@@ -1,4 +1,5 @@
 package wargame;
+
 public class Position implements IConfig {
 	// Infos
 	private int x, y;

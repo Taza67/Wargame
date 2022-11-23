@@ -13,13 +13,13 @@ public class Carte implements IConfig, ICarte {
 				grilleCarte[i][j] = randomElement();
 	}
 	
-	// Accesseurs
+	// Pseudo-Accesseurs
 	// Renvoie l'élément à la position donné
 	public Element getElement(Position pos) { return grilleCarte[pos.getY()][pos.getX()]; }
 	
 	// Méthodes
 	// Crée aléatoirement des éléments
-	Element randomElement() { return null; }
+	public Element randomElement() { return null; }
 	// Trouve aléatoirement une position vide sur la carte
 	public Position trouvePositionVide() {
 		Position posElemVide = null;

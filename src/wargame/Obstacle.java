@@ -21,12 +21,12 @@ public class Obstacle extends Element implements IConfig {
 	}
 	
 	// Infos
-	private  TypeObstacle TYPE;
+	private final TypeObstacle TYPE;
 	
 	// Constructeurs
 	public Obstacle(Position pos, TypeObstacle type) { super(pos.getX(), pos.getY()); TYPE = type; }
 	
-	// Accesseurs
+	// Pseudo-accesseurs
 	public TypeObstacle getTYPE() { return TYPE; }
 	
 	// Méthodes

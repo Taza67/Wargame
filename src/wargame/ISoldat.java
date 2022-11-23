@@ -1,69 +1,66 @@
 package wargame;
 
-public interface ISoldat {
+
+public interface ISoldat extends IVivant {
 	// Type
 	// // Soldats bons
-	static enum TypesH {
+	static enum TypesSoldatH {
 		// Liste
-		HUMAIN(40, 3, 10, 2), NAIN(80, 1, 20, 0), ELF(70, 5, 10, 6), HOBBIT(20, 3, 5, 2);
+		HUMAIN(40, 3, 5, 10, 2), NAIN(80, 1, 4, 20, 0), ELF(70, 5, 7, 10, 6), HOBBIT(20, 3, 5, 5, 2);
 		
 		// Infos
-		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PUISSANCE, TIR;
+		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
 		
 		// Constructeurs
-		TypesH(int points, int portee, int puissance, int tir) {
-			POINTS_DE_VIE = points; 
-			PORTEE_VISUELLE = portee;
+		TypesSoldatH(int points, int porteeVisuelle, int porteeDeplacement, int puissance, int tir) {
+			POINTS_DE_VIE = points;
+			PORTEE_VISUELLE = porteeVisuelle;
+			PORTEE_DEPLACEMENT = porteeDeplacement;
 			PUISSANCE = puissance; 
 			TIR = tir;
 		}
 		
 		// Accesseurs
 		public int getPoints() { return POINTS_DE_VIE; }
-		public int getPortee() { return PORTEE_VISUELLE; }
+		public int getPorteeVisuelle() { return PORTEE_VISUELLE; }
+		public int getPorteeDeplacement() { return PORTEE_DEPLACEMENT; }
 		public int getPuissance() { return PUISSANCE; }
 		public int getTir() { return TIR; }
 		// Pseudo-accesseurs
-		public static TypesH getTypeHAlea() {
+		public static TypesSoldatH getTypeHAlea() {
 			return values()[(int)(Math.random()*values().length)];
 		}
 	}
 	// // Soldats maléfiques
-	public static enum TypesM {
+	public static enum TypesSoldatM {
 		// Liste
-		TROLL (100,1,30,0), ORC (40,2,10,3), GOBELIN (20,2,5,2);
+		TROLL (100, 1, 4 , 30, 0), ORC (40, 2, 5, 10, 3), GOBELIN (20, 2, 3, 5, 2);
       
 		// Infos
-		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PUISSANCE, TIR;
+		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
       
 		// Constructeurs
-		TypesM(int points, int portee, int puissance, int tir) {
-			POINTS_DE_VIE = points; 
-			PORTEE_VISUELLE = portee;
+		TypesSoldatM(int points, int porteeVisuelle, int porteeDeplacement, int puissance, int tir) {
+			POINTS_DE_VIE = points;
+			PORTEE_VISUELLE = porteeVisuelle;
+			PORTEE_DEPLACEMENT = porteeDeplacement;
 			PUISSANCE = puissance; 
 			TIR = tir;
 		}
 		
 		// Accesseurs
 		public int getPoints() { return POINTS_DE_VIE; }
-		public int getPortee() { return PORTEE_VISUELLE; }
+		public int getPorteeVisuelle() { return PORTEE_VISUELLE; }
+		public int getPorteeDeplacement() { return PORTEE_DEPLACEMENT; }
 		public int getPuissance() { return PUISSANCE; }
 		public int getTir() { return TIR; }
 		// Pseudo-accesseurs
-		public static TypesM getTypeMAlea() {
+		public static TypesSoldatM getTypeMAlea() {
          return values()[(int)(Math.random()*values().length)];
 		}
 	}
 	
 	// Méthodes
-	// Retourne le nombre de points de vie du soldat
-	int getPoints();
-	// Retourne la portée du soldat
-	int getTour(); int getPortee();
-	// 
-	void joueTour(int tour);
-	// Fait combattre le soldat courant avec le soldat en paramètre
-	void combat(Soldat soldat);
-	// Déplace le soldat à la position en paramètre
-	void seDeplace(Position newPos);
+	// Fait combattre le soldat courant avec l'être vivant en paramètre
+	void combat(Vivant etre);
 }
