@@ -12,12 +12,12 @@ public interface IConfig {
 	int NB_HEROS = 6; int NB_MONSTRES = 15; int NB_OBSTACLES = 20;
 	// Couleurs
 	Color COULEUR_VIDE = Color.white, 
-		  COULEUR_INCONNU = Color.lightGray,
-		  COULEUR_TEXTE = Color.black,
-		  COULEUR_MONSTRES = Color.black,
-		  COULEUR_HEROS = Color.red, 
-		  COULEUR_HEROS_DEJA_JOUE = Color.pink,
-		  COULEUR_EAU = Color.blue, 
-		  COULEUR_FORET = Color.green, 
-		  COULEUR_ROCHER = Color.gray;
+	 	  COULEUR_INCONNU = Color.lightGray,
+	 	  COULEUR_TEXTE = Color.black,
+	 	  COULEUR_MONSTRES = Color.black,
+	 	  COULEUR_HEROS = Color.red, 
+	 	  COULEUR_HEROS_DEJA_JOUE = Color.pink,
+	 	  COULEUR_EAU = Color.blue, 
+	 	  COULEUR_FORET = Color.green, 
+	 	  COULEUR_ROCHER = Color.gray;
 }
