@@ -9,7 +9,7 @@ public class Obstacle extends Element{
 		ROCHER(COULEUR_ROCHER), FORET (COULEUR_FORET), EAU (COULEUR_EAU);
 		
 		// Infos
-		private final Color COULEUR;
+		private final Color COULEUR ;
 		
 		// Constructeurs
 		private TypeObstacle(Color couleur) {COULEUR = couleur;}
