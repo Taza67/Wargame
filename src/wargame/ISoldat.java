@@ -1,6 +1,5 @@
 package wargame;
 
-
 public interface ISoldat extends IVivant {
 	// Type
 	// // Soldats bons
@@ -10,6 +9,7 @@ public interface ISoldat extends IVivant {
 		
 		// Infos
 		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
+		private final char CAMP;
 		
 		// Constructeurs
 		TypesSoldatH(int points, int porteeVisuelle, int porteeDeplacement, int puissance, int tir) {
@@ -18,6 +18,7 @@ public interface ISoldat extends IVivant {
 			PORTEE_DEPLACEMENT = porteeDeplacement;
 			PUISSANCE = puissance; 
 			TIR = tir;
+			CAMP = VERTS;
 		}
 		
 		// Accesseurs
@@ -26,6 +27,7 @@ public interface ISoldat extends IVivant {
 		public int getPorteeDeplacement() { return PORTEE_DEPLACEMENT; }
 		public int getPuissance() { return PUISSANCE; }
 		public int getTir() { return TIR; }
+		public char getCAMP() { return CAMP; }
 		// Pseudo-accesseurs
 		public static TypesSoldatH getTypeHAlea() {
 			return values()[(int)(Math.random()*values().length)];
@@ -38,6 +40,7 @@ public interface ISoldat extends IVivant {
       
 		// Infos
 		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
+		private final char CAMP;
       
 		// Constructeurs
 		TypesSoldatM(int points, int porteeVisuelle, int porteeDeplacement, int puissance, int tir) {
@@ -46,6 +49,7 @@ public interface ISoldat extends IVivant {
 			PORTEE_DEPLACEMENT = porteeDeplacement;
 			PUISSANCE = puissance; 
 			TIR = tir;
+			CAMP = ROUGES;
 		}
 		
 		// Accesseurs
@@ -54,6 +58,7 @@ public interface ISoldat extends IVivant {
 		public int getPorteeDeplacement() { return PORTEE_DEPLACEMENT; }
 		public int getPuissance() { return PUISSANCE; }
 		public int getTir() { return TIR; }
+		public char getCAMP() { return CAMP; }
 		// Pseudo-accesseurs
 		public static TypesSoldatM getTypeMAlea() {
          return values()[(int)(Math.random()*values().length)];
@@ -62,5 +67,5 @@ public interface ISoldat extends IVivant {
 	
 	// Méthodes
 	// Fait combattre le soldat courant avec l'être vivant en paramètre
-	void combat(Vivant etre);
+	void combat(Vivant adversaire);
 }

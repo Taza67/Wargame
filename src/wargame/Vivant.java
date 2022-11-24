@@ -7,15 +7,19 @@ public class Vivant extends Element implements IVivant {
 	private int points_de_vie,
 				portee_visuelle,
 				portee_deplacement,
-				niveau;
+				niveau,
+				experience;
+	private final char CAMP;
 	
 	// Constructeurs
-	public Vivant(Position pos, int points_de_vie, int portee_visuelle, int portee_deplacement) { 
+	public Vivant(Position pos, char camp, int points_de_vie, int portee_visuelle, int portee_deplacement) { 
 		super(pos.getX(), pos.getY()); 
 		this.points_de_vie = points_de_vie;
 		this.portee_visuelle = portee_visuelle;
 		this.portee_deplacement = portee_deplacement;
 		niveau = 0;
+		experience = 0;
+		CAMP = camp;
 	}
 
 	// Accesseurs
@@ -23,6 +27,8 @@ public class Vivant extends Element implements IVivant {
 	public int getPortee_visuelle() { return portee_visuelle; }
 	public int getPortee_deplacement() { return portee_deplacement; }
 	public int getNiveau() { return niveau; }
+	public int getExperience() { return experience; }
+	public char getCAMP() { return CAMP; }
 
 	// Mutateurs
 	public void setPoints_de_vie(int points_de_vie) { this.points_de_vie = points_de_vie; }
@@ -54,7 +60,6 @@ public class Vivant extends Element implements IVivant {
 	public void augmenteNiveau() {
 		if (niveau < 10)
 			niveau++;
-		
 		points_de_vie += niveau * 10;
 	}
 }
