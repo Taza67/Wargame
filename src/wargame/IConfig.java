@@ -10,7 +10,9 @@ public interface IConfig {
 	// Position de la fênetre
 	int POSITION_X = 100, POSITION_Y = 50;
 	// Limites
-	int NB_HEROS = 6; int NB_MONSTRES = 15; int NB_OBSTACLES = 20;
+	int NB_AMIRAUX_CAMP = 3;
+	int NB_SOLDATS_CAMP = 15;
+	int NB_OBSTACLES = 20;
 	// Couleurs
 	Color COULEUR_VIDE = Color.white, 
 	 	  COULEUR_INCONNU = Color.lightGray,

@@ -8,9 +8,11 @@ public class Carte implements IConfig, ICarte {
 	
 	// Constructeurs
 	public Carte() {
-		for (int i = 0; i < HAUTEUR_CARTE; i++)
-			for (int j = 0; j < LARGEUR_CARTE; j++)
-				grilleCarte[i][j] = randomElement();
+		int nbObstacles = 0;
+		while(nbObstacles++ < NB_OBSTACLES) {
+			Position posVide = trouvePositionVide();
+			grilleCarte[posVide.getX()][posVide.getY()] = new Obstacle(posVide, Obstacle.TypeObstacle.getObstacleAlea());
+		}
 	}
 	
 	// Pseudo-Accesseurs
@@ -18,13 +20,11 @@ public class Carte implements IConfig, ICarte {
 	public Element getElement(Position pos) { return grilleCarte[pos.getY()][pos.getX()]; }
 	
 	// Méthodes
-	// Crée aléatoirement des éléments
-	public Element randomElement() { return null; }
 	// Trouve aléatoirement une position vide sur la carte
 	public Position trouvePositionVide() {
 		Position posElemVide = null;
 		
-		posElemVide = trouvePositionVideZone(0, HAUTEUR_CARTE - 1, 0, LARGEUR_CARTE); // cf Méthodes auxiliaires
+		posElemVide = trouvePositionVideZone(0, HAUTEUR_CARTE - 1, 0, LARGEUR_CARTE - 1); // cf Méthodes auxiliaires
 		
 		return posElemVide;
 	}

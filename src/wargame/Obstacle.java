@@ -14,8 +14,8 @@ public class Obstacle extends Element implements IConfig {
 		// Constructeurs
 		private TypeObstacle(Color couleur) { COULEUR = couleur; }
 		
-		// Accesseurs
-		public static TypeObstacle getObsacleAlea() { 
+		// Pseudo-accesseurs
+		public static TypeObstacle getObstacleAlea() { 
 			return values() [(int) (Math.random() * values().length)];
 		}
 	}

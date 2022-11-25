@@ -1,6 +1,6 @@
 package wargame;
 
-public class Amiral extends Soldat implements IAmiral {	
+public class Amiral extends Soldat implements IAmiral, IConfig {	
 	// Infos
 	private static int nbAmirauxMalefiques = 0;
 	private static int nbAmirauxBons = 0;
