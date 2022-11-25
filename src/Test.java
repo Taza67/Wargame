@@ -11,7 +11,7 @@ public class Test {
 		
 		Panneau panel = new Panneau();
 		panel.setOpaque(true);
-		panel.setBackground(IConfig.COULEUR_VIDE);
+		panel.setBackground(IConfig.COULEUR_INCONNU);
 		panel.setPreferredSize(new Dimension(IConfig.LARGEUR_CARTE * IConfig.NB_PIX_CASE + 5, IConfig.HAUTEUR_CARTE * IConfig.NB_PIX_CASE + 5));
 		
 		frame.setContentPane(panel);

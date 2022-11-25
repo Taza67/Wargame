@@ -18,6 +18,6 @@ public class Panneau extends JPanel {
 	// Méthodes
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		c.seDessinerCoucheReelle(g);
+		c.seDessinerCoucheVisuelle(g);
 	}
 }

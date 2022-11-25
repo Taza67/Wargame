@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 public class Carte implements IConfig, ICarte {
 	// Infos
-	private Element[][] grille;
+	protected Element[][] grille;
 	
 	// Constructeurs
 	public Carte() { 
@@ -89,6 +89,24 @@ public class Carte implements IConfig, ICarte {
 		for (int i = 0; i < HAUTEUR_CARTE; i++)
 			for (int j = 0; j < LARGEUR_CARTE; j++)
 				if (grille[i][j] != null) grille[i][j].seDessiner(g);
+	}
+	public void seDessinerCoucheVisuelle(Graphics g) {
+		for (int i = 0; i < HAUTEUR_CARTE; i++)
+			for (int j = 0; j < LARGEUR_CARTE; j++)
+				if (grille[i][j] != null) {
+					if (grille[i][j] instanceof Heros) {
+						int porteeVisuelle = ((Heros)grille[i][j]).getPORTEE_VISUELLE(),
+							extHautGaucheX = (j - porteeVisuelle) >= 0 ? j - porteeVisuelle : 0,
+							extHautGaucheY = (i - porteeVisuelle) >= 0 ? i - porteeVisuelle : 0,
+							extBasDroitX = (j + porteeVisuelle) < LARGEUR_CARTE ? j + porteeVisuelle : LARGEUR_CARTE - 1,
+							extBasDroitY = (i + porteeVisuelle) < HAUTEUR_CARTE ? i + porteeVisuelle : HAUTEUR_CARTE - 1;
+						Position extHautGauche = new Position(extHautGaucheX, extHautGaucheY),
+								 extBasDroit = new Position(extBasDroitX, extBasDroitY);
+						System.out.println(extHautGauche + " " + extBasDroit);
+						Zone zoneVisuelleHeros = new Zone(this, extHautGauche, extBasDroit);
+						zoneVisuelleHeros.seDessiner(g);
+					}
+				}
 	}
 	
 }
