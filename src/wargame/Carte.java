@@ -83,34 +83,32 @@ public class Carte implements IConfig, ICarte {
 		return posElemVide;
 	}
 	// Trouve aléatoirement un héros dans une zone dont les extremités sont données en paramètres
-	public Position trouvePositionHerosZone(int deb_ligne, int fin_ligne, int deb_colonne, int fin_colonne) {
-		Element elemVide = null;
-		Position posElemVide = null;	
+	public Heros trouveHerosZone(int deb_ligne, int fin_ligne, int deb_colonne, int fin_colonne) {
+		Element h = null;
 		do {
 			int x = retourneAlea(deb_colonne, fin_colonne),
 				y = retourneAlea(deb_ligne, fin_ligne);
-			elemVide = grille[y][x];
-			posElemVide = new Position(x, y);
-		} while (!(elemVide instanceof Heros)); // Tant qu'un héros n'a pas été trouvé
-		return posElemVide;
+			h = grille[y][x];
+		} while (!(h instanceof Heros)); // Tant qu'un héros n'a pas été trouvé
+		return (Heros)h;
 	}
 	// Trouve aléatoirement un héros sur la carte
-	public Position trouvePositionHeros() {
-		Position posElemVide = null;	
-		posElemVide = trouvePositionHerosZone(0, HAUTEUR_CARTE - 1, 0, LARGEUR_CARTE - 1);
-		return posElemVide;
+	public Heros trouveHeros() {
+		Heros h = null;	
+		h = trouveHerosZone(0, HAUTEUR_CARTE - 1, 0, LARGEUR_CARTE - 1);
+		return h;
 	}
 	// Trouve un héros choisi aleatoirement parmi les 8 positions adjacentes de pos
-	public Position trouvePositionHeros(Position pos) {
+	public Heros trouveHeros(Position pos) {
 		int xPos = pos.getX(),		// Indice de colonne de pos
 			yPos = pos.getY(),		// Indice de ligne de pos
 			deb_ligne = yPos - 1, 	// Indice début ligne
 			deb_colonne = xPos - 1, // Indice début colonne
 			fin_ligne = yPos + 1, 	// Indice fin ligne
 			fin_colonne = xPos + 1; // Indice fin colonne
-		Position posElemVide = null;		
-		posElemVide = trouvePositionHerosZone(deb_ligne, fin_ligne, deb_colonne, fin_colonne);
-		return posElemVide;
+		Heros h = null;		
+		h = trouveHerosZone(deb_ligne, fin_ligne, deb_colonne, fin_colonne);
+		return h;
 	}
 	
 	// Méthodes graphiques
