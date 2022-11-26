@@ -102,7 +102,6 @@ public class Carte implements IConfig, ICarte {
 							extBasDroitY = (i + porteeVisuelle) < HAUTEUR_CARTE ? i + porteeVisuelle : HAUTEUR_CARTE - 1;
 						Position extHautGauche = new Position(extHautGaucheX, extHautGaucheY),
 								 extBasDroit = new Position(extBasDroitX, extBasDroitY);
-						System.out.println(extHautGauche + " " + extBasDroit);
 						Zone zoneVisuelleHeros = new Zone(this, extHautGauche, extBasDroit);
 						zoneVisuelleHeros.seDessiner(g);
 					}
