@@ -110,6 +110,20 @@ public class Carte implements IConfig, ICarte {
 		h = trouveHerosZone(deb_ligne, fin_ligne, deb_colonne, fin_colonne);
 		return h;
 	}
+	// Déplace un soldat à la position pos
+	public boolean deplaceSoldat(Position pos, Soldat soldat) {
+		boolean ret = false,
+				possible = pos.estValide() && !(soldat.pos.equals(pos)) && grille[pos.getY()][pos.getX()] == null;
+		if (possible == true) {
+			ret = true;
+			grille[soldat.pos.getY()][soldat.pos.getX()] = null; // Le soldat sort de sa position avant déplacement
+			grille[pos.getY()][pos.getX()] = soldat; // Le soldat se déplace à la position où il doit être
+			// On fixe sa nouvelle position
+			soldat.pos.setX(pos.getX());
+			soldat.pos.setY(pos.getY());	
+		}
+		return ret;
+	}
 	
 	// Méthodes graphiques
 	public void seDessinerCoucheReelle(Graphics g) {

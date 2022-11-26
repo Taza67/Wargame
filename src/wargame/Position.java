@@ -1,5 +1,7 @@
 package wargame;
 
+import java.util.Objects;
+
 public class Position implements IConfig {
 	// Infos
 	private int x, y;
@@ -27,4 +29,16 @@ public class Position implements IConfig {
 	public boolean estVoisine(Position pos) {
 		return ((Math.abs(x - pos.x) <= 1) && (Math.abs(y - pos.y) <= 1));
 	}
+	// Vérifie si l'objet en paramètre est égal à la position courante
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Position other = (Position) obj;
+		return x == other.x && y == other.y;
+	}
+	
 }
