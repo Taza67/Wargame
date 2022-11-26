@@ -15,7 +15,7 @@ public interface ICarte {
 	// Trouve un heros choisi aléatoirement parmi les 8 positions adjacentes de pos
 	Heros trouveHeros(Position pos);
 	// Déplace un soldat à la position pos
-	// boolean deplaceSoldat(Position pos, Soldat soldat);
+	boolean deplaceSoldat(Position pos, Soldat soldat);
 	// Tue un soldat
 	// void mort(Soldat perso);
 	// À voir

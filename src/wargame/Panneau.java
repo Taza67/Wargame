@@ -19,5 +19,6 @@ public class Panneau extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		c.seDessinerCoucheVisuelle(g);
+		c.seDessinerMiniMap(g);
 	}
 }

@@ -1,5 +1,6 @@
 package wargame;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Carte implements IConfig, ICarte {
@@ -126,12 +127,28 @@ public class Carte implements IConfig, ICarte {
 	}
 	
 	// Méthodes graphiques
+	// Dessine la carte reelle sans prendre en compte la portee visuelle des héros
 	public void seDessinerCoucheReelle(Graphics g) {
 		for (int i = 0; i < HAUTEUR_CARTE; i++)
 			for (int j = 0; j < LARGEUR_CARTE; j++)
 				if (grille[i][j] != null) grille[i][j].seDessiner(g);
 	}
-	public void seDessinerCoucheVisuelle(Graphics g) {
+	// Dessine une carte avec toutes les cases cachées
+	public void seDessinerCoucheVide(Graphics g, char carte_ou_mini_map) {
+		for (int i = 0; i < HAUTEUR_CARTE; i++)
+			for (int j = 0; j < LARGEUR_CARTE; j++) {
+				int taille_case = carte_ou_mini_map == CARTE ? NB_PIX_CASE : NB_PIX_CASE_MINI_MAP,
+						decalage = carte_ou_mini_map == CARTE ? 5 : 1;
+					int x = j * taille_case,
+						y = i * taille_case;
+					g.setColor(COULEUR_INCONNU);
+					g.fillRect(x + decalage, y + decalage, taille_case - decalage, taille_case - decalage);
+			}
+	}
+	
+	// Dessine la carte visuelle en prenant en compte la portee visuelle des héros, sous sa taille réelle ou miniature en fonction du paramètre carte_ou_mini_map
+	public void seDessinerCoucheVisuelle(Graphics g, char carte_ou_mini_map) {
+		seDessinerCoucheVide(g, carte_ou_mini_map);
 		for (int i = 0; i < HAUTEUR_CARTE; i++)
 			for (int j = 0; j < LARGEUR_CARTE; j++)
 				if (grille[i][j] != null) {
@@ -144,9 +161,22 @@ public class Carte implements IConfig, ICarte {
 						Position extHautGauche = new Position(extHautGaucheX, extHautGaucheY),
 								 extBasDroit = new Position(extBasDroitX, extBasDroitY);
 						Zone zoneVisuelleHeros = new Zone(this, extHautGauche, extBasDroit);
-						zoneVisuelleHeros.seDessiner(g);
+						if (carte_ou_mini_map == CARTE) zoneVisuelleHeros.seDessiner(g);
+						else zoneVisuelleHeros.seDessinerMiniMap(g);
+						
+						
 					}
 				}
+	}
+	// Dessine la carte visuelle en prenant en compte la portee visuelle des héros
+	public void seDessinerCoucheVisuelle(Graphics g) {
+		this.seDessinerCoucheVisuelle(g, CARTE);
+	}
+	// Dessine la mini-map en prenant en compte la portee visuelle des héros
+	public void seDessinerMiniMap(Graphics g) {
+		g.setColor(Color.black);
+		g.fillRect(0, 0, LARGEUR_CARTE * IConfig.NB_PIX_CASE_MINI_MAP + 1, HAUTEUR_CARTE * IConfig.NB_PIX_CASE_MINI_MAP + 1);
+		this.seDessinerCoucheVisuelle(g, MINI_MAP);
 	}
 	
 }

@@ -18,8 +18,14 @@ public class Heros extends Soldat {
 	public TypesH getTYPE() { return TYPE; }
 	
 	// Méthodes graphiques
+	// Dessine l'héros sous sa forme reelle sur la carte
 	public void seDessiner(Graphics g) {
 		g.setColor(COULEUR_HEROS);
 		super.seDessiner(g);
+	}
+	// Dessine l'héros sous sa forme miniature sur la mini-map
+	public void seDessinerMiniMap(Graphics g) {
+		g.setColor(COULEUR_HEROS);
+		super.seDessinerMiniMap(g);
 	}
 }

@@ -36,8 +36,14 @@ public class Obstacle extends Element implements IConfig {
 	public String toString() { return "" + TYPE; }
 	
 	// Méthodes graphiques
+	// Dessine l'obstacle sous sa forme reelle sur la carte
 	public void seDessiner(Graphics g) {
 		g.setColor(TYPE.getCOULEUR());
 		super.seDessiner(g);
+	}
+	// Dessine l'obstacle sous sa forme miniature sur la mini-map
+	public void seDessinerMiniMap(Graphics g) {
+		g.setColor(TYPE.getCOULEUR());
+		super.seDessinerMiniMap(g);
 	}
 }
