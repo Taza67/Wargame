@@ -27,7 +27,7 @@ public class Obstacle extends Element implements IConfig {
 	private final TypeObstacle TYPE;
 	
 	// Constructeurs
-	public Obstacle(TypeObstacle type, Position pos) { TYPE = type; this.pos = pos; }
+	public Obstacle(Carte carte, TypeObstacle type, Position pos) {this.carte = carte; TYPE = type; this.pos = pos; }
 	
 	// Accesseurs
 	public TypeObstacle getTYPE() { return TYPE; }
@@ -36,14 +36,9 @@ public class Obstacle extends Element implements IConfig {
 	public String toString() { return "" + TYPE; }
 	
 	// Méthodes graphiques
-	// Dessine l'obstacle sous sa forme reelle sur la carte
-	public void seDessiner(Graphics g) {
+	// Dessine l'obstacle sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
+	public void seDessiner(Graphics g, char type) {
 		g.setColor(TYPE.getCOULEUR());
-		super.seDessiner(g);
-	}
-	// Dessine l'obstacle sous sa forme miniature sur la mini-map
-	public void seDessinerMiniMap(Graphics g) {
-		g.setColor(TYPE.getCOULEUR());
-		super.seDessinerMiniMap(g);
+		super.seDessiner(g, type);
 	}
 }

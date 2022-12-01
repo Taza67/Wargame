@@ -3,22 +3,17 @@ package wargame;
 import java.awt.Color;
 
 public interface IConfig {
-	// Dimensions de la carte
-	int LARGEUR_CARTE = 25, HAUTEUR_CARTE = 15; // en nombre de cases
-	// Taille d'une case (Carte, mini-map)
-	int NB_PIX_CASE = 50,
-		NB_PIX_CASE_MINI_MAP = 10;
+	// Mini-map
+	int TAILLE_MAX_MINI_MAP = 300,			// en pixels
+		X_MINI_MAP = 5,
+		Y_MINI_MAP = 5;
 	// Position de la fenêtre
 	int POSITION_X = 100, POSITION_Y = 50;
-	// Limites
-	int NB_HEROS = 6, 
-		NB_MONSTRES = 15, 
-		NB_OBSTACLES = 20;
 	// Camps
 	char VERTS = 'v', 	// Gentils
 		 ROUGES = 'r';	// Méchants
 	// Couleurs
-	Color COULEUR_VIDE = Color.white, 
+	Color COULEUR_VIDE = Color.darkGray, 
 		  COULEUR_INCONNU = Color.lightGray,
 		  COULEUR_TEXTE = Color.black,
 		  // Vivants
@@ -30,8 +25,8 @@ public interface IConfig {
 		  COULEUR_FORET = Color.green, 
 		  COULEUR_ROCHER = Color.gray,
 		  // Sol
-		  COULEUR_SOL = new Color(194, 178, 128);
-	// Identifiants mini-map, carte
-	char CARTE = 'c', 	// carte
-		 MINI_MAP = 'm'; // mini-map 
+		  COULEUR_SOL = new Color(194, 178, 128),
+		  // Interaction
+		  COULEUR_SELECTION = Color.orange,
+		  COULEUR_CURSEUR = Color.yellow;
 }

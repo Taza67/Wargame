@@ -16,14 +16,9 @@ public class Monstre extends Soldat {
 	public TypesM getTYPE() { return TYPE; }
 	
 	// Méthodes graphiques
-	// Dessine le monstre sous sa forme reelle sur la carte
-	public void seDessiner(Graphics g) {
+	// Dessine le monstre sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
+	public void seDessiner(Graphics g, char type) {
 		g.setColor(COULEUR_MONSTRES);
-		super.seDessiner(g);
-	}
-	// Dessine le monstre sous sa forme miniature sur la mini-map
-	public void seDessinerMiniMap(Graphics g) {
-		g.setColor(COULEUR_MONSTRES);
-		super.seDessinerMiniMap(g);
+		super.seDessiner(g, type);
 	}
 }

@@ -19,9 +19,8 @@ public class Position implements IConfig {
 	
 	// Méthodes
 	// Teste si les "coordonnées" de la position sont valides par rapport aux dimensions de la carte
-	public boolean estValide() {
-		// x dans [ 0, LARGEUR_CARTE [ et y dans [ 0, HAUTEUR_CARTE [
-		return x >= 0 && x < LARGEUR_CARTE && y >= 0 && y < HAUTEUR_CARTE;
+	public boolean estValide(int largeur, int hauteur) {
+		return x >= 0 && x < largeur && y >= 0 && y < hauteur; // x dans [ 0, largeur [ et y dans [ 0, hauteur [
 	}
 	// Retourne les infos de la position
 	public String toString() { return "(" + x + ", " + y + ")"; }
@@ -31,12 +30,9 @@ public class Position implements IConfig {
 	}
 	// Vérifie si l'objet en paramètre est égal à la position courante
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
 		Position other = (Position) obj;
 		return x == other.x && y == other.y;
 	}
