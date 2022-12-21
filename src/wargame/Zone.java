@@ -1,6 +1,5 @@
 package wargame;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 public class Zone implements IConfig {
@@ -22,8 +21,8 @@ public class Zone implements IConfig {
 		this.carte = carte;
 		this.extHautGauche = calculerExtHautGauche(pos, rayon_x, rayon_y);
 		this.extBasDroit = calculerExtBasDroit(pos, rayon_x, rayon_y);
-		this.largeurCase = extHautGauche.getX() - extBasDroit.getX();
-		this.hauteurCase = extHautGauche.getY() - extBasDroit.getY();
+		this.largeurCase = calculerLargeurCase();
+		this.hauteurCase = calculerHauteurCase();
 	}
 
 	// Accesseurs
@@ -33,8 +32,16 @@ public class Zone implements IConfig {
 	public int getHauteurCase() { return hauteurCase; }
 
 	// Mutateurs
-	public void setExtHautGauche(Position extHautGauche) { this.extHautGauche = extHautGauche; }
-	public void setExtBasDroit(Position extBasDroit) { this.extBasDroit = extBasDroit; }
+	public void setExtHautGauche(Position extHautGauche) { 
+		this.extHautGauche = extHautGauche; 
+		this.largeurCase = calculerLargeurCase();
+		this.hauteurCase = calculerHauteurCase();
+	}
+	public void setExtBasDroit(Position extBasDroit) { 
+		this.extBasDroit = extBasDroit; 
+		this.largeurCase = calculerLargeurCase();
+		this.hauteurCase = calculerHauteurCase();
+	}
 	public void setLargeurCase(int largeurCase) { this.largeurCase = largeurCase; }
 	public void setHauteurCase(int hauteurCase) { this.hauteurCase = hauteurCase; }
 	

@@ -1,17 +1,14 @@
 package wargameInterface;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.awt.LayoutManager;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import wargame.Carte;
 
@@ -46,14 +43,30 @@ public class PanneauPartie extends JPanel {
 			}
 		});
 		jeu.grille.addMouseMotionListener(new MouseAdapter() {
-			public void mouseMoved(MouseEvent e) { 
+			public void mouseMoved(MouseEvent e) {
 				carte.deplacerCurseur(e.getX(), e.getY()); 
 				jeu.repaint();
 				tableauBord.miniMap.repaint();
 			}
 		});
-		// jeu.grille.addMouseWheelListener(new MouseAdapter() {
-		//	public void mouseWheelMoved(MouseWheelEvent e) { carte.zoomerCarteAffichee(e.getWheelRotation()); repaint(); }
-		//});
+		jeu.grille.addMouseWheelListener(new MouseAdapter() {
+			int zoom = 10;
+			public void mouseWheelMoved(MouseWheelEvent e) { 
+				zoom -= e.getWheelRotation(); 
+				tableauBord.boutonsMiniMap.slider.setValue(zoom);
+				carte.zoomerCarteAffichee(zoom); 
+				repaint(); 
+			}
+		});
+		tableauBord.boutonsMiniMap.slider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) { carte.zoomerCarteAffichee(tableauBord.boutonsMiniMap.slider.getValue()); repaint(); }
+		});
+		tableauBord.boutonsMiniMap.reinit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { 
+				carte.zoomerCarteAffichee(10);
+				tableauBord.boutonsMiniMap.slider.setValue(10);
+				repaint(); 
+			};
+		});
 	}
 }

@@ -1,7 +1,5 @@
 package wargame;
 
-import java.util.Objects;
-
 public class Position implements IConfig {
 	// Infos
 	private int x, y;
@@ -18,7 +16,7 @@ public class Position implements IConfig {
 	public void setY(int y) { this.y = y; }
 	
 	// Méthodes
-	// Teste si les "coordonnées" de la position sont valides par rapport aux dimensions de la carte
+	// Teste si les "coordonnées" de la position sont valides par rapport aux dimensions données
 	public boolean estValide(int largeur, int hauteur) {
 		return x >= 0 && x < largeur && y >= 0 && y < hauteur; // x dans [ 0, largeur [ et y dans [ 0, hauteur [
 	}

@@ -1,14 +1,11 @@
 package wargame;
 
-import wargame.ISoldat.TypesH;
-import wargame.ISoldat.TypesM;
-
 public interface ISoldat extends IConfig {
 	// Type
 	// // Soldats bons
 	public static enum TypesH {
 		// Liste
-		HUMAIN(40, 3, 5, 10, 2), NAIN(80, 1, 4, 20, 0), ELF(70, 5, 7, 10, 6), HOBBIT(20, 3, 5, 5, 2);
+		HUMAIN(40, 4, 4, 10, 2), NAIN(80, 2, 3, 20, 0), ELF(70, 6, 5, 10, 6), HOBBIT(20, 2, 2, 5, 2);
 		
 		// Infos
 		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
@@ -69,6 +66,8 @@ public interface ISoldat extends IConfig {
 	}
 
 	// Méthodes
+	// Déplace un soldat à la position pos
+	boolean seDeplace(Position pos);
 	// int getTour(); 
 	// void joueTour(int tour);
 	// void combat(Soldat soldat);
