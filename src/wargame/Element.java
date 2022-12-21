@@ -87,11 +87,12 @@ public abstract class Element implements IConfig {
 		if (visible == false) g.setColor(COULEUR_INCONNU);
 		
 		rayon = taillePix / 2;
+		decalageX = 0;
 		decalageY = (pos.getX() % 2 == 0) ? 0 : rayon;
 		
 		// Dessin
 		// g.fillRect(xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
-		dessinerHexagone(g, xPix, yPix + decalageY, rayon);
+		dessinerHexagone(g, xPix - decalageX, yPix + decalageY, rayon);
 		// Affichage du nom du héros
 		if (this instanceof Heros && type == ELEMENT_CARTE) {
 			g.setColor(Color.black);
