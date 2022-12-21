@@ -21,9 +21,57 @@ public abstract class Element implements IConfig {
 		// Reprise de la couleur sauvegardée
 		g.setColor(couleurCourante);
 	}
+	
+
+	int tabx[] = new int[6];
+	int taby[] = new int[6];
+	
+	public void rempliTableauPoint(int[] tabx, int[] taby, int centrex, int centrey, int rayon, int nb_cote) {
+		int x = centrex;
+		int y = centrey;
+		int n = nb_cote;
+		int r = rayon;
+		for(int i = 0; i < n; i++) {
+			int xp = x;
+			int yp = y;
+			int dx = xp - x;
+			int dy = yp - y;
+			double a = Math.atan2(dy, dx);
+			this.tabx[i]= (int) (x + ( r * Math.cos(a+(i+1)   *   2   *   Math.PI/n)  ));
+			this.taby[i]= (int) (y + ( r * Math.sin(a+(i+1)   *   2   *   Math.PI/n) ));
+		}
+
+	}
+
+	public void dessinerHexagone(Graphics g, int x, int y, int rayon) {
+		/* faire un tableau de point x et y */
+
+
+
+		rempliTableauPoint(this.tabx, this.taby, x, y, rayon, 6);
+		/* appeler la methode qui dessine le polygone en fonction des tableaux */
+
+		g.fillPolygon(this.tabx, this.taby, 6);
+
+
+	}
+	public void dessinerHexagone(Graphics g, Color c, int x, int y, int rayon) {
+		/* faire un tableau de point x et y */
+
+
+
+		rempliTableauPoint(this.tabx, this.taby, x, y, rayon, 6);
+		/* appeler la methode qui dessine le polygone en fonction des tableaux */
+		g.setColor(c);
+		g.fillPolygon(this.tabx, this.taby, 6);
+
+
+	}
+	
+	
 	// Dessine l'élément sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
 	public void seDessiner(Graphics g, char type) {
-		int taillePix, frontiere,
+		int taillePix, frontiere, decalageX, decalageY, rayon,
 			xPix, yPix;					// Coordoonnées de l'origine de la case représentant l'élément (en pixels)
 		if (type == ELEMENT_CARTE) {
 			taillePix = carte.getTaillePixelCaseCarte();
@@ -37,8 +85,13 @@ public abstract class Element implements IConfig {
 			yPix = pos.getY() * taillePix + Y_MINI_MAP;
 		} else taillePix = frontiere = xPix = yPix = 0;
 		if (visible == false) g.setColor(COULEUR_INCONNU);
+		
+		rayon = taillePix / 2;
+		decalageY = (pos.getX() % 2 == 0) ? 0 : rayon;
+		
 		// Dessin
-		g.fillRect(xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
+		// g.fillRect(xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
+		dessinerHexagone(g, xPix, yPix + decalageY, rayon);
 		// Affichage du nom du héros
 		if (this instanceof Heros && type == ELEMENT_CARTE) {
 			g.setColor(Color.black);
@@ -62,10 +115,12 @@ public abstract class Element implements IConfig {
 		yPix = pos.getY() * taillePix + Y_MINI_MAP;
 	} else taillePix = frontiere = xPix = yPix = 0;
 		// Dessin du cadre
-		dessinerRectangle(g, couleurCadre, xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
+		dessinerHexagone(g, couleurCadre, xPix, yPix, taillePix);
+		// dessinerRectangle(g, couleurCadre, xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
 		// Dessin de l'élément
 		if (visible == false) g.setColor(COULEUR_INCONNU);
-		g.fillRect(xPix + frontiere + 4, yPix + frontiere + 4, taillePix - frontiere - 8, taillePix - frontiere - 8);
+		dessinerHexagone(g, couleurCadre, xPix, yPix, taillePix - frontiere);
+		// g.fillRect(xPix + frontiere + 4, yPix + frontiere + 4, taillePix - frontiere - 8, taillePix - frontiere - 8);
 		if (this instanceof Heros && type == ELEMENT_CARTE) {
 			g.setColor(Color.black);
 			g.setFont(new Font("Serif", Font.BOLD, taillePix + frontiere));
