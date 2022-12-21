@@ -213,14 +213,14 @@ public class Carte implements IConfig, ICarte {
 		yOrigineCarteAffichee *= taillePixelCaseCarte;
 		// Dessin de la carte
 		carteAffichee.seDessiner(g);
-//		// Dessin de la zone de déplacement du héros sélectionné
-//		if (elemSelecActuel instanceof Heros) ((Heros) elemSelecActuel).dessinerZoneDeplacement(g, ELEMENT_CARTE);
-//		// Dessin de l'élément avec le curseur dessus
-//		if (elemCurseur != null)
-//			elemCurseur.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_CURSEUR);
-//		// Dessin de l'élement sélectionné
-//		if (elemSelecActuel != null)
-//			elemSelecActuel.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_SELECTION);
+		// Dessin de la zone de déplacement du héros sélectionné
+		if (elemSelecActuel instanceof Heros) ((Heros) elemSelecActuel).dessinerZoneDeplacement(g, ELEMENT_CARTE);
+		// Dessin de l'élément avec le curseur dessus
+		if (elemCurseur != null)
+			elemCurseur.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_CURSEUR);
+		// Dessin de l'élement sélectionné
+		if (elemSelecActuel != null)
+			elemSelecActuel.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_SELECTION);
 	}
 	// Déplace la zone de la carte à afficher en fonction d'un point dont les coordonnées sont en pixels
 	public boolean deplacerCarteAffichee(int xPix, int yPix) {

@@ -71,7 +71,7 @@ public abstract class Element implements IConfig {
 	
 	// Dessine l'élément sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
 	public void seDessiner(Graphics g, char type) {
-		int taillePix, frontiere, decalageX, decalageY, rayon,
+		int taillePix, frontiere, decalageY, rayon,
 			xPix, yPix;					// Coordoonnées de l'origine de la case représentant l'élément (en pixels)
 		if (type == ELEMENT_CARTE) {
 			taillePix = carte.getTaillePixelCaseCarte();
@@ -87,12 +87,11 @@ public abstract class Element implements IConfig {
 		if (visible == false) g.setColor(COULEUR_INCONNU);
 		
 		rayon = taillePix / 2;
-		decalageX = 0;
 		decalageY = (pos.getX() % 2 == 0) ? 0 : rayon;
 		
 		// Dessin
 		// g.fillRect(xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
-		dessinerHexagone(g, xPix - decalageX, yPix + decalageY, rayon);
+		dessinerHexagone(g, xPix + rayon, yPix + rayon + decalageY, rayon);
 		// Affichage du nom du héros
 		if (this instanceof Heros && type == ELEMENT_CARTE) {
 			g.setColor(Color.black);
@@ -102,25 +101,29 @@ public abstract class Element implements IConfig {
 	}
 	// Dessine l'élément avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
 	public void seDessinerCadre(Graphics g, char type, Color couleurCadre) {
-		int taillePix, frontiere,
+		int taillePix, frontiere, rayon, decalageY,
 		xPix, yPix;					// Coordoonnées de l'origine de la case représentant l'élément (en pixels)
-	if (type == ELEMENT_CARTE) {
-		taillePix = carte.getTaillePixelCaseCarte();
-		frontiere = carte.getFrontiereCase();
-		xPix = (pos.getX() - carte.getCarteAffichee().getExtHautGauche().getX()) * taillePix + carte.getxOrigineCarteAffichee();
-		yPix = (pos.getY() - carte.getCarteAffichee().getExtHautGauche().getY()) * taillePix + carte.getyOrigineCarteAffichee();
-	} else if (type == ELEMENT_MINI_MAP) {
-		taillePix = carte.getTAILLE_PIXEL_CASE_MINI_MAP();
-		frontiere = 1;
-		xPix = pos.getX() * taillePix + X_MINI_MAP;
-		yPix = pos.getY() * taillePix + Y_MINI_MAP;
-	} else taillePix = frontiere = xPix = yPix = 0;
+		if (type == ELEMENT_CARTE) {
+			taillePix = carte.getTaillePixelCaseCarte();
+			frontiere = carte.getFrontiereCase();
+			xPix = (pos.getX() - carte.getCarteAffichee().getExtHautGauche().getX()) * taillePix + carte.getxOrigineCarteAffichee();
+			yPix = (pos.getY() - carte.getCarteAffichee().getExtHautGauche().getY()) * taillePix + carte.getyOrigineCarteAffichee();
+		} else if (type == ELEMENT_MINI_MAP) {
+			taillePix = carte.getTAILLE_PIXEL_CASE_MINI_MAP();
+			frontiere = 1;
+			xPix = pos.getX() * taillePix + X_MINI_MAP;
+			yPix = pos.getY() * taillePix + Y_MINI_MAP;
+		} else taillePix = frontiere = xPix = yPix = 0;
+		
+		rayon = taillePix / 2;
+		decalageY = (pos.getX() % 2 == 0) ? 0 : rayon;
+		
 		// Dessin du cadre
-		dessinerHexagone(g, couleurCadre, xPix, yPix, taillePix);
+		dessinerHexagone(g, couleurCadre, xPix + rayon, yPix + rayon + decalageY, rayon - frontiere);
 		// dessinerRectangle(g, couleurCadre, xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
 		// Dessin de l'élément
 		if (visible == false) g.setColor(COULEUR_INCONNU);
-		dessinerHexagone(g, couleurCadre, xPix, yPix, taillePix - frontiere);
+		dessinerHexagone(g, xPix + rayon, yPix + rayon + decalageY, rayon - frontiere * 2);
 		// g.fillRect(xPix + frontiere + 4, yPix + frontiere + 4, taillePix - frontiere - 8, taillePix - frontiere - 8);
 		if (this instanceof Heros && type == ELEMENT_CARTE) {
 			g.setColor(Color.black);
