@@ -14,7 +14,7 @@ public class Carte implements IConfig, ICarte {
 	// // Dimensions en pixels
 	// // // Case
 	private int taillePixelCaseCarte = 50, 				// Dans la carte
-			    frontiereCase = 5;
+			    frontiereCase = 10;
 	private final int TAILLE_PIXEL_CASE_MINI_MAP;		// Dans la mini-map
 	// // // Carte Affichée
 	private int largeurPixelCarteAffichee = largeurCaseCarteAffichee * taillePixelCaseCarte + frontiereCase,
@@ -50,7 +50,10 @@ public class Carte implements IConfig, ICarte {
 		NB_HEROS = nbHeros;
 		NB_MONSTRES = nbHeros * 2;
 		// // Initialisation des éléments de la grille (= sol)
-		for (int i = 0; i < hauteur; i++) for (int j = 0; j < largeur; j++) grille[i][j] = new Sol(this, new Position(j, i));
+		for (int i = 0; i < hauteur; i++) 
+			for (int j = 0; j < largeur; j++) 
+				grille[i][j] = new Sol(this, new Position(j, i));
+		
 		// // Zone à afficher
 		centreCarteAffichee = new Position(largeur / 2, hauteur / 2);
 		carteAffichee = new Zone(this, centreCarteAffichee, largeurCaseCarteAffichee, hauteurCaseCarteAffichee);

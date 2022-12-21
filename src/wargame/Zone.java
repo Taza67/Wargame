@@ -71,9 +71,14 @@ public class Zone implements IConfig {
 	// Méthodes graphique
 	// Dessine une zone de la carte
 	public void seDessiner(Graphics g) {
-		for (int i = extHautGauche.getY(); i <= extBasDroit.getY(); i++)
-			for (int j = extHautGauche.getX(); j <= extBasDroit.getX(); j++)
-				carte.getElement(new Position(j, i)).seDessiner(g, Element.ELEMENT_CARTE);
+		for (int i = extHautGauche.getY(); i <= extBasDroit.getY(); i++) {
+			for (int j = extHautGauche.getX(); j <= extBasDroit.getX(); j++) {
+				if(i%2==0 && j%4==2) 
+					carte.getElement(new Position(j, i)).seDessiner(g, Element.ELEMENT_CARTE);
+				if(i%2 ==1 && j%4==0)
+					carte.getElement(new Position(j, i)).seDessiner(g, Element.ELEMENT_CARTE);
+			}
+		}
 	}
 	
 }
