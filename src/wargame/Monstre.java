@@ -1,5 +1,6 @@
 package wargame;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Monstre extends Soldat {
@@ -20,5 +21,10 @@ public class Monstre extends Soldat {
 	public void seDessiner(Graphics g, char type) {
 		g.setColor(COULEUR_MONSTRES);
 		super.seDessiner(g, type);
+	}
+	// Dessine le monstre avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
+	public void seDessinerCadre(Graphics g, char type, Color couleurCadre) {
+		g.setColor(COULEUR_MONSTRES);
+		super.seDessinerCadre(g, type, couleurCadre);
 	}
 }

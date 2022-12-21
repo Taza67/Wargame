@@ -12,6 +12,9 @@ public interface IConfig {
 	// Camps
 	char VERTS = 'v', 	// Gentils
 		 ROUGES = 'r';	// Méchants
+	// Constantes statiques
+	char ELEMENT_CARTE = 'c',
+		 ELEMENT_MINI_MAP = 'm';
 	// Couleurs
 	Color COULEUR_VIDE = Color.darkGray, 
 		  COULEUR_INCONNU = Color.lightGray,

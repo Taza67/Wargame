@@ -67,18 +67,18 @@ public class Zone implements IConfig {
 			for (int j = extHautGauche.getX(); j <= extBasDroit.getX(); j++)
 				carte.getElement(new Position(j, i)).visible = true;
 	}
+	// Vérifie si une position donnée en paramètre est dans la zone ou pas
+	public boolean contient(Position pos) {
+		return pos.getX() >= extHautGauche.getX() && pos.getX() <= extBasDroit.getX()
+			&& pos.getY() >= extHautGauche.getY() && pos.getY() <= extBasDroit.getY();
+	}
 	
 	// Méthodes graphique
 	// Dessine une zone de la carte
 	public void seDessiner(Graphics g) {
-		for (int i = extHautGauche.getY(); i <= extBasDroit.getY(); i++) {
-			for (int j = extHautGauche.getX(); j <= extBasDroit.getX(); j++) {
-				if(i%2==0 && j%4==2) 
-					carte.getElement(new Position(j, i)).seDessiner(g, Element.ELEMENT_CARTE);
-				if(i%2 ==1 && j%4==0)
-					carte.getElement(new Position(j, i)).seDessiner(g, Element.ELEMENT_CARTE);
-			}
-		}
+		for (int i = extHautGauche.getY(); i <= extBasDroit.getY(); i++)
+			for (int j = extHautGauche.getX(); j <= extBasDroit.getX(); j++)
+				carte.getElement(new Position(j, i)).seDessiner(g, Element.ELEMENT_CARTE);
 	}
 	
 }

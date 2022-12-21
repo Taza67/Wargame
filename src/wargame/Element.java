@@ -1,9 +1,57 @@
 package wargame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 public abstract class Element implements IConfig {
+	// Sous-classes
+	private class Point {
+		// Infos
+		private int x;
+		private int y;
+		
+		// Constructeurs
+		public Point(int x, int y) { this.x = x; this.y = y; }
+	}
+	private class Hexagone {
+		// Infos de l'hexagone
+		private final Point[] extremites;
+		private Point centre;
+		
+		// Constructeurs
+		public Hexagone(Point centre, Point unSommet) {
+			this.extremites = new Point[6];
+			this.centre = centre;
+			this.extremites[0] = unSommet;
+			calculerAutresSommets();
+		}
+		
+		// Méthodes
+		// Retourne le point d'indice donné à partir du centre, du nombre de côtés/points et du point de base
+		private Point calculerAutreSommet(int indice) {
+			Point p = null;
+			int x, y, dx, dy, r, a,
+			    xC = centre.x,
+			    yC = centre.y,
+			    xP = extremites[0].x,
+			    yP = extremites[0].y;
+			dx = Math.abs(xP - xC);
+			dy = Math.abs(yP - yC);
+			r = (int)Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+			a = (int)Math.atan2(dy, dx);
+			x = (int)(xC + r * Math.cos(a + indice * 2 * Math.PI / 6));
+			y = (int)(yC + r * Math.sin(a + indice * 2 * Math.PI / 6));
+			p = new Point(x, y);
+			return p;
+		}
+		// Calcule tous les autres sommets de l'hexagone
+		private void calculerAutresSommets() {
+			for (int i = 0; i < 6; i++)
+				extremites[i] = calculerAutreSommet(i);
+		}
+	}
+	
 	// Constantes statiques
 	public static final char ELEMENT_CARTE = 'c',
 							 ELEMENT_MINI_MAP = 'm';
@@ -12,62 +60,38 @@ public abstract class Element implements IConfig {
 	protected Carte carte;
 	protected Position pos;
 	protected boolean visible = false;							// Élément visible pour le joueur
-	protected boolean selectionne = false;						// Élément sélectionné par le joueur
-	protected boolean curseurDessus = false;					// Curseur du joueur au dessus de l'élément
-	protected boolean affichageCurseurMiniMapFini = false,
-					  affichageCurseurCarte = false;
 	
-	int tabx[] = new int[6];
-	int taby[] = new int[6];
 	// Méthodes
 	// Méthodes graphiques
 	// Dessine un rectangle plein de dimensions et couleur données
 	public void dessinerRectangle(Graphics g, Color c, int x, int y, int larg, int haut) {
+		// On stocke la couleur => reprise plus tard
+		Color couleurCourante = g.getColor();
 		g.setColor(c);
 		g.fillRect(x, y, larg, haut);
+		// Reprise de la couleur sauvegardée
+		g.setColor(couleurCourante);
 	}
-	
-	public void rempliTableauPoint(int[] tabx, int[] taby, int centrex, int centrey, int rayon, int nb_cote) {
-		int x= centrex;
-		int y=centrey;
-		int n= nb_cote;
-		int r = rayon;
-		for(int i =0; i<n; i++) {
-			
-			int xp = x+rayon;
-			int yp = y;
-			int dx = xp - x;
-			int dy = yp - y;
-			double a = Math.atan2(dy, dx);
-			this.tabx[i]= (int) (x + ( r * Math.cos(a+(i+1)   *   2   *   Math.PI/n)  ));
-			this.taby[i]= (int) (y + ( r * Math.sin(a+(i+1)   *   2   *   Math.PI/n) ));
-		}
-		
-	}
-	
-	public void dessinerHexagone(Graphics g, int x, int y, int rayon) {
-		/* faire un tableau de point x et y */
-		
-		
-		
-		rempliTableauPoint(this.tabx, this.taby, x, y, rayon, 6);
-		/* appeler la methode qui dessine le polygone en fonction des tableaux */
-		
-		g.drawPolygon(this.tabx, this.taby, 6);
-		
-		
-	}
+	// Dessine un hexagone plein de dimensions
 	public void dessinerHexagone(Graphics g, Color c, int x, int y, int rayon) {
-		/* faire un tableau de point x et y */
-		
-		
-		
-		rempliTableauPoint(this.tabx, this.taby, x, y, rayon, 6);
-		/* appeler la methode qui dessine le polygone en fonction des tableaux */
+		Hexagone h = new Hexagone(new Point(x, y), new Point(x + rayon, y));
+		int tabx[] = new int[6];
+		int taby[] = new int[6];
+		// faire un tableau de point x et y
+		for (int i = 0; i < 6; i++) {
+			tabx[i] = h.extremites[i].x;
+			taby[i] = h.extremites[i].y;
+		}
+		// appeler la methode qui dessine le polygone en fonction des tableaux
+		// // On stocke la couleur => reprise plus tard
+		Color couleurCourante = g.getColor();
 		g.setColor(c);
-		g.drawPolygon(this.tabx, this.taby, 6);
-		
-		
+		g.fillPolygon(tabx, taby, 6);
+		// // Reprise de la couleur sauvegardée
+		g.setColor(couleurCourante);
+	}
+	public void dessinerHexagone(Graphics g, int x, int y, int rayon) {
+		dessinerHexagone(g, g.getColor(), x, y, rayon);
 	}
 	// Dessine l'élément sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
 	public void seDessiner(Graphics g, char type) {
@@ -76,44 +100,48 @@ public abstract class Element implements IConfig {
 		if (type == ELEMENT_CARTE) {
 			taillePix = carte.getTaillePixelCaseCarte();
 			frontiere = carte.getFrontiereCase();
-			xPix = (pos.getX() - carte.getCarteAffichee().getExtHautGauche().getX()) * taillePix + carte.getxOrigineCarteAffichee();
-			yPix = (pos.getY() - carte.getCarteAffichee().getExtHautGauche().getY()) * taillePix + carte.getyOrigineCarteAffichee();
-			affichageCurseurCarte = true;
+			xPix = (pos.getX() - carte.getCarteAffichee().getExtHautGauche().getX()) * taillePix + carte.getxOrigineCarteAffichee() + taillePix / 2;
+			yPix = (pos.getY() - carte.getCarteAffichee().getExtHautGauche().getY()) * taillePix + carte.getyOrigineCarteAffichee() + taillePix / 2;
 		} else if (type == ELEMENT_MINI_MAP) {
 			taillePix = carte.getTAILLE_PIXEL_CASE_MINI_MAP();
 			frontiere = 1;
-			xPix = pos.getX() * taillePix + X_MINI_MAP;
-			yPix = pos.getY() * taillePix + Y_MINI_MAP;
-			affichageCurseurMiniMapFini = true;
+			xPix = pos.getX() * taillePix + X_MINI_MAP  + taillePix / 2;
+			yPix = pos.getY() * taillePix + Y_MINI_MAP  + taillePix / 2;
 		} else taillePix = frontiere = xPix = yPix = 0;
-		// On stocke la couleur => reprise plus tard
-		Color couleurCourante = g.getColor();
-		// Curseur dessus ?
-		if (curseurDessus == true && selectionne == false)
-			//dessinerRectangle(g, COULEUR_CURSEUR, xPix, yPix, taillePix + frontiere, taillePix + frontiere);
-			dessinerHexagone(g, COULEUR_CURSEUR, xPix, yPix, taillePix);
-	
-		// Selectionné ?
-		if (selectionne == true)
-			//dessinerRectangle(g, COULEUR_SELECTION, xPix, yPix, taillePix + frontiere, taillePix + frontiere);
-			
-			dessinerHexagone(g, COULEUR_CURSEUR, xPix, yPix, taillePix);
-		// Reprise de la couleur initiale si élément visible
-		if (visible == false) g.setColor(COULEUR_INCONNU); 
-		else g.setColor(couleurCourante);
+		if (visible == false) g.setColor(COULEUR_INCONNU);
 		// Dessin
-		//g.fillRect(xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
-		dessinerHexagone(g,xPix, yPix, taillePix);
-		if (affichageCurseurMiniMapFini && affichageCurseurCarte) {
-			curseurDessus = false;
-			affichageCurseurMiniMapFini = affichageCurseurCarte = false;
-		}
+		// g.fillRect(xPix + frontiere, yPix + frontiere, taillePix - frontiere, taillePix - frontiere);
+		dessinerHexagone(g, xPix, yPix, taillePix);
 	}
+	// Dessine l'élément avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
+	public void seDessinerCadre(Graphics g, char type, Color couleurCadre) {
+		int taillePix, frontiere,
+		xPix, yPix;					// Coordoonnées de l'origine de la case représentant l'élément (en pixels)
+	if (type == ELEMENT_CARTE) {
+		taillePix = carte.getTaillePixelCaseCarte();
+		frontiere = carte.getFrontiereCase();
+		xPix = (pos.getX() - carte.getCarteAffichee().getExtHautGauche().getX()) * taillePix + carte.getxOrigineCarteAffichee() + taillePix / 2;
+		yPix = (pos.getY() - carte.getCarteAffichee().getExtHautGauche().getY()) * taillePix + carte.getyOrigineCarteAffichee() + taillePix / 2;
+	} else if (type == ELEMENT_MINI_MAP) {
+		taillePix = carte.getTAILLE_PIXEL_CASE_MINI_MAP();
+		frontiere = 1;
+		xPix = pos.getX() * taillePix + X_MINI_MAP + taillePix / 2;
+		yPix = pos.getY() * taillePix + Y_MINI_MAP + taillePix / 2;
+	} else taillePix = frontiere = xPix = yPix = 0;
+		// Dessin du cadre
+		dessinerHexagone(g, couleurCadre, xPix, yPix, taillePix - frontiere);
+		// Dessin de l'élément
+		if (visible == false) g.setColor(COULEUR_INCONNU);
+		dessinerHexagone(g, xPix, yPix, taillePix);
+	}
+	
 	// Renvoie les infos de l'élément
 	public String toString() {
 		String nomClasse = this.getClass().getSimpleName(),
-			   desc = nomClasse;
-		desc += " : " + pos + " ";
+			   desc;
+		desc = pos + " ";
+		if (visible == true)
+			desc += nomClasse;
 		return desc;
 	}
 }

@@ -14,7 +14,7 @@ public class Carte implements IConfig, ICarte {
 	// // Dimensions en pixels
 	// // // Case
 	private int taillePixelCaseCarte = 50, 				// Dans la carte
-			    frontiereCase = 10;
+			    frontiereCase = 5;
 	private final int TAILLE_PIXEL_CASE_MINI_MAP;		// Dans la mini-map
 	// // // Carte Affichée
 	private int largeurPixelCarteAffichee = largeurCaseCarteAffichee * taillePixelCaseCarte + frontiereCase,
@@ -29,14 +29,15 @@ public class Carte implements IConfig, ICarte {
 	private Position centreCarteAffichee;				// Centre de cette dernière
 	// // Éléments
 	private Element elemSelecActuel,
-					elemSelecPost;
+					elemSelecPost,
+					elemCurseur;
 	// // Infos curseur, selection
 	private InfoBar infoBar;
 	// Limites
 	private final int NB_HEROS, 
 					  NB_MONSTRES, 
 					  NB_OBSTACLES;
-	
+
 	// Constructeurs
 	public Carte(int hauteur, int largeur, int nbHeros) {
 		// Initialisations
@@ -50,10 +51,7 @@ public class Carte implements IConfig, ICarte {
 		NB_HEROS = nbHeros;
 		NB_MONSTRES = nbHeros * 2;
 		// // Initialisation des éléments de la grille (= sol)
-		for (int i = 0; i < hauteur; i++) 
-			for (int j = 0; j < largeur; j++) 
-				grille[i][j] = new Sol(this, new Position(j, i));
-		
+		for (int i = 0; i < hauteur; i++) for (int j = 0; j < largeur; j++) grille[i][j] = new Sol(this, new Position(j, i));
 		// // Zone à afficher
 		centreCarteAffichee = new Position(largeur / 2, hauteur / 2);
 		carteAffichee = new Zone(this, centreCarteAffichee, largeurCaseCarteAffichee, hauteurCaseCarteAffichee);
@@ -66,14 +64,11 @@ public class Carte implements IConfig, ICarte {
 	 												 						carteAffichee.getExtBasDroit().getY(),
  												 							carteAffichee.getExtHautGauche().getX(),
 	 												 						carteAffichee.getExtBasDroit().getX()));
-		elemSelecPost.selectionne = true;
 		// InfoBar
 		infoBar = new InfoBar(this, elemSelecActuel, null);
 	}
 	
 	// Accesseurs
-	public int getLargeurCaseCarteAffichee() { return largeurCaseCarteAffichee; }
-	public int getHauteurCaseCarteAffichee() { return hauteurCaseCarteAffichee; }
 	public int getLARGEUR_CASE_CARTE() { return LARGEUR_CASE_CARTE; }
 	public int getHAUTEUR_CASE_CARTE() { return HAUTEUR_CASE_CARTE; }
 	public int getTaillePixelCaseCarte() { return taillePixelCaseCarte; }
@@ -83,27 +78,14 @@ public class Carte implements IConfig, ICarte {
 	public int getHauteurPixelCarteAffichee() { return hauteurPixelCarteAffichee; }
 	public int getLARGEUR_PIXEL_MINI_MAP() { return LARGEUR_PIXEL_MINI_MAP; }
 	public int getHAUTEUR_PIXEL_MINI_MAP() { return HAUTEUR_PIXEL_MINI_MAP; }
-	public Element[][] getGrille() { return grille; }
 	public int getxOrigineCarteAffichee() { return xOrigineCarteAffichee; }
 	public int getyOrigineCarteAffichee() { return yOrigineCarteAffichee; }
 	public Zone getCarteAffichee() { return carteAffichee; }
-	public Position getCentreCarteAffichee() { return centreCarteAffichee; }
 	public InfoBar getInfoBar() { return infoBar; }
 	// // Pseudo-accesseurs
 	// Renvoie l'élément à la position donné
 	public Element getElement(Position pos) { return pos.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE) ? grille[pos.getY()][pos.getX()] : null; }
 	
-	// Mutateurs
-	public void setLargeurCaseCarteAffichee(int largeurCaseCarteAffichee) { this.largeurCaseCarteAffichee = largeurCaseCarteAffichee; }
-	public void setHauteurCaseCarteAffichee(int hauteurCaseCarteAffichee) {	this.hauteurCaseCarteAffichee = hauteurCaseCarteAffichee; }
-	public void setTaillePixelCaseCarte(int taillePixelCaseCarte) { this.taillePixelCaseCarte = taillePixelCaseCarte; }
-	public void setFrontiereCase(int frontiereCase) { this.frontiereCase = frontiereCase; }
-	public void setLargeurPixelCarteAffichee(int largeurPixelCarteAffichee) { this.largeurPixelCarteAffichee = largeurPixelCarteAffichee; }
-	public void setHauteurPixelCarteAffichee(int hauteurPixelCarteAffichee) { this.hauteurPixelCarteAffichee = hauteurPixelCarteAffichee; }
-	public void setxOrigineCarteAffichee(int xOrigineCarteAffichee) { this.xOrigineCarteAffichee = xOrigineCarteAffichee; }
-	public void setyOrigineCarteAffichee(int yOrigineCarteAffichee) { this.yOrigineCarteAffichee = yOrigineCarteAffichee; }
-	public void setCarteAffichee(Zone carteAffichee) { this.carteAffichee = carteAffichee; }
-	public void setCentreCarteAffichee(Position centreCarteAffichee) { this.centreCarteAffichee = centreCarteAffichee; }
 	// // Pseudo-mutateurs
 	// Place un élément à une position donnée de la carte
 	public void setElement(Position pos, Element elem) { if (pos.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE)) grille[pos.getY()][pos.getX()] = elem; }
@@ -151,8 +133,9 @@ public class Carte implements IConfig, ICarte {
 	public void genereHeros(int nb, int deb_ligne, int fin_ligne, int deb_colonne, int fin_colonne) {
 		int c = 0;
 		while (c++ < nb) {
+			String nom = "" + (char)('A' + retourneEntierAleatoire(0, 26));
 			Position posVide = trouvePositionVideZone(deb_ligne, fin_ligne, deb_colonne, fin_colonne);
-			grille[posVide.getY()][posVide.getX()] = new Heros(this, ISoldat.TypesH.getTypeHAlea(), "Toto", posVide);
+			grille[posVide.getY()][posVide.getX()] = new Heros(this, ISoldat.TypesH.getTypeHAlea(), nom, posVide);
 		}
 	}
 	// Génère aléatoirement des obstacles 
@@ -171,32 +154,16 @@ public class Carte implements IConfig, ICarte {
 			grille[posVide.getY()][posVide.getX()] = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
 		}
 	}
-	// Déplace un soldat à la position pos
-	public boolean deplaceSoldat(Position pos, Soldat soldat) {
-		boolean possible = true;
-		int xPos = pos.getX(), yPos = pos.getY(), 
-			xSold = soldat.pos.getX(), ySold = soldat.pos.getY();
-		// Vérifications
-		possible = possible && pos.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE);	// Position cible valide ?
-		possible = possible && !(soldat.pos.equals(pos));								// Pas la même position que l'actuelle ?
-		possible = possible && grille[yPos][xPos] instanceof Sol;						// Position cible libre ?
-		if (possible) {
-			grille[yPos][xPos] = soldat;												// Le soldat se déplace à la position où il doit être
-			grille[ySold][xSold] = new Sol(this, new Position(xSold, ySold));			// L'ancienne position du soldat = sol
-			grille[ySold][xSold].visible = true;
-			// Les coordonnées du soldat doivent changer
-			grille[yPos][xPos].pos.setX(xPos);
-			grille[yPos][xPos].pos.setY(yPos);
-			// Découverte de nouvelle terres :)
-			soldat.majZoneVisuelle(pos);
-		}
-		return possible;
-	}
 	// Met à jour la visibilité (Inconnu ou pas)
 	public void majVisibilite() {
 		for (int i = 0; i < HAUTEUR_CASE_CARTE; i++) 
 			for (int j = 0; j < LARGEUR_CASE_CARTE; j++)
 				if (grille[i][j] instanceof Heros) ((Heros)grille[i][j]).getZoneVisuelle().rendreVisible();
+	}
+	// Tue le soldat
+	public void mort(Soldat victime) {
+		setElement(victime.pos, new Sol(this, new Position(victime.pos.getX(), victime.pos.getY())));
+		victime = null;
 	}
 	
 	// Méthodes graphiques
@@ -209,6 +176,14 @@ public class Carte implements IConfig, ICarte {
 		for (int i = 0; i < HAUTEUR_CASE_CARTE; i++)
 			for (int j = 0; j < LARGEUR_CASE_CARTE; j++)
 				grille[i][j].seDessiner(g, Element.ELEMENT_MINI_MAP);
+		// Dessin de la zone de déplacement du héros sélectionné
+		if (elemSelecActuel instanceof Heros) ((Heros) elemSelecActuel).dessinerZoneDeplacement(g, ELEMENT_MINI_MAP);
+		// Dessin de l'élément avec le curseur dessus
+		if (elemCurseur != null)
+			elemCurseur.seDessinerCadre(g, ELEMENT_MINI_MAP, COULEUR_CURSEUR);
+		// Dessin de l'élement sélectionné
+		if (elemSelecActuel != null)
+			elemSelecActuel.seDessinerCadre(g, ELEMENT_MINI_MAP, COULEUR_SELECTION);
 		// Dessin d'un rectangle représentant la zone affichée
 		g.setColor(Color.yellow);
 		int xCaseEHG = carteAffichee.getExtHautGauche().getX(),					// EHG = Extrémité haute gauche
@@ -236,8 +211,16 @@ public class Carte implements IConfig, ICarte {
 		// En pixels
 		xOrigineCarteAffichee *= taillePixelCaseCarte;
 		yOrigineCarteAffichee *= taillePixelCaseCarte;
-		// Dessin
+		// Dessin de la carte
 		carteAffichee.seDessiner(g);
+		// Dessin de la zone de déplacement du héros sélectionné
+		if (elemSelecActuel instanceof Heros) ((Heros) elemSelecActuel).dessinerZoneDeplacement(g, ELEMENT_CARTE);
+		// Dessin de l'élément avec le curseur dessus
+		if (elemCurseur != null)
+			elemCurseur.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_CURSEUR);
+		// Dessin de l'élement sélectionné
+		if (elemSelecActuel != null)
+			elemSelecActuel.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_SELECTION);
 	}
 	// Déplace la zone de la carte à afficher en fonction d'un point dont les coordonnées sont en pixels
 	public boolean deplacerCarteAffichee(int xPix, int yPix) {
@@ -254,9 +237,6 @@ public class Carte implements IConfig, ICarte {
 			// Modification des extremités de la zone de la carte affichée
 			carteAffichee.setExtHautGauche(carteAffichee.calculerExtHautGauche(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
 			carteAffichee.setExtBasDroit(carteAffichee.calculerExtBasDroit(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
-			// Modification des dimensions de cette dernière
-			carteAffichee.setLargeurCase(carteAffichee.calculerLargeurCase());
-			carteAffichee.setHauteurCase(carteAffichee.calculerHauteurCase());
 		}
 		return possible;
 	}
@@ -272,8 +252,8 @@ public class Carte implements IConfig, ICarte {
 				Position posSelec = new Position(indiceCurseurColonne + carteAffichee.getExtHautGauche().getX(), 
 												 indiceCurseurLigne + carteAffichee.getExtHautGauche().getY());
 			if (posSelec.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE)) {
-				grille[posSelec.getY()][posSelec.getX()].curseurDessus = true;
-				infoBar.setCurseur(grille[posSelec.getY()][posSelec.getX()]);
+				elemCurseur = grille[posSelec.getY()][posSelec.getX()];
+				infoBar.setCurseur(elemCurseur);
 			}
 		}
 		return possible;
@@ -291,35 +271,35 @@ public class Carte implements IConfig, ICarte {
 												 indiceCurseurLigne + carteAffichee.getExtHautGauche().getY());
 			if (posSelec.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE)) {
  				if (elemSelecActuel != null && elemSelecActuel.pos.equals(posSelec)) {
- 					elemSelecActuel.selectionne = false;
  					elemSelecActuel = null;
  				} else if (elemSelecActuel instanceof Heros)
-					deplaceSoldat(posSelec, (Soldat)elemSelecActuel);
+ 					((Soldat)elemSelecActuel).seDeplace(posSelec);
 				else {
 					elemSelecPost = elemSelecActuel;
 					elemSelecActuel = grille[posSelec.getY()][posSelec.getX()];
-					if (elemSelecPost != null) elemSelecPost.selectionne = false;
-					elemSelecActuel.selectionne = true;
 				}
 			}
 			infoBar.setSelection(elemSelecActuel);
 		}
+		if (elemSelecActuel instanceof Heros) ((Soldat)(elemSelecActuel)).calculerZoneDeplacement();
 		return possible;
 	}
 	// Zoome la zone d'affichage
 	public void zoomerCarteAffichee(int zoom) {
-		largeurCaseCarteAffichee += zoom;
-		hauteurCaseCarteAffichee += zoom;
-		taillePixelCaseCarte -= 5 * zoom;
-		frontiereCase -= zoom;
-		largeurPixelCarteAffichee = largeurCaseCarteAffichee * taillePixelCaseCarte + frontiereCase;
-		hauteurPixelCarteAffichee = hauteurCaseCarteAffichee * taillePixelCaseCarte + frontiereCase;
-		// Modification des extremités de la zone de la carte affichée
-		carteAffichee.setExtHautGauche(carteAffichee.calculerExtHautGauche(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
-		carteAffichee.setExtBasDroit(carteAffichee.calculerExtBasDroit(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
-		// Modification des dimensions de cette dernière
-		carteAffichee.setLargeurCase(carteAffichee.calculerLargeurCase());
-		carteAffichee.setHauteurCase(carteAffichee.calculerHauteurCase());
+		if (zoom >= 6 && zoom <= 18) {
+			taillePixelCaseCarte = 5 * zoom;
+			frontiereCase = (taillePixelCaseCarte / 10);
+			if (frontiereCase > 5) frontiereCase = 5;
+			largeurCaseCarteAffichee = largeurPixelCarteAffichee / taillePixelCaseCarte;
+			hauteurCaseCarteAffichee = hauteurPixelCarteAffichee / taillePixelCaseCarte;
+			
+			// Modification des extremités de la zone de la carte affichée
+			carteAffichee.setExtHautGauche(carteAffichee.calculerExtHautGauche(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
+			carteAffichee.setExtBasDroit(carteAffichee.calculerExtBasDroit(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
+			// Modification des dimensions de cette dernière
+			carteAffichee.setLargeurCase(carteAffichee.calculerLargeurCase());
+			carteAffichee.setHauteurCase(carteAffichee.calculerHauteurCase());
+		}
 	}
 	
 	// Autres méthodes

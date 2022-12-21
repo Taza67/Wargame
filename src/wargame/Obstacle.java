@@ -33,12 +33,23 @@ public class Obstacle extends Element implements IConfig {
 	public TypeObstacle getTYPE() { return TYPE; }
 	
 	// Méthodes
-	public String toString() { return "" + TYPE; }
+	// Retourne les infos sur l'obstacle
+	public String toString() { 
+		String desc = super.toString();
+		if (visible == true)
+			desc += " : [ Type : " + TYPE + " ]";
+		return desc;
+	}
 	
 	// Méthodes graphiques
 	// Dessine l'obstacle sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
 	public void seDessiner(Graphics g, char type) {
 		g.setColor(TYPE.getCOULEUR());
 		super.seDessiner(g, type);
+	}
+	// Dessine l'obstacle avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
+	public void seDessinerCadre(Graphics g, char type, Color couleurCadre) {
+		g.setColor(TYPE.getCOULEUR());
+		super.seDessinerCadre(g, type, couleurCadre);
 	}
 }
