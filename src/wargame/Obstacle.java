@@ -27,7 +27,11 @@ public class Obstacle extends Element implements IConfig {
 	private final TypeObstacle TYPE;
 	
 	// Constructeurs
-	public Obstacle(Carte carte, TypeObstacle type, Position pos) {this.carte = carte; TYPE = type; this.pos = pos; }
+	public Obstacle(Carte carte, TypeObstacle type, Position pos) {
+		this.carte = carte; 
+		TYPE = type; 
+		this.pos = pos;
+	}
 	
 	// Accesseurs
 	public TypeObstacle getTYPE() { return TYPE; }

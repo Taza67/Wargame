@@ -7,7 +7,9 @@ public class Sol extends Element {
 	// Infos
 	
 	// Constructeurs
-	public Sol(Carte carte, Position pos) { this.carte = carte; this.pos = pos; }
+	public Sol(Carte carte, Position pos) { 
+		this.carte = carte; this.pos = pos;
+	}
 	
 	// Méthodes graphiques
 	// Dessine le sol sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
