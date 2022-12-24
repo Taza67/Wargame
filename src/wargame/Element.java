@@ -65,4 +65,8 @@ public abstract class Element implements IConfig {
 	public void seDessinerCadreMM(Graphics g, Color cadre) {
 		seDessinerCadreBis(hexMM, g, cadre);
 	}
+	
+	public String toString() {
+		return getClass().getSimpleName();
+	}
 }
