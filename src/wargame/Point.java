@@ -1,11 +1,6 @@
 package wargame;
 
 public class Point {
-	// Constantes statiques
-	public static final int SAM = -1;
-	public static final int ALIGNES = 0;
-	public static final int SIAM = 1;
-	
 	// Infos
 	private double x;
 	private double y;
@@ -22,11 +17,9 @@ public class Point {
 	public void setY(double y) { this.y = y; }
 	
 	// Méthodes
-	// Calcule la distance d'un point depuis l'origine
-	public double distance() {
-		double terme1 = Math.pow(this.x, 2), 
-			   terme2 = Math.pow(this.y, 2);
-		return Math.sqrt(terme1 + terme2);
+	// Renvoie les infos
+	public String toString() {
+		return "(" + x + ", " + y + ")";
 	}
 	// Calcule la distance d'un point avec un autre passé en paramètre
 	public double distance(Point p) {
@@ -34,23 +27,24 @@ public class Point {
 			   terme2 = Math.pow(this.y - p.getY(), 2);
 		return Math.sqrt(terme1 + terme2);
 	}
-	// Retourne les infos sur un point
-	public String toString() {
-		return "(" + (float)x + ", " + (float)y + ")";
+	// Calcule la position axiale
+	public PositionAxiale toPositionAxiale(int rayon, Point origine) {
+		x = Math.round((x - origine.getX()) / rayon);
+		y = Math.round((y - origine.getY()) / rayon);
+	    double q = (Math.sqrt(3) / 3.) * x  +  (-1 / 3.) * y,
+	    	   r = (2 / 3. * y);
+	    return (new PositionAxiale(q, r)).round();
 	}
-	// Retourne le signe de l'angle formé par le point en question et les deux donnés
-	public int signeAngle(Point b, Point c) {
-        double toto = ((b.getX() - this.getX()) * (c.getY() - this.getY()) - 
-        			   (c.getX() - this.getX()) * (b.getY() - this.getY()));
-        if (toto < 0) return SIAM;
-        if (toto > 0) return SAM;
-        else return ALIGNES;
-    }
-	// Vérifie si deux points sont égaux ou pas
-	public boolean equals(Object obj) {
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
-		Point other = (Point) obj;
-		return x == other.x && y == other.y;
+	// Ajoute aux coordonnées celles du point donné
+	public Point add(Point p) {
+		return new Point(x + p.getX(), y + p.getY());
+	}
+	// Réduit les coordonnées de celles du point donné
+	public Point substract(Point p) {
+		return new Point(x - p.getX(), y - p.getY());
+	}
+	// Vérifie si les coordonnées du point sont comprises entre celles des deux points données
+	public boolean estValide(Point min, Point max) {
+		return x >= min.getX() && x <= max.getX() && y >= min.getY() && y <= max.getY();
 	}
 }

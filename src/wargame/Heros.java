@@ -12,6 +12,8 @@ public class Heros extends Soldat {
 	public Heros(Carte carte, TypesH type, String nom, Position pos) {
 		super(carte, pos, type.getPoints(), type.getPorteeVisuelle(), type.getPorteeDeplacement(), type.getPuissance(), type.getTir());
 		NOM = nom; TYPE = type;
+		visible = true;
+		this.getZoneVisuelle().rendreVisible();
 	}
 	
 	// Accesseurs
@@ -27,14 +29,25 @@ public class Heros extends Soldat {
 	}
 	
 	// Méthodes graphiques
-	// Dessine l'héros sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
-	public void seDessiner(Graphics g, char type) {
+	// Dessine l'héros
+	public void seDessiner(Graphics g) {
 		g.setColor(COULEUR_HEROS);
-		super.seDessiner(g, type);
+		super.seDessiner(g);
+		// super.dessinerZoneDeplacement(g);
 	}
 	// Dessine l'héros avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
-	public void seDessinerCadre(Graphics g, char type, Color couleurCadre) {
+	public void seDessinerCadre(Graphics g, Color couleurCadre) { 
 		g.setColor(COULEUR_HEROS);
-		super.seDessinerCadre(g, type, couleurCadre);
+		super.seDessinerCadre(g, couleurCadre);
+	}
+	// Dessine l'héros dans la mini-map
+	public void seDessinerMM(Graphics g) {
+		g.setColor(COULEUR_HEROS);
+		super.seDessinerMM(g);
+	}
+	// Dessine l'héros avec un cadre qui indique son état dans la mini-map
+	public void seDessinerCadreMM(Graphics g, Color couleurCadre) { 
+		g.setColor(COULEUR_HEROS);
+		super.seDessinerCadreMM(g, couleurCadre);
 	}
 }

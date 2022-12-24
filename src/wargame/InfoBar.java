@@ -5,20 +5,16 @@ import java.awt.Graphics;
 
 public class InfoBar {
 	// Infos
-	private Carte carte;
 	private Element selection;
 	private Element curseur;
 	
 	// Constructeurs
-	public InfoBar(Carte carte, Element selection, Element curseur) {
-		this.carte = carte;
+	public InfoBar(Element selection, Element curseur) {
 		this.selection = selection;
 		this.curseur = curseur;
 	}
 	
 	// Accesseurs
-	public Element getSelection() { return selection; }
-	public Element getCurseur() { return curseur; }
 	
 	// Mutateurs
 	public void setSelection(Element selection) { this.selection = selection; }

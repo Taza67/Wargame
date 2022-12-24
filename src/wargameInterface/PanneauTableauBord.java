@@ -24,7 +24,7 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 		this.actionsHeros = new PanneauActionsHeros(CARTE);
 		this.add(miniMap);
 		this.add(boutonsMiniMap);
-		this.add(Box.createRigidArea(new Dimension(carte.getLARGEUR_PIXEL_MINI_MAP() + 10, carte.getHauteurPixelCarteAffichee() - carte.getHAUTEUR_PIXEL_MINI_MAP() - 15)));
+		this.add(Box.createRigidArea(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP - carte.getHautMM() - 15)));
 		this.add(actionsHeros);
 		this.setBackground(COULEUR_VIDE);
 	}

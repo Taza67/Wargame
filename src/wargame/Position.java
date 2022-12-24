@@ -34,5 +34,24 @@ public class Position implements IConfig {
 		Position other = (Position) obj;
 		return x == other.x && y == other.y;
 	}
-	
+	// Calcule les coordonnées axiales
+	public PositionAxiale toPositionAxiale() {
+		int q = x - (y - (y & 1)) / 2,
+			r = y;
+		return new PositionAxiale(q, r);
+	}
+	// Calcule le point
+	public Point toPoint(int rayon) {
+	    double xP = rayon * Math.sqrt(3) * (x + 0.5 * (y & 1)),
+	    	   yP = rayon * 3/2 * y;
+	    return new Point(xP, yP);
+	}
+	// Ajoute aux coordonnées celles de la position donnée
+	public Position add(Position pos) {
+		return new Position (x + pos.getX(), y + pos.getY());
+	}
+	// Reduit les coordonnées de celles de la position donnée
+	public Position substract(Position pos) {
+		return new Position (x - pos.getX(), y - pos.getY());
+	}
 }

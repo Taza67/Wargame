@@ -1,73 +1,68 @@
 package wargame;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 
-public abstract class Element implements IConfig {	
-	
+public abstract class Element implements IConfig {
 	// Infos
 	protected Carte carte;
 	protected Position pos;
-	protected Hexagone hexMap, hexMiniMap;
-	protected boolean visible = false;							// Élément visible pour le joueur
+	protected Hexagone hex, hexMM;
+	protected boolean visible;
 	
 	// Méthodes
-	public void creerHexagone(char type) {
-		int frontiere, rayon, decalageY, xPix, yPix, haut, larg, horiz, vert;
-		Point centre, unSommet;
-		if (type == ELEMENT_CARTE) {
-			frontiere = carte.getFrontiere();
-			larg = carte.getDiametreHexagone();
-			rayon = (int)(larg / 2.0);
-			horiz = (int)(3 * larg / 4.0);
-			vert = haut = (int)(Math.sqrt(3) * rayon);
-			
-			xPix = (pos.getX() - carte.getCarteAffichee().getExtHautGauche().getX()) * horiz + carte.getxOrigineCarteAffichee();
-			yPix = (pos.getY() - carte.getCarteAffichee().getExtHautGauche().getY()) * vert + carte.getyOrigineCarteAffichee();
-		} else {
-			frontiere = 1;
-			larg = carte.getTAILLE_PIXEL_CASE_MINI_MAP();
-			rayon = (int)(larg / 2.0);
-			horiz = (int)(3 * larg / 4.0);
-			vert = haut = (int)(Math.sqrt(3) * rayon);
-			
-			xPix = pos.getX() * horiz + X_MINI_MAP;
-			yPix = pos.getX() * vert + Y_MINI_MAP;
-		}
-		decalageY = (pos.getX() % 2 == 0) ? 0 : vert / 2;
-		yPix += rayon + decalageY;
-		xPix += rayon;	
-		centre = new Point(xPix, yPix);
-		unSommet = new Point(xPix + rayon - frontiere, yPix);	
-		if (type == ELEMENT_CARTE) hexMap = new Hexagone(centre, unSommet);
-		else if (type == ELEMENT_MINI_MAP) hexMiniMap = new Hexagone(centre, unSommet);
+	// Crée les deux hexagones
+	public void creerHex() {
+		creerHexM();
+		creerHexMM();
 	}
-	
-	// Méthodes graphiques
-	// Dessine l'élément sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
-	public void seDessiner(Graphics g, char type) {
-		creerHexagone(type);
+	// Crée l'hexagone de la map affichée
+	public void creerHexM() {
+		int rayon;
+		Point centre;
+		rayon = carte.getRayonHex();
+		centre = pos.substract(carte.getMapAff().getUpLeft()).toPositionAxiale().toPoint(rayon, carte.getOrigine());
+		hex = new Hexagone(centre, rayon);
+	}
+	// Crée l'hexagone de la mini-map
+	public void creerHexMM() {
+		int rayon;
+		Point centre;
+		rayon = carte.getRayonMM();
+		centre = pos.toPositionAxiale().toPoint(rayon, carte.getOrigineMM());
+		hexMM = new Hexagone(centre, rayon);
+	}
+	// Dessine l'hexagone passé en paramètre
+	public void seDessinerBis(Hexagone h, Graphics g) {
 		if (visible == false) g.setColor(COULEUR_INCONNU);
-		if (type == ELEMENT_CARTE) hexMap.seDessiner(g);
-		else if (type == ELEMENT_MINI_MAP) hexMiniMap.seDessiner(g);
+		h.seDessiner(g);
 	}
-	
-	// Dessine l'élément avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
-	public void seDessinerCadre(Graphics g, char type, Color couleurCadre) {
-		if (type == ELEMENT_CARTE)
-			hexMap.seDessiner(g);
-		else if (type == ELEMENT_MINI_MAP)
-			hexMiniMap.seDessiner(g);
+	// Dessine l'élément
+	public void seDessiner(Graphics g) {
+		seDessinerBis(hex, g);
 	}
-	
-	// Renvoie les infos de l'élément
-	public String toString() {
-		String nomClasse = this.getClass().getSimpleName(),
-			   desc;
-		desc = pos + " ";
-		if (visible == true)
-			desc += nomClasse;
-		return desc;
+	// Dessine l'élément dans la mini-map
+	public void seDessinerMM(Graphics g) {
+		seDessinerBis(hexMM, g);
+	}
+	// Dessine l'hexagone passé en paramètre avec un cadre
+	public void seDessinerCadreBis(Hexagone h, Graphics g, Color cadre) {
+		int rayon = h.getRayon();
+		Color courante = g.getColor();
+		g.setColor(cadre);
+		h.seDessiner(g);
+		h.setRayon((int)(rayon * 0.75));
+		if (visible == false) courante = COULEUR_INCONNU;
+		g.setColor(courante);
+		h.seDessiner(g);
+		h.setRayon(rayon);
+	}
+	// Dessine l'élément avec un cadre
+	public void seDessinerCadre(Graphics g, Color cadre) {
+		seDessinerCadreBis(hex, g, cadre);
+	}
+	// Dessine l'élément avec un cadre dans la mini-map
+	public void seDessinerCadreMM(Graphics g, Color cadre) {
+		seDessinerCadreBis(hexMM, g, cadre);
 	}
 }

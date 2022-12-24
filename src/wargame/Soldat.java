@@ -9,7 +9,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Infos
 	private final int POINTS_DE_VIE_MAX, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
 	private int pointsDeVie;
-	private Zone zoneVisuelle;
+	private ZoneH zoneVisuelle;
 	private List<Position> zoneDeplacement;
 	
 	// Constructeurs
@@ -23,9 +23,10 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		TIR = tir;
 		// Initialisation des zones d'action du soldat
 		// // Zone Visuelle
-		zoneVisuelle = new Zone(carte, pos, porteeVisuelle, porteeVisuelle);
+		zoneVisuelle = new ZoneH(pos.toPositionAxiale(), porteeVisuelle, carte);
 		// // Zone Deplacement
 		calculerZoneDeplacement();
+		creerHex();
 	}
 
 	// Accesseurs
@@ -35,7 +36,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	public int getPUISSANCE() { return PUISSANCE; }
 	public int getTIR() { return TIR; }
 	public int getPointsDeVie() { return pointsDeVie; }
-	public Zone getZoneVisuelle() { return zoneVisuelle; }
+	public ZoneH getZoneVisuelle() { return zoneVisuelle; }
 	public List<Position> getZoneDeplacement() { return zoneDeplacement; }
 	
 	// Mutateurs
@@ -44,8 +45,8 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Méthodes
 	// Met à jour la zone visuelle du soldat
 	public void majZoneVisuelle() {
-		zoneVisuelle.setExtHautGauche(zoneVisuelle.calculerExtHautGauche(pos, PORTEE_VISUELLE, PORTEE_VISUELLE));
-		zoneVisuelle.setExtBasDroit(zoneVisuelle.calculerExtBasDroit(pos, PORTEE_VISUELLE, PORTEE_VISUELLE));
+		zoneVisuelle.setCentre(pos.toPositionAxiale());
+		zoneVisuelle.calculerZone();
 	}
 	// Met à jour la zone de déplacement du soldat
 	public void majZoneDeplacement() {
@@ -59,7 +60,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 			for (int i = y - 1; i <= y + 1; i++)
 				for (int j = x - 1; j <= x + 1; j++) {
 					Position tmp = new Position(j, i);
-					if (tmp.estValide(carte.getLARGEUR_CASE_CARTE(), carte.getHAUTEUR_CASE_CARTE()) && carte.getElement(tmp) instanceof Sol) {
+					if (tmp.estValide(carte.getLargC(), carte.getHautC()) && carte.getElement(tmp) instanceof Sol) {
 						couleurs[i][j] = 1;
 						calculerZoneDeplacementBis(tmp, nbPas - 1, couleurs);
 					}
@@ -72,9 +73,9 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		// Initialisations
 		zoneDeplacement = new ArrayList<Position>();
 		// Couleurs : 1 = BLANC, 2 = GRIS, 3 = NOIR
-		int[][] couleurs = new int[carte.getHAUTEUR_CASE_CARTE()][carte.getLARGEUR_CASE_CARTE()];
-		for (int i = 0; i < carte.getHAUTEUR_CASE_CARTE(); i++)
-			for (int j = 0; j < carte.getLARGEUR_CASE_CARTE(); j++)
+		int[][] couleurs = new int[carte.getHautC()][carte.getLargC()];
+		for (int i = 0; i < carte.getHautC(); i++)
+			for (int j = 0; j < carte.getLargC(); j++)
 				couleurs[i][j] = 0;
 		calculerZoneDeplacementBis(this.pos, PORTEE_DEPLACEMENT, couleurs);
 	}
@@ -93,13 +94,9 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	public boolean seDeplace(Position cible) {
 		boolean possible = true;
 		// Vérifications
-		possible = possible && cible.estValide(carte.getLARGEUR_CASE_CARTE(),			// Position cible valide ?
-											   carte.getHAUTEUR_CASE_CARTE());
 		possible = possible && !(pos.equals(cible));									// Pas la même position que l'actuelle ?
 		possible = possible && carte.getElement(cible) instanceof Sol;					// Position cible libre ?
-		System.out.println("" + possible);
 		possible = possible && (zoneDeplacement.indexOf(cible) != -1);
-		System.out.println("" + possible);
 		if (possible) {
 			carte.setElement(cible, this);												// Le soldat se déplace à la position où il doit être
 			carte.setElement(pos, new Sol(carte, 										// L'ancienne position du soldat = sol										 			
@@ -111,6 +108,8 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 			// Découverte de nouvelle terres :)
 			majZoneVisuelle();
 			majZoneDeplacement();
+			if (this instanceof Heros) this.getZoneVisuelle().rendreVisible();
+			creerHex();
 		}
 		return possible;
 	}
@@ -134,13 +133,18 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	}
 	// Vérifie si une attaque à distance est possible
 	public boolean verifieAttaqueDistance(Soldat adv) {
-		return zoneVisuelle.contient(adv.pos);
+		return zoneVisuelle.contient(adv);
 	}
 	
 	// Méthodes graphiques
-	// Dessine un cadre pour montrer la zone de déplacement du soldat dans la carte, ou mini-map
-	public void dessinerZoneDeplacement(Graphics g, char type) {
+	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
+	public void dessinerZoneDeplacement(Graphics g) {
 		for (Position pos : zoneDeplacement)
-			carte.getElement(pos).seDessinerCadre(g, type, Color.white);
+			carte.getElement(pos).seDessinerCadre(g, Color.white);
+	}
+	// Dessine un cadre autour des éléments dans la mini-map
+	public void dessinerZoneDeplacementMM(Graphics g) {
+		for (Position pos : zoneDeplacement)
+			carte.getElement(pos).seDessinerCadreMM(g, Color.white);
 	}
 }

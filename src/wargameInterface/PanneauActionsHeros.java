@@ -28,7 +28,7 @@ public class PanneauActionsHeros extends JPanel implements IConfig {
 		add(campement, BorderLayout.CENTER);
 		add(longueMarche, BorderLayout.EAST);
 		this.setBackground(COULEUR_VIDE);
-		this.setSize(new Dimension(CARTE.getLARGEUR_PIXEL_MINI_MAP() + 10, 30));
+		this.setSize(new Dimension(carte.getLargMM() + 10, 30));
 	}
 	
 }

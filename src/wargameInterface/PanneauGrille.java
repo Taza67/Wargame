@@ -18,13 +18,12 @@ public class PanneauGrille extends JPanel implements IConfig {
 		super();
 		this.CARTE = carte;
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(CARTE.getLargeurPixelCarteAffichee(), CARTE.getHauteurPixelCarteAffichee()));
+		this.setPreferredSize(new Dimension(LARGEUR_MAP, HAUTEUR_MAP));
 	}
 		
 	// Méthodes
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		CARTE.majVisibilite();
-		CARTE.seDessinerCarteAffichee(g);
+		CARTE.seDessiner(g);
 	}
 }

@@ -31,6 +31,7 @@ public class Obstacle extends Element implements IConfig {
 		this.carte = carte; 
 		TYPE = type; 
 		this.pos = pos;
+		creerHex();
 	}
 	
 	// Accesseurs
@@ -46,14 +47,24 @@ public class Obstacle extends Element implements IConfig {
 	}
 	
 	// Méthodes graphiques
-	// Dessine l'obstacle sous sa forme reelle sur la carte ou miniature sur la mini-map en fonction de <type>
-	public void seDessiner(Graphics g, char type) {
+	// Dessine l'obstacle
+	public void seDessiner(Graphics g) {
 		g.setColor(TYPE.getCOULEUR());
-		super.seDessiner(g, type);
+		super.seDessiner(g);
 	}
 	// Dessine l'obstacle avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
-	public void seDessinerCadre(Graphics g, char type, Color couleurCadre) {
+	public void seDessinerCadre(Graphics g, Color cadre) {
 		g.setColor(TYPE.getCOULEUR());
-		super.seDessinerCadre(g, type, couleurCadre);
+		super.seDessinerCadre(g, cadre);
+	}
+	// Dessine l'obstacle dans la mini-map
+	public void seDessinerMM(Graphics g) {
+		g.setColor(TYPE.getCOULEUR());
+		super.seDessinerMM(g);
+	}
+	// Dessine l'obstacle avec un cadre qui indique son état dans la mini-map
+	public void seDessinerCadreMM(Graphics g, Color couleurCadre) { 
+		g.setColor(TYPE.getCOULEUR());
+		super.seDessinerCadreMM(g, couleurCadre);
 	}
 }

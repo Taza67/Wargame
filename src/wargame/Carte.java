@@ -3,324 +3,263 @@ package wargame;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Carte implements IConfig, ICarte {
+public class Carte implements IConfig {
 	// Infos
-	// // Dimensions en cases
-	// // // Carte Affichée
-	private int largeurCaseCarteAffichee, 
-			   	hauteurCaseCarteAffichee;
-	// // // Carte réelle
-	private final int LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE;
-	// // Dimensions en pixels
-	// // // Case
-	private int diametreHexagone = 50, 				// Dans la carte
-			    frontiere = 5;
-	private final int TAILLE_PIXEL_CASE_MINI_MAP;		// Dans la mini-map
-	// // // Carte Affichée
-	private int largeurPixelCarteAffichee,
-				hauteurPixelCarteAffichee;
-	// // // Mini-map
-	private final int LARGEUR_PIXEL_MINI_MAP, HAUTEUR_PIXEL_MINI_MAP;
-	// // Carte en elle-même
-	private Element[][] grille; 						// Grille du jeu
-	private int xOrigineCarteAffichee = 0, 				// Coordonnées de l'origine de la carte (en pixels)
-				yOrigineCarteAffichee = 0;
-	private Zone carteAffichee;							// Zone de la carte affichée
-	private Position centreCarteAffichee;				// Centre de cette dernière
-	// // Éléments
-	private Element elemSelecActuel,
-					elemSelection,
-					elemCurseur;
-	// // Infos curseur, selection
-	private InfoBar infoBar;
+	private int largC, hautC;						// Dimensions de la carte réelle
+	private int largAffC, hautAffC;					// Dimensions de la carte affichée 
+	private int hautMM, largMM;						// Hauteur de la mini-map
+	private int rayonHex = 25, rayonMM;				// Rayon d'un hexagone
+	private Element[][] grille; 					// Grille du jeu
+	private ZoneR mapAff;							// Carte affichée
+	private Position centreAff;						// Centre de la carte affichée
+	private InfoBar infoBar;						// Barre d'info
+	// Positionnement
+	private Point origine, origineMM;				// Origine de la carte affichée
+	// Interactions
+	Element curseur, selection;
 	// Limites
-	private final int NB_HEROS, 
-					  NB_MONSTRES, 
-					  NB_OBSTACLES;
-
+	private int nbHeros, nbMonstres, nbObstacles;
+	
 	// Constructeurs
-	public Carte(int hauteur, int largeur, int nbHeros) {
-		int haut;
+	public Carte(int largeur, int hauteur) {
+		int horiz, vert, horizMM, vertMM;
+		horiz = (int)(Math.sqrt(3.) * rayonHex);
+		vert = (int)(3 / 2. * rayonHex);
 		// Initialisations
-		TAILLE_PIXEL_CASE_MINI_MAP = TAILLE_MAX_MINI_MAP / (hauteur > largeur ? hauteur : largeur);
+		largC = largeur;
+		hautC = hauteur;
+		largAffC = LARGEUR_MAP / horiz;
+		hautAffC = HAUTEUR_MAP / vert;
+		//// Mini-map
+		horizMM = LARGEUR_MINI_MAP / largeur + 1; 
+		rayonMM = (int)(horizMM / Math.sqrt(3));
+		vertMM = (int)(3 / 2. * rayonMM);
+		hautMM = hauteur * vertMM;
+		largMM = largeur * horizMM;
+		//// Grille + Map affichée
 		grille = new Element[hauteur][largeur];
-		HAUTEUR_CASE_CARTE = hauteur;
-		LARGEUR_CASE_CARTE = largeur;
-		HAUTEUR_PIXEL_MINI_MAP = hauteur * TAILLE_PIXEL_CASE_MINI_MAP;
-		LARGEUR_PIXEL_MINI_MAP = largeur * TAILLE_PIXEL_CASE_MINI_MAP;
-		NB_OBSTACLES = (int)(HAUTEUR_CASE_CARTE * LARGEUR_CASE_CARTE * 0.25);
-		
-		haut = (int)(Math.sqrt(3) * (int)(diametreHexagone / 2.0));
-		largeurPixelCarteAffichee = 1000;
-		hauteurPixelCarteAffichee = 750;
-		largeurCaseCarteAffichee = largeurPixelCarteAffichee / (int)(diametreHexagone * 3 / 4.0);
-		hauteurCaseCarteAffichee = hauteurPixelCarteAffichee / haut;
-		
-		NB_HEROS = nbHeros;
-		NB_MONSTRES = nbHeros * 2;
-		// // Initialisation des éléments de la grille (= sol)
-		for (int i = 0; i < hauteur; i++) for (int j = 0; j < largeur; j++) grille[i][j] = new Sol(this, new Position(j, i));
-		// // Zone à afficher
-		centreCarteAffichee = new Position(largeur / 2, hauteur / 2);
-		carteAffichee = new Zone(this, centreCarteAffichee, largeurCaseCarteAffichee, hauteurCaseCarteAffichee);
-		// // Génération alétoire d'obstacles, héros, monstres
-		genereObstacles(NB_OBSTACLES);
-		genereHeros(NB_HEROS, 0, hauteur - 1, largeur / 2, largeur - 1);
-		genereMonstres(NB_MONSTRES, 0, hauteur - 1, 0, largeur / 2 - 1);
+		centreAff = new Position(largeur / 2, hauteur / 2);
+		mapAff = new ZoneR(this, centreAff, largAffC, hautAffC);
+		// Calcul des origines
+		origine = new Point(rayonHex, rayonHex - 2);
+		origineMM = new Point(rayonMM + 5, rayonMM + 5);
+		// Génération des éléments
+		for (int i = 0; i < hauteur; i++)
+			for (int j = 0; j < largeur; j++)
+				grille[i][j] = new Sol(this, new Position(j, i));	
+		nbHeros = nbMonstres = 6;
+		nbObstacles = hautC * largC / 3;
+		genereObstacles(nbObstacles);
+		genereHeros(nbHeros);
+		genereMonstres(nbMonstres);
 		// Éléments sélectionnés au départ
-		elemSelection = elemSelecActuel = getElement(trouvePositionVideZone(carteAffichee.getExtHautGauche().getY(), 
-	 												 						carteAffichee.getExtBasDroit().getY(),
- 												 							carteAffichee.getExtHautGauche().getX(),
-	 												 						carteAffichee.getExtBasDroit().getX()));
+		selection = trouveHeros();
 		// InfoBar
-		infoBar = new InfoBar(this, elemSelecActuel, null);
+		infoBar = new InfoBar(selection, null);
 	}
 	
 	// Accesseurs
-	public int getLARGEUR_CASE_CARTE() { return LARGEUR_CASE_CARTE; }
-	public int getHAUTEUR_CASE_CARTE() { return HAUTEUR_CASE_CARTE; }
-	public int getDiametreHexagone() { return diametreHexagone; }
-	public int getFrontiere() { return frontiere; }
-	public int getTAILLE_PIXEL_CASE_MINI_MAP() { return TAILLE_PIXEL_CASE_MINI_MAP; }
-	public int getLargeurPixelCarteAffichee() { return largeurPixelCarteAffichee; }
-	public int getHauteurPixelCarteAffichee() { return hauteurPixelCarteAffichee; }
-	public int getLARGEUR_PIXEL_MINI_MAP() { return LARGEUR_PIXEL_MINI_MAP; }
-	public int getHAUTEUR_PIXEL_MINI_MAP() { return HAUTEUR_PIXEL_MINI_MAP; }
-	public int getxOrigineCarteAffichee() { return xOrigineCarteAffichee; }
-	public int getyOrigineCarteAffichee() { return yOrigineCarteAffichee; }
-	public Zone getCarteAffichee() { return carteAffichee; }
+	public int getLargC() { return largC; }
+	public int getHautC() { return hautC; }
+	public int getLargAffC() { return largAffC; }
+	public int getHautAffC() { return hautAffC; }
+	public int getLargMM() { return largMM; }
+	public int getHautMM() { return hautMM; }
+	public int getRayonHex() { return rayonHex; }
+	public int getRayonMM() { return rayonMM; }
+	public Element[][] getGrille() { return grille; }
+	public ZoneR getMapAff() { return mapAff; }
+	public Position getCentreAff() { return centreAff; }
+	public Point getOrigine() { return origine; }
+	public Point getOrigineMM() { return origineMM; }
 	public InfoBar getInfoBar() { return infoBar; }
-
-	// // Pseudo-accesseurs
-	// Renvoie l'élément à la position donné
-	public Element getElement(Position pos) { return pos.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE) ? grille[pos.getY()][pos.getX()] : null; }
+	//// Pseudo-accesseurs
+	public Element getElement(Position pos) {
+		return (pos.estValide(largC, hautC)) ? grille[pos.getY()][pos.getX()] : null;
+	}
 	
 	// Mutateurs
-	// // Pseudo-mutateurs
-	// Place un élément à une position donnée de la carte
-	public void setElement(Position pos, Element elem) { if (pos.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE)) grille[pos.getY()][pos.getX()] = elem; }
+	//// Pseudo-mutateurs
+	public void setElement(Position pos, Element elem) {
+		if (pos.estValide(largC, hautC)) grille[pos.getY()][pos.getX()] = elem;
+	}
+	
 	// Méthodes
-	// Trouve aléatoirement une position vide dans une zone dont les extremités sont données en paramètres
-	public Position trouvePositionVideZone(int deb_ligne, int fin_ligne, int deb_colonne, int fin_colonne) {
+	// Trouve aléatoirement une position de type donné dans une zone dont les extremités sont données en paramètres
+	public Position trouvePosType(int debX, int finX, int debY, int finY, char type) {
 		Element elemVide = null;
-		Position posElemVide = null;	
+		Position posElemVide = null;
+		boolean test;
 		do {
-			int x = retourneEntierAleatoire(deb_colonne, fin_colonne), y = retourneEntierAleatoire(deb_ligne, fin_ligne);
+			int x = alea(debX, finX), 
+				y = alea(debY, finY);
 			elemVide = grille[y][x];
 			posElemVide = new Position(x, y);
-		} while (!(elemVide instanceof Sol)); // Tant qu'un élément vide n'a pas été trouvé
+			test = typeof(elemVide, type);
+		} while (!(test)); // Tant que l'élément du type recherche n'a pas été retrouvé
 		return posElemVide;
 	}
 	// Trouve aléatoirement une position vide sur la carte réelle
-	public Position trouvePositionVide() { return trouvePositionVideZone(0, HAUTEUR_CASE_CARTE - 1, 0, LARGEUR_CASE_CARTE - 1); }
-	// Trouve une position vide choisie aleatoirement parmi les 8 positions adjacentes de pos
-	public Position trouvePositionVide(Position pos) {
-		int xPos = pos.getX(), yPos = pos.getY(),			// Indices de pos
-			deb_ligne = yPos - 1, fin_ligne = yPos + 1,		// Indices de ligne
-			deb_colonne = xPos - 1, fin_colonne = xPos + 1; // Indices de colonne
-		return trouvePositionVideZone(deb_ligne, fin_ligne, deb_colonne, fin_colonne);
+	public Position trouvePosVide() {
+		return trouvePosType(0, largC - 1, 0, hautC - 1, 's');
 	}
-	// Trouve aléatoirement un héros dans une zone dont les extremités sont données en paramètres
-	public Heros trouveHerosZone(int deb_ligne, int fin_ligne, int deb_colonne, int fin_colonne) {
-		Element h = null;
-		do {
-			int x = retourneEntierAleatoire(deb_colonne, fin_colonne), y = retourneEntierAleatoire(deb_ligne, fin_ligne);
-			h = grille[y][x];
-		} while (!(h instanceof Heros)); // Tant qu'un héros n'a pas été trouvé
-		return (Heros)h;
+	// Trouve une position vide choisie aleatoirement parmi les 8 positions adjacentes de pos
+	public Position trouvePosVide(Position pos) {
+		int xPos = pos.getX(), yPos = pos.getY(),			// Indices de pos
+			debY = yPos - 1, finY = yPos + 1,				// Indices de ligne
+			debX = xPos - 1, finX = xPos + 1; 				// Indices de colonne
+		return trouvePosType(debY, finY, debX, finX, 's');
 	}
 	// Trouve aléatoirement un héros sur la carte réelle
-	public Heros trouveHeros() { return trouveHerosZone(0, HAUTEUR_CASE_CARTE - 1, 0, LARGEUR_CASE_CARTE - 1); }
+	public Heros trouveHeros() {
+		return (Heros)getElement(trouvePosType(0, largC - 1, 0, hautC - 1, 'h'));
+	}
 	// Trouve un héros choisi aleatoirement parmi les 8 positions adjacentes de pos
 	public Heros trouveHeros(Position pos) {
 		int xPos = pos.getX(), yPos = pos.getY(),			// Indices de pos
-			deb_ligne = yPos - 1, fin_ligne = yPos + 1,		// Indices de ligne
-			deb_colonne = xPos - 1, fin_colonne = xPos + 1; // Indices de colonne
-		return trouveHerosZone(deb_ligne, fin_ligne, deb_colonne, fin_colonne);
-	}
-	// Génère aléatoirement des héros 
-	public void genereHeros(int nb, int deb_ligne, int fin_ligne, int deb_colonne, int fin_colonne) {
-		int c = 0;
-		while (c++ < nb) {
-			String nom = "" + (char)('A' + retourneEntierAleatoire(0, 26));
-			Position posVide = trouvePositionVideZone(deb_ligne, fin_ligne, deb_colonne, fin_colonne);
-			grille[posVide.getY()][posVide.getX()] = new Heros(this, ISoldat.TypesH.getTypeHAlea(), nom, posVide);
-		}
-	}
-	// Génère aléatoirement des obstacles 
-	public void genereObstacles(int nb) {
-		int c = 0;
-		while (c++ < nb) {
-			Position posVide = trouvePositionVide();
-			grille[posVide.getY()][posVide.getX()] = new Obstacle(this, Obstacle.TypeObstacle.getObstacleAlea(), posVide);
-		}
-	}
-	// Génère aléatoirement des monstres
-	public void genereMonstres(int nb, int deb_ligne, int fin_ligne, int deb_colonne, int fin_colonne) {
-		int c = 0;
-		while (c++ < nb) {
-			Position posVide = trouvePositionVide();
-			grille[posVide.getY()][posVide.getX()] = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
-		}
-	}
-	// Met à jour la visibilité (Inconnu ou pas)
-	public void majVisibilite() {
-		for (int i = 0; i < HAUTEUR_CASE_CARTE; i++) 
-			for (int j = 0; j < LARGEUR_CASE_CARTE; j++)
-				if (grille[i][j] instanceof Heros) ((Heros)grille[i][j]).getZoneVisuelle().rendreVisible();
+			debY = yPos - 1, finY = yPos + 1,		// Indices de ligne
+			debX = xPos - 1, finX = xPos + 1; // Indices de colonne
+		return (Heros)getElement(trouvePosType(debY, finY, debX, finX, 'h'));
 	}
 	// Tue le soldat
 	public void mort(Soldat victime) {
 		setElement(victime.pos, new Sol(this, new Position(victime.pos.getX(), victime.pos.getY())));
 		victime = null;
 	}
+	// Génère aléatoirement des héros 
+	public void genereHeros(int n) {
+		int c = 0,
+			debY = 0, finY = hautC - 1,
+			debX = largC / 2 + 1, finX = largC - 1;
+		while (c++ < n) {
+			String nom = "" + (char)('A' + alea(0, 26));
+			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
+			grille[posVide.getY()][posVide.getX()] = new Heros(this, ISoldat.TypesH.getTypeHAlea(), nom, posVide);
+		}
+	}
+	// Génère aléatoirement des obstacles 
+	public void genereObstacles(int n) {
+		int c = 0;
+		while (c++ < n) {
+			Position posVide = trouvePosVide();
+			grille[posVide.getY()][posVide.getX()] = new Obstacle(this, Obstacle.TypeObstacle.getObstacleAlea(), posVide);
+		}
+	}
+	// Génère aléatoirement des monstres
+	public void genereMonstres(int n) {
+		int c = 0,
+			debY = 0, finY = hautC - 1,
+			debX = 0, finX = largC / 2;
+		while (c++ < n) {
+			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
+			grille[posVide.getY()][posVide.getX()] = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
+		}
+	}
+	// Calcul tous les hexagones des éléments de la carte
+	public void calculerHex() {
+		for (Element[] liste : grille)
+			for (Element e : liste)
+				e.creerHexM();
+	}
 	
-	// Méthodes graphiques
-	// Méthodes graphiques
-		// Dessine la carte reelle sous forme de mini-map
-		public void seDessinerMiniMap(Graphics g) {
-			// Dessin du cadre
-			g.setColor(Color.darkGray);
-			g.fillRect(0, 0, LARGEUR_PIXEL_MINI_MAP + 10, HAUTEUR_PIXEL_MINI_MAP + 10);
-			// Dessin des éléments
-			for (int i = 0; i < HAUTEUR_CASE_CARTE; i++)
-				for (int j = 0; j < LARGEUR_CASE_CARTE; j++)
-					grille[i][j].seDessiner(g, Element.ELEMENT_MINI_MAP);
-			// Dessin de la zone de déplacement du héros sélectionné
-			if (elemSelection instanceof Heros) ((Heros) elemSelection).dessinerZoneDeplacement(g, ELEMENT_MINI_MAP);
-			// Dessin de l'élément avec le curseur dessus
-			if (elemCurseur != null)
-				elemCurseur.seDessinerCadre(g, ELEMENT_MINI_MAP, COULEUR_CURSEUR);
-			// Dessin de l'élement sélectionné
-			if (elemSelection != null)
-				elemSelection.seDessinerCadre(g, ELEMENT_MINI_MAP, COULEUR_SELECTION);
-			// Dessin d'un rectangle représentant la zone affichée
-			g.setColor(Color.yellow);
-			int xCaseEHG = carteAffichee.getExtHautGauche().getX(),					// EHG = Extrémité haute gauche
-				yCaseEHG = carteAffichee.getExtHautGauche().getY(),
-				xCaseCCA = centreCarteAffichee.getX(),								// CCA = Centre de la carte (= zone) affichée
-				yCaseCCA = centreCarteAffichee.getY(),
-				largCase = xCaseEHG + largeurCaseCarteAffichee > LARGEUR_CASE_CARTE ? LARGEUR_CASE_CARTE - xCaseEHG : largeurCaseCarteAffichee,
-				hautCase = yCaseEHG + hauteurCaseCarteAffichee > HAUTEUR_CASE_CARTE ? HAUTEUR_CASE_CARTE - yCaseEHG : hauteurCaseCarteAffichee,
-				xPix = xCaseEHG * TAILLE_PIXEL_CASE_MINI_MAP + X_MINI_MAP + 2,		// Coordonnées de l'origine du rectangle
-				yPix = yCaseEHG * TAILLE_PIXEL_CASE_MINI_MAP + Y_MINI_MAP + 2;
-			largCase += xCaseCCA - largeurCaseCarteAffichee / 2 < 0 ? xCaseCCA - largeurCaseCarteAffichee / 2 : 0;
-			hautCase += yCaseCCA - hauteurCaseCarteAffichee / 2 < 0 ? yCaseCCA - hauteurCaseCarteAffichee / 2 : 0;
-			g.drawRect(xPix - 2, yPix - 2, largCase * TAILLE_PIXEL_CASE_MINI_MAP, hautCase * TAILLE_PIXEL_CASE_MINI_MAP);	
-		}	
-		// Dessine la zone de la carte à afficher
-		public void seDessinerCarteAffichee(Graphics g) {
-			int largCaseZoneAffichee = carteAffichee.getLargeurCase(),			// largCaseZoneAffichee = largeurCaseCarteAffichee => pas toujours !
-				hautCaseZoneAffichee = carteAffichee.getHauteurCase(),			// Idem
-				xCaseCCA = centreCarteAffichee.getX(),							// CCA = Centre de la carte (= zone) affichée
-				yCaseCCA = centreCarteAffichee.getY();
-			// Calcul des coordonnées de l'origine de la carte
-			// En cases
-			xOrigineCarteAffichee = xCaseCCA - largeurCaseCarteAffichee / 2 < 0 ? largeurCaseCarteAffichee - largCaseZoneAffichee : 0;
-			yOrigineCarteAffichee = yCaseCCA - hauteurCaseCarteAffichee / 2 < 0 ? hauteurCaseCarteAffichee - hautCaseZoneAffichee : 0;
-			// En pixels
-			xOrigineCarteAffichee *= diametreHexagone;
-			yOrigineCarteAffichee *= diametreHexagone;
-			// Dessin de la carte
-			carteAffichee.seDessiner(g);
-			// Dessin de la zone de déplacement du héros sélectionné
-			if (elemSelection instanceof Heros) ((Heros) elemSelection).dessinerZoneDeplacement(g, ELEMENT_CARTE);
-			// Dessin de l'élément avec le curseur dessus
-			if (elemCurseur != null)
-				elemCurseur.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_CURSEUR);
-			// Dessin de l'élement sélectionné
-			if (elemSelection != null)
-				elemSelection.seDessinerCadre(g, ELEMENT_CARTE, COULEUR_SELECTION);
-		}
-	// Déplace la zone de la carte à afficher en fonction d'un point dont les coordonnées sont en pixels
-	public boolean deplacerCarteAffichee(int xPix, int yPix) {
-		boolean possible = true;
-		// Vérifications
-		possible = possible && (xPix >= X_MINI_MAP && xPix <= X_MINI_MAP + LARGEUR_PIXEL_MINI_MAP);
-		possible = possible && (yPix >= Y_MINI_MAP && yPix <= Y_MINI_MAP + HAUTEUR_PIXEL_MINI_MAP);
-		if (possible) {
-			int indiceCurseurLigne = (yPix - Y_MINI_MAP) / TAILLE_PIXEL_CASE_MINI_MAP,
-				indiceCurseurColonne = (xPix - X_MINI_MAP) / TAILLE_PIXEL_CASE_MINI_MAP;
-			// Modification du centre de la zone de la carte affichée
-			centreCarteAffichee.setX(indiceCurseurColonne);
-			centreCarteAffichee.setY(indiceCurseurLigne);
-			// Modification des extremités de la zone de la carte affichée
-			carteAffichee.setExtHautGauche(carteAffichee.calculerExtHautGauche(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
-			carteAffichee.setExtBasDroit(carteAffichee.calculerExtBasDroit(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
-		}
-		return possible;
+	// Méthodes d'interaction
+	// Déplace le curseur
+	public void deplacerCurseur(Point c) {
+		Position p = c.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
+		curseur = getElement(p);
+		infoBar.setCurseur(curseur);
 	}
-//	// Déplace le curseur
-//	public Position trouverHexagoneExacte(int xPix, int yPix, Position pos) {
-//		Position posExacte = null;
-//		int x = pos.getX(), y = pos.getY();
-//		for (int i = y - 1; i <= y + 1; i++)
-//			for (int j = x - 1; j <= x + 1; j++) 
-//		return posExacte;
-//	}
-	public boolean deplacerCurseur(int xPix, int yPix) {
-		boolean possible = true;
-		int haut = (int)(Math.sqrt(3) * (int)(diametreHexagone / 2.0));
-		// Vérifications
-		possible = possible && (xPix >= xOrigineCarteAffichee && xPix < largeurPixelCarteAffichee);
-		possible = possible && (yPix >= yOrigineCarteAffichee && yPix < hauteurPixelCarteAffichee);
-		if (possible) {
-			int indiceCurseurLigne = (yPix - yOrigineCarteAffichee) / diametreHexagone,
-				indiceCurseurColonne = (xPix - xOrigineCarteAffichee) / haut;
-				Position posSelec = new Position(indiceCurseurColonne + carteAffichee.getExtHautGauche().getX(), 
-												 indiceCurseurLigne + carteAffichee.getExtHautGauche().getY());
-			if (posSelec.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE)) {
-				elemCurseur = grille[posSelec.getY()][posSelec.getX()];
-				infoBar.setCurseur(elemCurseur);
-			}
-		}
-		return possible;
-	}
-	// Déplace le curseur de sélection
-	public boolean deplacerSelection(int xPix, int yPix) {
-		boolean possible = true;
-		int haut = (int)(Math.sqrt(3) * (int)(diametreHexagone / 2.0));
-		// Vérifications
-		possible = possible && (xPix >= xOrigineCarteAffichee && xPix < largeurPixelCarteAffichee);
-		possible = possible && (yPix >= yOrigineCarteAffichee && yPix < hauteurPixelCarteAffichee);
-		if (possible) {
-			int indiceCurseurLigne = (yPix - yOrigineCarteAffichee) / diametreHexagone,
-				indiceCurseurColonne = (xPix - xOrigineCarteAffichee) / haut;
-				Position posSelec = new Position(indiceCurseurColonne + carteAffichee.getExtHautGauche().getX(), 
-												 indiceCurseurLigne + carteAffichee.getExtHautGauche().getY());
-			if (posSelec.estValide(LARGEUR_CASE_CARTE, HAUTEUR_CASE_CARTE)) {
- 				if (elemSelection != null && elemSelection.pos.equals(posSelec))
- 					elemSelection = null;
- 				else if (elemSelection instanceof Heros)
- 					((Soldat)elemSelection).seDeplace(posSelec);
-				else
-					elemSelection = grille[posSelec.getY()][posSelec.getX()];
-			}
-			infoBar.setSelection(elemSelection);
-		}
-		if (elemSelection instanceof Heros) ((Soldat)(elemSelection)).calculerZoneDeplacement();
-		return possible;
+	// Déplace la sélection
+	public void deplacerSelection(Point s) {
+		Position p = s.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
+		Element e = getElement(p);
+		if (selection != null) selection = (p.equals(selection.pos)) ? null : e;
+		else selection = e;
+		infoBar.setSelection(selection);
 	}
 	// Zoome la zone d'affichage
-	public void zoomerCarteAffichee(int zoom) {
-		int haut;
+	public void zoomer(int zoom) {
+		int horiz, vert;
 		if (zoom >= 6 && zoom <= 18) {
-			diametreHexagone = 5 * zoom;
-			frontiere = (diametreHexagone / 10);
-			if (frontiere > 5) frontiere = 5;
-			haut = (int)(Math.sqrt(3) * (int)(diametreHexagone / 2.0));
-			largeurCaseCarteAffichee = largeurPixelCarteAffichee / diametreHexagone;
-			hauteurCaseCarteAffichee = hauteurPixelCarteAffichee / haut;
-			
+			rayonHex = (int)(2.5 * zoom);
+			horiz = (int)(Math.sqrt(3.) * rayonHex);
+			vert = (int)(3 / 2. * rayonHex);
+			largAffC = LARGEUR_MAP / horiz;
+			hautAffC = HAUTEUR_MAP / vert;
 			// Modification des extremités de la zone de la carte affichée
-			carteAffichee.setExtHautGauche(carteAffichee.calculerExtHautGauche(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
-			carteAffichee.setExtBasDroit(carteAffichee.calculerExtBasDroit(centreCarteAffichee, largeurCaseCarteAffichee + 1, hauteurCaseCarteAffichee + 1));
+			mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC + 1, hautAffC + 1));
+			mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC + 1, hautAffC + 1));
 			// Modification des dimensions de cette dernière
-			carteAffichee.setLargeurCase(carteAffichee.calculerLargeurCase());
-			carteAffichee.setHauteurCase(carteAffichee.calculerHauteurCase());
+			mapAff.setLargeur(mapAff.calculerLargeur());
+			mapAff.setHauteur(mapAff.calculerHauteur());
+			// Calcul des hexagones
+			calculerHex();
 		}
 	}
+	// Déplace la zone affichée autour du point p
+	public void deplacer(Point p) {
+		if (p.estValide(origineMM, (new Point(largMM, hautMM)))) {
+			centreAff = p.toPositionAxiale(rayonMM, origineMM).toPosition();
+			mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
+			mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
+			// Calcul de l'origine
+			int largMAC = mapAff.getLargeur(),							// largMAC = largAffC => pas toujours !
+				hautMAC = mapAff.getHauteur(),							// Idem
+				xC = centreAff.getX(),									// C = Centre de la carte (= zone) affichée
+				yC = centreAff.getY();
+			// Calcul des coordonnées de l'origine de la carte
+			Position po = new Position(xC - largAffC / 2 < 0 ? largAffC - largMAC : 0,
+									   yC - hautAffC / 2 < 0 ? hautAffC - hautMAC : 0);
+			origine = po.toPoint(rayonHex);
+			// On recalcule tous les hexagones
+			calculerHex();
+		}
+	}
+	// Déplace l'élément sélectionné si c'est un héros
+	public void deplacerHeros(Point p) {
+		if (selection instanceof Heros) {
+			Position cible = p.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
+			((Heros)selection).seDeplace(cible);
+		}
+	}
+	
+	// Méthodes graphiques
+	public void seDessiner(Graphics g) {
+		mapAff.seDessiner(g);
+		if (curseur != null) curseur.seDessinerCadre(g, COULEUR_CURSEUR);
+		if (selection != null) {
+			selection.seDessinerCadre(g, COULEUR_SELECTION);
+			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacement(g);
+		}
+	}
+	// Dessine la carte reelle sous forme de mini-map
+	public void seDessinerMM(Graphics g) {
+		for (Element[] liste : grille)
+			for (Element e : liste)
+				e.seDessinerMM(g);
+		if (curseur != null) curseur.seDessinerCadreMM(g, COULEUR_CURSEUR);
+		if (selection != null) {
+			selection.seDessinerCadreMM(g, COULEUR_SELECTION);
+			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacementMM(g);
+		}
+		// Dessin d'un rectangle représentant la zone affichée
+		Point ul = mapAff.getUpLeft().toPositionAxiale().toPoint(rayonMM, origineMM).substract(new Point(rayonMM, rayonMM)),
+			  dr = mapAff.getDownRight().toPositionAxiale().toPoint(rayonMM, origineMM);
+		g.setColor(Color.yellow);
+		g.drawRect((int)ul.getX(), (int)ul.getY(), (int)(dr.getX() - ul.getX()), (int)(dr.getY() - ul.getY()));
+	}
+	
 	// Autres méthodes
 	// Renvoie un nombre aléatoire compris entre inf et sup
-	public static int retourneEntierAleatoire(int inf, int sup) { return inf + (int)(Math.random() * ((sup - inf) + 1)); }
+	public static int alea(int inf, int sup) {
+		return inf + (int)(Math.random() * ((sup - inf) + 1));
+	}
+	// Auxiliaire à trouvePosType()
+	public boolean typeof(Element elem, char type) {
+		switch (type) {
+			case 's': return elem instanceof Sol;
+			case 'h': return elem instanceof Heros;
+			default : return false;
+		}
+	}
 }

@@ -18,13 +18,12 @@ public class PanneauMiniMap extends JPanel implements IConfig {
 		super();
 		this.CARTE = carte;
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(CARTE.getLARGEUR_PIXEL_MINI_MAP() + 10, CARTE.getHAUTEUR_PIXEL_MINI_MAP() + 10));
+		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, CARTE.getHautMM() + 10));
 	}
 		
 	// Méthodes
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		CARTE.majVisibilite();
-		CARTE.seDessinerMiniMap(g);
+		CARTE.seDessinerMM(g);
 	}
 }

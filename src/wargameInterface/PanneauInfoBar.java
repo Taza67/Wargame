@@ -17,7 +17,7 @@ public class PanneauInfoBar extends JPanel implements IConfig {
 	public PanneauInfoBar(Carte carte) {
 		this.CARTE = carte;
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(CARTE.getLargeurPixelCarteAffichee(), 50));
+		this.setPreferredSize(new Dimension(LARGEUR_MAP, 50));
 	}
 		
 	// Méthodes

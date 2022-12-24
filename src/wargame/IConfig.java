@@ -4,9 +4,10 @@ import java.awt.Color;
 
 public interface IConfig {
 	// Mini-map
-	int TAILLE_MAX_MINI_MAP = 300,			// en pixels
-		X_MINI_MAP = 5,
-		Y_MINI_MAP = 5;
+	int LARGEUR_MINI_MAP = 300;
+	// Map
+	int LARGEUR_MAP = 1501,
+		HAUTEUR_MAP = 760;
 	// Position de la fenêtre
 	int POSITION_X = 100, POSITION_Y = 50;
 	// Camps
