@@ -11,9 +11,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import wargame.Carte;
+import wargame.Heros;
+import wargame.IConfig;
 import wargame.Point;
 
-public class PanneauPartie extends JPanel {
+public class PanneauPartie extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private Carte carte;
@@ -23,7 +25,7 @@ public class PanneauPartie extends JPanel {
 	// Constructeurs
 	public PanneauPartie() {
 		super();
-		this.carte = new Carte(50, 40);
+		this.carte = new Carte(this, 50, 40);
 		this.tableauBord = new PanneauTableauBord(carte);
 		this.jeu = new PanneauJeu(carte);
 		this.add(jeu, BorderLayout.WEST);
@@ -45,15 +47,19 @@ public class PanneauPartie extends JPanel {
 		});
 		jeu.grille.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					carte.deplacerSelection(new Point(e.getX(), e.getY()));
-					jeu.repaint();
-					tableauBord.miniMap.repaint();
-				} else if (SwingUtilities.isRightMouseButton(e)) {
-					carte.deplacerHeros(new Point(e.getX(), e.getY()));
-					jeu.repaint();
-					tableauBord.miniMap.repaint();
-				} 
+				if (carte.getInfoPartie().getJoueur() == GENTILS) {
+					if (SwingUtilities.isLeftMouseButton(e)) {
+						carte.deplacerSelection(new Point(e.getX(), e.getY()));
+						jeu.repaint();
+						tableauBord.miniMap.repaint();
+						if (carte.getSelection() instanceof Heros) tableauBord.actionsHeros.setVisible(true);
+						else tableauBord.actionsHeros.setVisible(false);
+					} else if (SwingUtilities.isRightMouseButton(e)) {
+						carte.deplacerHeros(new Point(e.getX(), e.getY()));
+						jeu.repaint();
+						tableauBord.miniMap.repaint();
+					}
+				}
 			}
 		});
 		jeu.grille.addMouseWheelListener(new MouseAdapter() {
@@ -69,11 +75,20 @@ public class PanneauPartie extends JPanel {
 			public void stateChanged(ChangeEvent e) { carte.zoomer(tableauBord.boutonsMiniMap.slider.getValue()); repaint(); }
 		});
 		tableauBord.boutonsMiniMap.reinit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { 
+			public void actionPerformed(ActionEvent e) {
 				carte.zoomer(10);
 				tableauBord.boutonsMiniMap.slider.setValue(10);
-				repaint(); 
+				repaint();
 			};
 		});
+		tableauBord.boutonsTour.finTour.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				carte.finirTour(GENTILS);
+			}
+		});;
 	}
+	
+	// Accesseurs
+	public PanneauJeu getJeu() { return jeu; }
+	public PanneauTableauBord getTableauBord() { return tableauBord; }
 }

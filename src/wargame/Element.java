@@ -1,6 +1,8 @@
 package wargame;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 
 public abstract class Element implements IConfig {
@@ -22,8 +24,16 @@ public abstract class Element implements IConfig {
 		Point centre;
 		rayon = carte.getRayonHex();
 		centre = pos.substract(carte.getMapAff().getUpLeft()).toPositionAxiale().toPoint(rayon, carte.getOrigine());
+		if (carte.getMapAff().getUpLeft().getY() % 2 != 0 && pos.getY() % 2 == 0)
+			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));
 		hex = new Hexagone(centre, rayon);
 	}
+	// Renvoie les infos
+	public String toString() {
+		return pos.toString();
+	}
+	
+	// Méthodes graphiques
 	// Crée l'hexagone de la mini-map
 	public void creerHexMM() {
 		int rayon;
@@ -49,11 +59,14 @@ public abstract class Element implements IConfig {
 	public void seDessinerCadreBis(Hexagone h, Graphics g, Color cadre) {
 		int rayon = h.getRayon();
 		Color courante = g.getColor();
-		g.setColor(cadre);
-		h.seDessiner(g);
-		h.setRayon((int)(rayon * 0.75));
 		if (visible == false) courante = COULEUR_INCONNU;
 		g.setColor(courante);
+		h.seDessiner(g);
+		g.setColor(cadre);
+		h.setRayon((int)(rayon * 0.75));
+		h.seDessiner(g);
+		g.setColor(courante);
+		h.setRayon((int)(rayon * 0.5));
 		h.seDessiner(g);
 		h.setRayon(rayon);
 	}
@@ -65,8 +78,25 @@ public abstract class Element implements IConfig {
 	public void seDessinerCadreMM(Graphics g, Color cadre) {
 		seDessinerCadreBis(hexMM, g, cadre);
 	}
-	
-	public String toString() {
-		return getClass().getSimpleName();
+	// Dessine un texte centré au sein d'un hexagone
+	public void drawCenteredString(Graphics g, String text, Font font) {
+		int larg, haut, rayon,
+			x, y;
+		Point centre;
+		rayon = carte.getRayonHex();
+		larg = (int)(Math.sqrt(3) * rayon);
+		haut = 2 * rayon;
+		centre = hex.getCentre();
+	    // Get the FontMetrics
+	    FontMetrics metrics = g.getFontMetrics(font);
+	    // Determine the X-Y coordinates for the text
+	    x = (int)(centre.getX() - larg / 2);
+	    y = (int)(centre.getY() - haut / 2);
+	    x = x + (larg - metrics.stringWidth(text)) / 2;
+	    y = y + ((haut - metrics.getHeight()) / 2) + metrics.getAscent();
+	    // Set the font
+	    g.setFont(font);
+	    // Draw the String
+	    g.drawString(text, x, y);
 	}
 }

@@ -27,6 +27,7 @@ public class ZoneH {
 	// Mutateurs
 	public void setCentre(PositionAxiale centre) { this.centre = centre; }
 	public void setRayon(int rayon) { this.rayon = rayon; }
+	public void setZone(List<Element> zone) { this.zone = zone; }
 	
 	// Méthodes
 	// Calcule la zone
@@ -52,9 +53,8 @@ public class ZoneH {
 	}
 	// Rend la zone visible sur la carte
 	public void rendreVisible() {
-		for (Element e : zone) {
-			e.visible = true;
-		}
+		for (Element e : zone)
+			if (e != null) e.visible = true;
 	}
 	
 	// Méthodes graphiques

@@ -1,6 +1,7 @@
 package wargame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 public class Heros extends Soldat {
@@ -27,18 +28,28 @@ public class Heros extends Soldat {
 		desc += " | [ Type : " + TYPE + " ]";
 		return desc;
 	}
+	// Déplace le soldat à la position pos
+	public boolean seDeplace(Position cible) {
+		boolean possible = super.seDeplace(cible);
+		if (possible) {
+			carte.getElement(pos).visible = true;
+			this.getZoneVisuelle().rendreVisible();
+		}
+		return possible;
+	}
 	
 	// Méthodes graphiques
 	// Dessine l'héros
 	public void seDessiner(Graphics g) {
 		g.setColor(COULEUR_HEROS);
 		super.seDessiner(g);
-		// super.dessinerZoneDeplacement(g);
+		drawCenteredString(g, NOM, (new Font("Courier", Font.BOLD, (int)(hex.getRayon() * 0.75))));
 	}
 	// Dessine l'héros avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
 	public void seDessinerCadre(Graphics g, Color couleurCadre) { 
 		g.setColor(COULEUR_HEROS);
 		super.seDessinerCadre(g, couleurCadre);
+		drawCenteredString(g, NOM, (new Font("Courier", Font.BOLD, (int)(hex.getRayon() * 0.5))));
 	}
 	// Dessine l'héros dans la mini-map
 	public void seDessinerMM(Graphics g) {

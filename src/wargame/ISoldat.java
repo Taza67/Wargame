@@ -18,7 +18,7 @@ public interface ISoldat extends IConfig {
 			PORTEE_DEPLACEMENT = porteeDeplacement;
 			PUISSANCE = puissance; 
 			TIR = tir;
-			CAMP = VERTS;
+			CAMP = GENTILS;
 		}
 		
 		// Accesseurs
@@ -49,7 +49,7 @@ public interface ISoldat extends IConfig {
 			PORTEE_DEPLACEMENT = porteeDeplacement;
 			PUISSANCE = puissance; 
 			TIR = tir;
-			CAMP = ROUGES;
+			CAMP = MECHANT;
 		}
 		
 		// Accesseurs

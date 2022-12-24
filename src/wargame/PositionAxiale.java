@@ -13,6 +13,7 @@ public class PositionAxiale {
 	// Accesseurs
 	public double getR() { return r; }
 	public double getQ() { return q; }
+	public double getS() { return - r - q; }
 	
 	// Méthodes
 	// Renvoie les infos

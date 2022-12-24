@@ -2,9 +2,15 @@ package wargame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import wargameInterface.PanneauPartie;
 
 public class Carte implements IConfig {
 	// Infos
+	private final PanneauPartie panPartie;
 	private int largC, hautC;						// Dimensions de la carte réelle
 	private int largAffC, hautAffC;					// Dimensions de la carte affichée 
 	private int hautMM, largMM;						// Hauteur de la mini-map
@@ -16,16 +22,22 @@ public class Carte implements IConfig {
 	// Positionnement
 	private Point origine, origineMM;				// Origine de la carte affichée
 	// Interactions
-	Element curseur, selection;
+	private Element curseur, selection;
+	private LigneH ligne;
 	// Limites
 	private int nbHeros, nbMonstres, nbObstacles;
+	// Infos sur la partie
+	private InfoPartie infoPartie;
+	// Liste des entités
+	List<Element> listeMonstres, listeHeros;
 	
 	// Constructeurs
-	public Carte(int largeur, int hauteur) {
+	public Carte(PanneauPartie panPartie, int largeur, int hauteur) {
 		int horiz, vert, horizMM, vertMM;
 		horiz = (int)(Math.sqrt(3.) * rayonHex);
 		vert = (int)(3 / 2. * rayonHex);
 		// Initialisations
+		this.panPartie = panPartie;
 		largC = largeur;
 		hautC = hauteur;
 		largAffC = LARGEUR_MAP / horiz;
@@ -56,6 +68,8 @@ public class Carte implements IConfig {
 		selection = trouveHeros();
 		// InfoBar
 		infoBar = new InfoBar(selection, null);
+		// Infos sur la partie
+		infoPartie = new InfoPartie(this, nbHeros, nbMonstres);
 	}
 	
 	// Accesseurs
@@ -73,6 +87,8 @@ public class Carte implements IConfig {
 	public Point getOrigine() { return origine; }
 	public Point getOrigineMM() { return origineMM; }
 	public InfoBar getInfoBar() { return infoBar; }
+	public Element getSelection() { return selection; }
+	public InfoPartie getInfoPartie() { return infoPartie; }
 	//// Pseudo-accesseurs
 	public Element getElement(Position pos) {
 		return (pos.estValide(largC, hautC)) ? grille[pos.getY()][pos.getX()] : null;
@@ -131,10 +147,13 @@ public class Carte implements IConfig {
 		int c = 0,
 			debY = 0, finY = hautC - 1,
 			debX = largC / 2 + 1, finX = largC - 1;
+		listeHeros = new ArrayList<Element>();
 		while (c++ < n) {
 			String nom = "" + (char)('A' + alea(0, 26));
 			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
-			grille[posVide.getY()][posVide.getX()] = new Heros(this, ISoldat.TypesH.getTypeHAlea(), nom, posVide);
+			Heros h = new Heros(this, ISoldat.TypesH.getTypeHAlea(), nom, posVide);
+			grille[posVide.getY()][posVide.getX()] = h;
+			listeHeros.add(h);
 		}
 	}
 	// Génère aléatoirement des obstacles 
@@ -150,9 +169,12 @@ public class Carte implements IConfig {
 		int c = 0,
 			debY = 0, finY = hautC - 1,
 			debX = 0, finX = largC / 2;
+		listeMonstres = new ArrayList<Element>();
 		while (c++ < n) {
 			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
-			grille[posVide.getY()][posVide.getX()] = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
+			Monstre m = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
+			grille[posVide.getY()][posVide.getX()] = m;
+			listeMonstres.add(m);
 		}
 	}
 	// Calcul tous les hexagones des éléments de la carte
@@ -161,21 +183,39 @@ public class Carte implements IConfig {
 			for (Element e : liste)
 				e.creerHexM();
 	}
+	// Fait jouer un tour de jeu à l'ordinateur
+	public void faireJouerOrdi() {
+		for (Element e : listeMonstres) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e1) {}
+			Soldat s = (Soldat)e;
+			s.seDeplace(s.aleaElem(s.getZoneDeplacement()).pos);
+			panPartie.repaint();
+		}
+		finirTour(MECHANT);
+	}
 	
 	// Méthodes d'interaction
 	// Déplace le curseur
 	public void deplacerCurseur(Point c) {
 		Position p = c.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
+		if (mapAff.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
+			p = p.add(new Position(1, 0));
 		curseur = getElement(p);
 		infoBar.setCurseur(curseur);
+		if (selection instanceof Heros && curseur != null) ligne = new LigneH(selection, curseur, this);
 	}
 	// Déplace la sélection
 	public void deplacerSelection(Point s) {
 		Position p = s.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
+		if (mapAff.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
+			p = p.add(new Position(1, 0));
 		Element e = getElement(p);
 		if (selection != null) selection = (p.equals(selection.pos)) ? null : e;
 		else selection = e;
 		infoBar.setSelection(selection);
+		ligne = null;
 	}
 	// Zoome la zone d'affichage
 	public void zoomer(int zoom) {
@@ -187,8 +227,8 @@ public class Carte implements IConfig {
 			largAffC = LARGEUR_MAP / horiz;
 			hautAffC = HAUTEUR_MAP / vert;
 			// Modification des extremités de la zone de la carte affichée
-			mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC + 1, hautAffC + 1));
-			mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC + 1, hautAffC + 1));
+			mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
+			mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
 			// Modification des dimensions de cette dernière
 			mapAff.setLargeur(mapAff.calculerLargeur());
 			mapAff.setHauteur(mapAff.calculerHauteur());
@@ -219,29 +259,46 @@ public class Carte implements IConfig {
 	public void deplacerHeros(Point p) {
 		if (selection instanceof Heros) {
 			Position cible = p.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
+			if (mapAff.getUpLeft().getY() % 2 != 0 && cible.getY() % 2 == 0)
+				cible = cible.add(new Position(1, 0));
 			((Heros)selection).seDeplace(cible);
+		}
+	}
+	// Mets fin au tour du joueur
+	public void finirTour(char side) {
+		if (side == GENTILS) {
+			panPartie.getTableauBord().getBoutonsTour().getFinTour().setVisible(false);
+			selection = null;
+			curseur = null;
+			infoPartie.setNbTours(infoPartie.getNbTours() + 1);
+			infoPartie.setJoueur(MECHANT);
+			faireJouerOrdi();
+		} else if (side == MECHANT) {
+			panPartie.getTableauBord().getBoutonsTour().getFinTour().setVisible(true);
+			infoPartie.setJoueur(GENTILS);
 		}
 	}
 	
 	// Méthodes graphiques
 	public void seDessiner(Graphics g) {
 		mapAff.seDessiner(g);
-		if (curseur != null) curseur.seDessinerCadre(g, COULEUR_CURSEUR);
 		if (selection != null) {
-			selection.seDessinerCadre(g, COULEUR_SELECTION);
 			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacement(g);
+			selection.seDessinerCadre(g, COULEUR_SELECTION);
 		}
+		if (ligne != null) ligne.seDessiner(g);
+		if (curseur != null) curseur.seDessinerCadre(g, COULEUR_CURSEUR);
 	}
 	// Dessine la carte reelle sous forme de mini-map
 	public void seDessinerMM(Graphics g) {
 		for (Element[] liste : grille)
 			for (Element e : liste)
 				e.seDessinerMM(g);
-		if (curseur != null) curseur.seDessinerCadreMM(g, COULEUR_CURSEUR);
 		if (selection != null) {
+			// if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacementMM(g);
 			selection.seDessinerCadreMM(g, COULEUR_SELECTION);
-			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacementMM(g);
 		}
+		if (curseur != null) curseur.seDessinerCadreMM(g, COULEUR_CURSEUR);
 		// Dessin d'un rectangle représentant la zone affichée
 		Point ul = mapAff.getUpLeft().toPositionAxiale().toPoint(rayonMM, origineMM).substract(new Point(rayonMM, rayonMM)),
 			  dr = mapAff.getDownRight().toPositionAxiale().toPoint(rayonMM, origineMM);

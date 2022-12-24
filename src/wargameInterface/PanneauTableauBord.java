@@ -13,6 +13,8 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 	private final Carte CARTE;
 	protected PanneauMiniMap miniMap;
 	protected PanneauBoutonsMiniMap boutonsMiniMap;
+	protected PanneauInfoPartie infoPartie;
+	protected PanneauTourJeu boutonsTour;
 	protected PanneauActionsHeros actionsHeros;
 	
 	// Constructeurs
@@ -21,11 +23,21 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 		this.CARTE = carte;
 		this.miniMap = new PanneauMiniMap(CARTE);
 		this.boutonsMiniMap = new PanneauBoutonsMiniMap(CARTE);
+		this.infoPartie = new PanneauInfoPartie(CARTE);
+		this.boutonsTour = new PanneauTourJeu(CARTE);
 		this.actionsHeros = new PanneauActionsHeros(CARTE);
 		this.add(miniMap);
 		this.add(boutonsMiniMap);
-		this.add(Box.createRigidArea(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP - carte.getHautMM() - 15)));
+		this.add(infoPartie);
+		this.add(Box.createRigidArea(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP - carte.getHautMM() - 135)));
+		this.add(boutonsTour);
 		this.add(actionsHeros);
 		this.setBackground(COULEUR_VIDE);
+		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP + 55));
 	}
+
+	// Accesseurs
+	public PanneauTourJeu getBoutonsTour() { return boutonsTour; }
+	
+	
 }

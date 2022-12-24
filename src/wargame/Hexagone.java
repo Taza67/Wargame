@@ -18,6 +18,7 @@ public class Hexagone {
 	}
 	
 	// Accesseurs
+	public Point getCentre() { return centre; }
 	public int getRayon() { return rayon; }
 	
 	// Mutateurs
