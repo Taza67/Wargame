@@ -89,6 +89,9 @@ public class Carte implements IConfig {
 	public InfoBar getInfoBar() { return infoBar; }
 	public Element getSelection() { return selection; }
 	public InfoPartie getInfoPartie() { return infoPartie; }
+	public List<Element> getListeMonstres() { return listeMonstres; }
+	public List<Element> getListeHeros() { return listeHeros; }
+	public PanneauPartie getPanPartie() { return panPartie; }
 	//// Pseudo-accesseurs
 	public Element getElement(Position pos) {
 		return (pos.estValide(largC, hautC)) ? grille[pos.getY()][pos.getX()] : null;
@@ -183,18 +186,6 @@ public class Carte implements IConfig {
 			for (Element e : liste)
 				e.creerHexM();
 	}
-	// Fait jouer un tour de jeu à l'ordinateur
-	public void faireJouerOrdi() {
-		for (Element e : listeMonstres) {
-			try {
-				TimeUnit.SECONDS.sleep(1);
-			} catch (InterruptedException e1) {}
-			Soldat s = (Soldat)e;
-			s.seDeplace(s.aleaElem(s.getZoneDeplacement()).pos);
-			panPartie.repaint();
-		}
-		finirTour(MECHANT);
-	}
 	
 	// Méthodes d'interaction
 	// Déplace le curseur
@@ -270,9 +261,12 @@ public class Carte implements IConfig {
 			panPartie.getTableauBord().getBoutonsTour().getFinTour().setVisible(false);
 			selection = null;
 			curseur = null;
+			ligne = null;
 			infoPartie.setNbTours(infoPartie.getNbTours() + 1);
 			infoPartie.setJoueur(MECHANT);
-			faireJouerOrdi();
+			panPartie.repaint();
+			TourOrdi to = new TourOrdi(this);
+			to.start();
 		} else if (side == MECHANT) {
 			panPartie.getTableauBord().getBoutonsTour().getFinTour().setVisible(true);
 			infoPartie.setJoueur(GENTILS);

@@ -18,7 +18,7 @@ public class PanneauTourJeu extends JPanel implements IConfig {
 		this.CARTE = carte;
 		finTour = new JButton("Fin du tour");
 		this.setBackground(COULEUR_VIDE);
-		finTour.setPreferredSize(new Dimension(carte.getLargMM(), 100));
+		finTour.setPreferredSize(new Dimension(carte.getLargMM(), 50));
 		this.add(finTour);
 	}
 

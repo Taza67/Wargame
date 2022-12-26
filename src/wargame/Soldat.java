@@ -19,7 +19,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		this.carte = carte;
 		this.pos = pos;
 		POINTS_DE_VIE_MAX = pointsDeVie = pts;
-		PORTEE_VISUELLE = porteeVisuelle; 
+		PORTEE_VISUELLE = porteeVisuelle;
 		PORTEE_DEPLACEMENT = porteeDeplacement;
 		PUISSANCE = puissance;
 		TIR = tir;

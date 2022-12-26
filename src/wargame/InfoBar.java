@@ -1,6 +1,7 @@
 package wargame;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 
 public class InfoBar {
@@ -24,7 +25,11 @@ public class InfoBar {
 	public void seDessiner(Graphics g) {
 		String affSelec = "Selectionné : " + selection,
 			   affCur = "Curseur : " + curseur;
-		g.setColor(Color.white);
-		g.drawString(affSelec + " " + affCur, 15, 30);
+		FontMetrics metrics = g.getFontMetrics(g.getFont());
+		int largAffSelec = metrics.stringWidth(affSelec);
+		g.setColor(Color.orange);
+		g.drawString(affSelec, 15, 30);
+		g.setColor(Color.yellow);
+		g.drawString(affCur, 15 * 2 + largAffSelec, 30);
 	}
 }

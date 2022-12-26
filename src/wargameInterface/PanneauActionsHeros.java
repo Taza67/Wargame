@@ -21,9 +21,9 @@ public class PanneauActionsHeros extends JPanel implements IConfig {
 		attaque = new JButton("Attaque");
 		campement = new JButton("Campement");
 		longueMarche = new JButton("Longue Marche");		
-		attaque.setPreferredSize(new Dimension(carte.getLargMM() / 3, 20));
-		campement.setPreferredSize(new Dimension(carte.getLargMM() / 3, 20));
-		longueMarche.setPreferredSize(new Dimension(carte.getLargMM() / 3, 20));
+		attaque.setPreferredSize(new Dimension(carte.getLargMM() / 3 - 3, 20));
+		campement.setPreferredSize(new Dimension(carte.getLargMM() / 3 - 3, 20));
+		longueMarche.setPreferredSize(new Dimension(carte.getLargMM() / 3 - 3, 20));
 		add(attaque, BorderLayout.WEST);
 		add(campement, BorderLayout.CENTER);
 		add(longueMarche, BorderLayout.EAST);

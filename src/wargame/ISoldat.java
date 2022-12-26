@@ -36,7 +36,7 @@ public interface ISoldat extends IConfig {
 	// // Soldats maléfiques
 	public static enum TypesM {
 		// Liste
-		TROLL (100, 1, 4 , 30, 0), ORC (40, 2, 5, 10, 3), GOBELIN (20, 2, 3, 5, 2);
+		TROLL (100, 2, 4, 30, 0), ORC (40, 3, 5, 10, 3), GOBELIN (20, 3, 3, 5, 2);
       
 		// Infos
 		private final int POINTS_DE_VIE, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
