@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import wargameInterface.PanneauPartie;
 
@@ -264,6 +263,7 @@ public class Carte implements IConfig {
 			ligne = null;
 			infoPartie.setNbTours(infoPartie.getNbTours() + 1);
 			infoPartie.setJoueur(MECHANT);
+			panPartie.getTableauBord().getActionsHeros().setVisible(false);
 			panPartie.repaint();
 			TourOrdi to = new TourOrdi(this);
 			to.start();

@@ -29,7 +29,7 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 		this.add(miniMap);
 		this.add(boutonsMiniMap);
 		this.add(infoPartie);
-		this.add(Box.createRigidArea(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP - carte.getHautMM() - 135)));
+		this.add(Box.createRigidArea(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP - carte.getHautMM() - 150)));
 		this.add(boutonsTour);
 		this.add(actionsHeros);
 		this.setBackground(COULEUR_VIDE);
@@ -38,6 +38,7 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 
 	// Accesseurs
 	public PanneauTourJeu getBoutonsTour() { return boutonsTour; }
+	public PanneauActionsHeros getActionsHeros() { return actionsHeros; }
 	
 	
 }
