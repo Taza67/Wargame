@@ -9,7 +9,7 @@ import wargameInterface.PanneauPartie;
 
 public class Carte implements IConfig {
 	// Map
-	public static int LARGEUR_MAP = 1501, HAUTEUR_MAP = 760;
+	public static int LARGEUR_MAP = 1250, HAUTEUR_MAP = 760;
 	// Position de la fenêtre
 	public static int POSITION_X = 100, POSITION_Y = 50;
 	// Infos
@@ -66,7 +66,7 @@ public class Carte implements IConfig {
 				grille[i][j] = new Sol(this, new Position(j, i));	
 		nbHeros = nbMonstres = 6;
 		nbObstacles = hautC * largC / 3;
-		genereObstacles(nbObstacles);
+		genereObstacles();
 		genereHeros(nbHeros);
 		genereMonstres(nbMonstres);
 		// Éléments sélectionnés au départ
@@ -181,13 +181,80 @@ public class Carte implements IConfig {
 		}
 	}
 	// Génère aléatoirement des obstacles 
-	public void genereObstacles(int n) {
-		int c = 0;
-		while (c++ < n) {
-			Position posVide = trouvePosVide();
-			grille[posVide.getY()][posVide.getX()] = new Obstacle(this, Obstacle.TypeObstacle.getObstacleAlea(), posVide);
+	public void genereObstacles() {
+		int nbR,nbF,nbL,nbZone;
+		nbR = alea(60,100);
+		nbF = alea(60,100);
+		nbL = alea(60,100);
+		nbZone = alea(1,4);
+		while(nbZone-- > 0) {
+			genereRocher(nbR);
+		}
+		nbZone = alea(1,4);
+		while(nbZone-- > 0) {
+			genereForet(nbF);
+		}
+		nbZone = alea(1,4);
+		while(nbZone-- > 0) {
+			genereLac(nbL);
+		}
+		
+	}
+	
+	// Génère une zone contenant des rochers
+	public void genereRocher(int nbR) {
+		int voisin = 0;
+		Position pos = trouvePosVide();
+		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
+		pos = posa.toPosition();
+		while( nbR > 0) {
+			voisin = alea(0, 5);
+			posa = pos.toPositionAxiale();
+			posa = posa.voisin(voisin);
+			pos = posa.toPosition();
+			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
+				grille[pos.getY()][pos.getX()] = new Obstacle(this, Obstacle.TypeObstacle.ROCHER, pos);
+				nbR--;
+			}
 		}
 	}
+	
+	public void genereLac(int nbL) {
+		int voisin = 0;
+		Position pos = trouvePosVide();
+		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
+		pos = posa.toPosition();
+		while( nbL > 0) {
+			voisin = alea(0, 5);
+			posa = pos.toPositionAxiale();
+			posa = posa.voisin(voisin);
+			pos = posa.toPosition();
+			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
+				grille[pos.getY()][pos.getX()] = new Obstacle(this, Obstacle.TypeObstacle.EAU, pos);
+				nbL--;
+			}
+		}
+	}
+	
+	
+	public void genereForet(int nbF) {
+		int voisin = 0;
+		Position pos = trouvePosVide();
+		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
+		pos = posa.toPosition();
+		while( nbF > 0) {
+			voisin = alea(0, 5);
+			posa = pos.toPositionAxiale();
+			posa = posa.voisin(voisin);
+			pos = posa.toPosition();
+			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
+				grille[pos.getY()][pos.getX()] = new Obstacle(this, Obstacle.TypeObstacle.FORET, pos);
+				nbF--;
+			}
+		}
+	}
+	
+	
 	// Génère aléatoirement des monstres
 	public void genereMonstres(int n) {
 		int c = 0,
@@ -305,6 +372,7 @@ public class Carte implements IConfig {
 		if (ligne != null) ligne.seDessiner(g);
 		if (curseur != null) curseur.seDessinerCadre(g, COULEUR_CURSEUR);
 	}
+	
 	// Dessine la carte reelle sous forme de mini-map
 	public void seDessinerMM(Graphics g) {
 		for (Element[] liste : grille)
