@@ -1,15 +1,11 @@
 package wargameInterface;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.LayoutManager;
 
-import javax.swing.JPanel;
-
 import wargame.Carte;
-import wargame.IConfig;
 
-public class PanneauJeu extends JPanel implements IConfig {
+public class PanneauJeu extends Panneau {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected PanneauGrille grille;
@@ -21,6 +17,6 @@ public class PanneauJeu extends JPanel implements IConfig {
 		this.infosCurseur = new PanneauInfoBar(carte);
 		this.add(grille, BorderLayout.NORTH);
 		this.add(infosCurseur, BorderLayout.SOUTH);
-		this.setPreferredSize(new Dimension(LARGEUR_MAP, HAUTEUR_MAP + 55));	
+		this.setDim(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP + 55);
 	}
 }

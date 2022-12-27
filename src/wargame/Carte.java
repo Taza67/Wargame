@@ -8,15 +8,21 @@ import java.util.List;
 import wargameInterface.PanneauPartie;
 
 public class Carte implements IConfig {
+	// Map
+	public static int LARGEUR_MAP = 1501, HAUTEUR_MAP = 760;
+	// Position de la fenêtre
+	public static int POSITION_X = 100, POSITION_Y = 50;
 	// Infos
 	private final PanneauPartie panPartie;
 	private int largC, hautC;						// Dimensions de la carte réelle
-	private int largAffC, hautAffC;					// Dimensions de la carte affichée 
+	private static int largAffC;					// Dimensions de la carte affichée 
+	private static int hautAffC;
 	private int hautMM, largMM;						// Hauteur de la mini-map
-	private int rayonHex = 25, rayonMM;				// Rayon d'un hexagone
-	private Element[][] grille; 					// Grille du jeu
-	private ZoneR mapAff;							// Carte affichée
-	private Position centreAff;						// Centre de la carte affichée
+	private static int rayonHex = 25;				// Rayon d'un hexagone
+	private int rayonMM;
+	private static Element[][] grille; 					// Grille du jeu
+	private static ZoneR mapAff;							// Carte affichée
+	private static Position centreAff;						// Centre de la carte affichée
 	private InfoBar infoBar;						// Barre d'info
 	// Positionnement
 	private Point origine, origineMM;				// Origine de la carte affichée
@@ -103,6 +109,22 @@ public class Carte implements IConfig {
 	}
 	
 	// Méthodes
+	// Recalcules les dimensions de la carte affichées
+	public static void recalculerDimensions() {
+		int horiz, vert;
+		horiz = (int)(Math.sqrt(3.) * rayonHex);
+		vert = (int)(3 / 2. * rayonHex);
+		largAffC = LARGEUR_MAP / horiz;
+		hautAffC = HAUTEUR_MAP / vert;
+		// Modification des extremités de la zone de la carte affichée
+		mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
+		mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
+		// Modification des dimensions de cette dernière
+		mapAff.setLargeur(mapAff.calculerLargeur());
+		mapAff.setHauteur(mapAff.calculerHauteur());
+		// Calcul des hexagones
+		calculerHex();
+	}
 	// Trouve aléatoirement une position de type donné dans une zone dont les extremités sont données en paramètres
 	public Position trouvePosType(int debX, int finX, int debY, int finY, char type) {
 		Element elemVide = null;
@@ -180,7 +202,7 @@ public class Carte implements IConfig {
 		}
 	}
 	// Calcul tous les hexagones des éléments de la carte
-	public void calculerHex() {
+	public static void calculerHex() {
 		for (Element[] liste : grille)
 			for (Element e : liste)
 				e.creerHexM();

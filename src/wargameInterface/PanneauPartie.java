@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -15,7 +14,7 @@ import wargame.Heros;
 import wargame.IConfig;
 import wargame.Point;
 
-public class PanneauPartie extends JPanel implements IConfig {
+public class PanneauPartie extends Panneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private Carte carte;
@@ -91,4 +90,13 @@ public class PanneauPartie extends JPanel implements IConfig {
 	// Accesseurs
 	public PanneauJeu getJeu() { return jeu; }
 	public PanneauTableauBord getTableauBord() { return tableauBord; }
+	
+	// Méthodes
+	public void setDimensions() {
+		jeu.setDim(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP + 55);
+		jeu.grille.setDim(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP);
+		jeu.infosCurseur.setDim(Carte.LARGEUR_MAP, 50);
+		tableauBord.setDim(carte.getLargMM() + 10, Carte.HAUTEUR_MAP + 55);
+		tableauBord.setDimBlanc();
+	}
 }

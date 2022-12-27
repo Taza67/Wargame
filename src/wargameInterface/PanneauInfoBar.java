@@ -1,14 +1,11 @@
 package wargameInterface;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
-
-import javax.swing.JPanel;
 
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauInfoBar extends JPanel implements IConfig {
+public class PanneauInfoBar extends Panneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	public final Carte CARTE;
@@ -17,7 +14,7 @@ public class PanneauInfoBar extends JPanel implements IConfig {
 	public PanneauInfoBar(Carte carte) {
 		this.CARTE = carte;
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(LARGEUR_MAP, 50));
+		this.setDim(Carte.LARGEUR_MAP, 50);
 	}
 		
 	// Méthodes

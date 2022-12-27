@@ -1,13 +1,13 @@
 package wargameInterface;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauTableauBord extends JPanel implements IConfig {
+public class PanneauTableauBord extends Panneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private final Carte CARTE;
@@ -16,6 +16,7 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 	protected PanneauInfoPartie infoPartie;
 	protected PanneauTourJeu boutonsTour;
 	protected PanneauActionsHeros actionsHeros;
+	protected Component blanc;
 	
 	// Constructeurs
 	public PanneauTableauBord(Carte carte) {
@@ -29,16 +30,20 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 		this.add(miniMap);
 		this.add(boutonsMiniMap);
 		this.add(infoPartie);
-		this.add(Box.createRigidArea(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP - carte.getHautMM() - 150)));
+		blanc = Box.createRigidArea(new Dimension(carte.getLargMM() + 10, Carte.HAUTEUR_MAP - carte.getHautMM() - 150));
+		this.add(blanc);
 		this.add(boutonsTour);
 		this.add(actionsHeros);
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, HAUTEUR_MAP + 55));
+		this.setDim(carte.getLargMM() + 10, Carte.HAUTEUR_MAP + 55);
 	}
 
 	// Accesseurs
 	public PanneauTourJeu getBoutonsTour() { return boutonsTour; }
 	public PanneauActionsHeros getActionsHeros() { return actionsHeros; }
 	
-	
+	// Méthodes
+	public void setDimBlanc() {
+		blanc.setPreferredSize(new Dimension(CARTE.getLargMM() + 10, Carte.HAUTEUR_MAP - CARTE.getHautMM() - 175));
+	}
 }
