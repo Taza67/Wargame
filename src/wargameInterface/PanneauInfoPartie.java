@@ -6,7 +6,7 @@ import wargame.Carte;
 import wargame.IConfig;
 import wargame.InfoPartie;
 
-public class PanneauInfoPartie extends Panneau implements IConfig {
+public class PanneauInfoPartie extends APanneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private final InfoPartie infoPartie;

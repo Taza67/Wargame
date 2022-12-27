@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauInfoBar extends Panneau implements IConfig {
+public class PanneauInfoBar extends APanneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	public final Carte CARTE;

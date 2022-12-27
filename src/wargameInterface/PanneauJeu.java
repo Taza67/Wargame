@@ -5,7 +5,7 @@ import java.awt.LayoutManager;
 
 import wargame.Carte;
 
-public class PanneauJeu extends Panneau {
+public class PanneauJeu extends APanneau {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected PanneauGrille grille;

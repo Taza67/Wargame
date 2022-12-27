@@ -14,7 +14,7 @@ import wargame.Heros;
 import wargame.IConfig;
 import wargame.Point;
 
-public class PanneauPartie extends Panneau implements IConfig {
+public class PanneauPartie extends APanneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private Carte carte;

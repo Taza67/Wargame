@@ -7,14 +7,15 @@ import javax.swing.BoxLayout;
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauTableauBord extends Panneau implements IConfig {
+public class PanneauTableauBord extends APanneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private final Carte CARTE;
 	protected PanneauMiniMap miniMap;
 	protected PanneauBoutonsMiniMap boutonsMiniMap;
 	protected PanneauInfoPartie infoPartie;
-	protected PanneauTourJeu boutonsTour;
+	protected PanneauBoutonsMenu boutonsMenu;
+	protected PanneauBoutonsTour boutonsTour;
 	protected PanneauActionsHeros actionsHeros;
 	protected Component blanc;
 	
@@ -25,13 +26,15 @@ public class PanneauTableauBord extends Panneau implements IConfig {
 		this.miniMap = new PanneauMiniMap(CARTE);
 		this.boutonsMiniMap = new PanneauBoutonsMiniMap(CARTE);
 		this.infoPartie = new PanneauInfoPartie(CARTE);
-		this.boutonsTour = new PanneauTourJeu(CARTE);
+		this.boutonsMenu = new PanneauBoutonsMenu(CARTE);
+		this.boutonsTour = new PanneauBoutonsTour(CARTE);
 		this.actionsHeros = new PanneauActionsHeros(CARTE);
 		this.add(miniMap);
 		this.add(boutonsMiniMap);
 		this.add(infoPartie);
-		blanc = Box.createRigidArea(new Dimension(carte.getLargMM() + 10, Carte.HAUTEUR_MAP - carte.getHautMM() - 150));
+		blanc = Box.createRigidArea(new Dimension(carte.getLargMM() + 10, Carte.HAUTEUR_MAP - carte.getHautMM() - 200));
 		this.add(blanc);
+		this.add(boutonsMenu);
 		this.add(boutonsTour);
 		this.add(actionsHeros);
 		this.setBackground(COULEUR_VIDE);
@@ -39,7 +42,7 @@ public class PanneauTableauBord extends Panneau implements IConfig {
 	}
 
 	// Accesseurs
-	public PanneauTourJeu getBoutonsTour() { return boutonsTour; }
+	public PanneauBoutonsTour getBoutonsTour() { return boutonsTour; }
 	public PanneauActionsHeros getActionsHeros() { return actionsHeros; }
 	
 	// Méthodes

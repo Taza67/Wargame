@@ -1,27 +1,27 @@
 package wargameInterface;
 
+import java.awt.Dimension;
 
 import javax.swing.JButton;
+
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauTourJeu extends Panneau implements IConfig {
+public class PanneauBoutonsMenu extends APanneau implements IConfig {
 	private static final long serialVersionUID = 1L;
-	// Infos
 	protected final Carte CARTE;
-	protected JButton finTour;
+	protected JButton menu;
 	
 	// Constructeurs
-	public PanneauTourJeu(Carte carte) {
+	public PanneauBoutonsMenu(Carte carte) {
 		this.CARTE = carte;
-		finTour = new JButton("Fin du tour");
+		menu = new JButton("Menu");
+		menu.setPreferredSize(new Dimension(carte.getLargMM(), 50));
 		this.setBackground(COULEUR_VIDE);
 		this.setDim(carte.getLargMM(), 50);
-		this.add(finTour);
+		this.add(menu);
 	}
 
 	// Accesseurs
-	public JButton getFinTour() { return finTour; }
-	
-	
+	public JButton getMenu() { return menu; }
 }

@@ -279,7 +279,7 @@ public class Carte implements IConfig {
 	// Mets fin au tour du joueur
 	public void finirTour(char side) {
 		if (side == GENTILS) {
-			panPartie.getTableauBord().getBoutonsTour().getFinTour().setVisible(false);
+			panPartie.getTableauBord().getBoutonsTour().setVisible(false);
 			selection = null;
 			curseur = null;
 			ligne = null;
@@ -290,7 +290,7 @@ public class Carte implements IConfig {
 			TourOrdi to = new TourOrdi(this);
 			to.start();
 		} else if (side == MECHANT) {
-			panPartie.getTableauBord().getBoutonsTour().getFinTour().setVisible(true);
+			panPartie.getTableauBord().getBoutonsTour().setVisible(true);
 			infoPartie.setJoueur(GENTILS);
 		}
 	}

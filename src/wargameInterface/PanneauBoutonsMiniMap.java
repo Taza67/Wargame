@@ -6,7 +6,7 @@ import javax.swing.JSlider;
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauBoutonsMiniMap extends Panneau implements IConfig {
+public class PanneauBoutonsMiniMap extends APanneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected JButton reinit;

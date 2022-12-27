@@ -6,7 +6,7 @@ import javax.swing.JButton;
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauActionsHeros extends Panneau implements IConfig {
+public class PanneauActionsHeros extends APanneau implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected JButton attaque;
