@@ -30,7 +30,7 @@ public class Carte implements IConfig {
 	private Element curseur, selection;
 	private LigneH ligne;
 	// Limites
-	private int nbHeros, nbMonstres, nbObstacles;
+	private int nbHeros, nbMonstres;
 	// Infos sur la partie
 	private InfoPartie infoPartie;
 	// Liste des entités
@@ -65,7 +65,6 @@ public class Carte implements IConfig {
 			for (int j = 0; j < largeur; j++)
 				grille[i][j] = new Sol(this, new Position(j, i));	
 		nbHeros = nbMonstres = 6;
-		nbObstacles = hautC * largC / 3;
 		genereObstacles();
 		genereHeros(nbHeros);
 		genereMonstres(nbMonstres);
@@ -180,6 +179,23 @@ public class Carte implements IConfig {
 			listeHeros.add(h);
 		}
 	}
+	// Génère une zone contenant un type d'obstacles donné
+	public void genereObsType(int n, Obstacle.TypeObstacle t) {
+		int voisin = 0;
+		Position pos = trouvePosVide();
+		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
+		pos = posa.toPosition();
+		while( n > 0) {
+			voisin = alea(0, 5);
+			posa = pos.toPositionAxiale();
+			posa = posa.voisin(voisin);
+			pos = posa.toPosition();
+			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
+				grille[pos.getY()][pos.getX()] = new Obstacle(this, t, pos);
+				n--;
+			}
+		}
+	}
 	// Génère aléatoirement des obstacles 
 	public void genereObstacles() {
 		int nbR,nbF,nbL,nbZone;
@@ -188,73 +204,17 @@ public class Carte implements IConfig {
 		nbL = alea(60,100);
 		nbZone = alea(1,4);
 		while(nbZone-- > 0) {
-			genereRocher(nbR);
+			genereObsType(nbR, Obstacle.TypeObstacle.ROCHER);
 		}
 		nbZone = alea(1,4);
 		while(nbZone-- > 0) {
-			genereForet(nbF);
+			genereObsType(nbF, Obstacle.TypeObstacle.FORET);
 		}
 		nbZone = alea(1,4);
 		while(nbZone-- > 0) {
-			genereLac(nbL);
-		}
-		
-	}
-	
-	// Génère une zone contenant des rochers
-	public void genereRocher(int nbR) {
-		int voisin = 0;
-		Position pos = trouvePosVide();
-		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
-		pos = posa.toPosition();
-		while( nbR > 0) {
-			voisin = alea(0, 5);
-			posa = pos.toPositionAxiale();
-			posa = posa.voisin(voisin);
-			pos = posa.toPosition();
-			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
-				grille[pos.getY()][pos.getX()] = new Obstacle(this, Obstacle.TypeObstacle.ROCHER, pos);
-				nbR--;
-			}
+			genereObsType(nbL, Obstacle.TypeObstacle.EAU);
 		}
 	}
-	
-	public void genereLac(int nbL) {
-		int voisin = 0;
-		Position pos = trouvePosVide();
-		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
-		pos = posa.toPosition();
-		while( nbL > 0) {
-			voisin = alea(0, 5);
-			posa = pos.toPositionAxiale();
-			posa = posa.voisin(voisin);
-			pos = posa.toPosition();
-			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
-				grille[pos.getY()][pos.getX()] = new Obstacle(this, Obstacle.TypeObstacle.EAU, pos);
-				nbL--;
-			}
-		}
-	}
-	
-	
-	public void genereForet(int nbF) {
-		int voisin = 0;
-		Position pos = trouvePosVide();
-		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
-		pos = posa.toPosition();
-		while( nbF > 0) {
-			voisin = alea(0, 5);
-			posa = pos.toPositionAxiale();
-			posa = posa.voisin(voisin);
-			pos = posa.toPosition();
-			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
-				grille[pos.getY()][pos.getX()] = new Obstacle(this, Obstacle.TypeObstacle.FORET, pos);
-				nbF--;
-			}
-		}
-	}
-	
-	
 	// Génère aléatoirement des monstres
 	public void genereMonstres(int n) {
 		int c = 0,
