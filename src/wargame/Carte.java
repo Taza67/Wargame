@@ -65,7 +65,6 @@ public class Carte implements IConfig {
 			for (int j = 0; j < largeur; j++)
 				grille[i][j] = new Sol(this, new Position(j, i));	
 		nbHeros = nbMonstres = 6;
-		genereObstaclesrec();
 		genereObstacles();
 		genereHeros(nbHeros);
 		genereMonstres(nbMonstres);
@@ -199,7 +198,7 @@ public class Carte implements IConfig {
 	}
 	// Génère aléatoirement des obstacles 
 	public void genereObstacles() {
-		int nbL,nbR,nbZone;
+		int nbL,nbR,nbF,nbZone;
 		nbL = alea(100,300);
 		nbZone = alea(1,3);
 		while(nbZone-- > 0) {
@@ -209,6 +208,11 @@ public class Carte implements IConfig {
 		nbR = alea(100,300);
 		while(nbZone-- > 0) {
 			genereObsType(nbR, Obstacle.TypeObstacle.ROCHER);
+		}
+		nbZone = alea(1,3);
+		nbF = alea(100,300);
+		while(nbZone-- > 0) {
+			genereObsType(nbR, Obstacle.TypeObstacle.FORET);
 		}
 		
 	}
