@@ -65,6 +65,7 @@ public class Carte implements IConfig {
 			for (int j = 0; j < largeur; j++)
 				grille[i][j] = new Sol(this, new Position(j, i));	
 		nbHeros = nbMonstres = 6;
+		genereObstaclesrec();
 		genereObstacles();
 		genereHeros(nbHeros);
 		genereMonstres(nbMonstres);
@@ -192,28 +193,55 @@ public class Carte implements IConfig {
 			pos = posa.toPosition();
 			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
 				grille[pos.getY()][pos.getX()] = new Obstacle(this, t, pos);
-				n--;
 			}
+			n--;
 		}
 	}
 	// Génère aléatoirement des obstacles 
 	public void genereObstacles() {
-		int nbR,nbF,nbL,nbZone;
-		nbR = alea(60,100);
-		nbF = alea(60,100);
-		nbL = alea(60,100);
-		nbZone = alea(1,4);
-		while(nbZone-- > 0) {
-			genereObsType(nbR, Obstacle.TypeObstacle.ROCHER);
-		}
-		nbZone = alea(1,4);
-		while(nbZone-- > 0) {
-			genereObsType(nbF, Obstacle.TypeObstacle.FORET);
-		}
-		nbZone = alea(1,4);
+		int nbL,nbR,nbZone;
+		nbL = alea(100,300);
+		nbZone = alea(1,3);
 		while(nbZone-- > 0) {
 			genereObsType(nbL, Obstacle.TypeObstacle.EAU);
 		}
+		nbZone = alea(1,3);
+		nbR = alea(100,300);
+		while(nbZone-- > 0) {
+			genereObsType(nbR, Obstacle.TypeObstacle.ROCHER);
+		}
+		
+	}
+	
+	public int faireVoisinBis(Position p, int nb,Obstacle.TypeObstacle t) {
+		int a = 0;
+		PositionAxiale posVoisin = new PositionAxiale(p.getX(), p.getY());
+		if(nb > 0) {
+			if( (p.getX() >= 0 && p.getX() <= 49) && (p.getY() >=0 && p.getY() <=39 ) ) {
+				grille[p.getY()][p.getX()] = new Obstacle(this, t, p);
+				a = alea(0,5);
+				nb-=a;
+				for (int i = 0; i < a; i++) {
+					posVoisin = p.toPositionAxiale();
+					posVoisin = posVoisin.voisin(i);
+					p = posVoisin.toPosition();
+					if( (p.getX() >= 0 && p.getX() <= 49) && (p.getY() >=0 && p.getY() <=39 ) )
+						grille[p.getY()][p.getX()] = new Obstacle(this, t, p);
+				}
+				for (int i = 0; i < a; i++) {
+					posVoisin = posVoisin.voisin(i);
+					p = posVoisin.toPosition();
+					nb = faireVoisinBis(p, nb,t);
+				}
+			}
+		}
+		return nb;
+	}
+	
+	public void genereObstaclesrec() {
+		Position p = trouvePosVide();
+		faireVoisinBis(p,40,Obstacle.TypeObstacle.FORET);
+		
 	}
 	// Génère aléatoirement des monstres
 	public void genereMonstres(int n) {
