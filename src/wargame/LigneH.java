@@ -10,15 +10,23 @@ public class LigneH implements IConfig {
 	private Carte carte;
 	
 	// Constructeur
-	public LigneH(Element dep, Element arr, Carte carte) {
+	public LigneH(Carte carte) {
 		this.carte = carte;
-		// Calcul de la ligne
 		ligne = new ArrayList<Element>();
+	}
+	public LigneH(Element dep, Element arr, Carte carte) {
+		this(carte);
 		this.calculerLigne(dep.pos.toPositionAxiale(), arr.pos.toPositionAxiale());
 	}
 	
 	// Accesseurs
 	public List<Element> getLigne() { return ligne; }
+	
+	// Mutateurs
+	// Pseudo-mutateurs
+	public void addElement(Element elem) {
+		ligne.add(elem);
+	}
 	
 	// Méthodes
 	// Interpolation d'une coordonnée
@@ -43,6 +51,6 @@ public class LigneH implements IConfig {
 	// Méthodes graphiques
 	void seDessiner(Graphics g) {
 		for (Element e : ligne)
-			e.seDessinerCadre(g, COULEUR_LIGNE);
+			if (e != null) e.seDessinerCadre(g, COULEUR_LIGNE);
 	}
 }

@@ -10,7 +10,8 @@ import wargame.Obstacle.TypeObstacle;
 public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Infos
 	private final int POINTS_DE_VIE_MAX, PORTEE_VISUELLE, PORTEE_DEPLACEMENT, PUISSANCE, TIR;
-	private int pointsDeVie;
+	private int pointsDeVie,
+				porteeDeplacement;
 	private ZoneH zoneVisuelle;
 	private List<Element> zoneDeplacement;
 	
@@ -20,7 +21,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		this.pos = pos;
 		POINTS_DE_VIE_MAX = pointsDeVie = pts;
 		PORTEE_VISUELLE = porteeVisuelle;
-		PORTEE_DEPLACEMENT = porteeDeplacement;
+		PORTEE_DEPLACEMENT = this.porteeDeplacement = porteeDeplacement;
 		PUISSANCE = puissance;
 		TIR = tir;
 		// Initialisation des zones d'action du soldat
@@ -38,11 +39,13 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	public int getPUISSANCE() { return PUISSANCE; }
 	public int getTIR() { return TIR; }
 	public int getPointsDeVie() { return pointsDeVie; }
+	public int getPorteeDeplacement() { return porteeDeplacement; }
 	public ZoneH getZoneVisuelle() { return zoneVisuelle; }
 	public List<Element> getZoneDeplacement() { return zoneDeplacement; }
 	
 	// Mutateurs
 	public void setPointsDeVie(int pointsDeVie) { this.pointsDeVie = pointsDeVie; }
+	public void setPorteeDeplacement(int porteeDeplacement) { this.porteeDeplacement = porteeDeplacement; }
 
 	// Méthodes
 	// Met à jour la zone visuelle du soldat
@@ -61,10 +64,12 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		for (Element e : zoneV) {
 			LigneH ligne = new LigneH(this, e, carte);
 			List<Element> ligneBis = ligne.getLigne();
+			boolean obsTrouve = false;
 			for (Element eL : ligneBis) {
+				if (!obsTrouve && eL instanceof Obstacle && ((Obstacle)eL).getTYPE() != TypeObstacle.EAU)
+					obsTrouve = true;
+				if (obsTrouve && !(eL instanceof Obstacle && ((Obstacle)eL).getTYPE() != TypeObstacle.EAU)) break;
 				realZoneV.add(eL);
-				if (eL instanceof Obstacle && ((Obstacle)eL).getTYPE() != TypeObstacle.EAU)
-					break;
 			}
 		}
 		zoneVisuelle.setZone(realZoneV);
@@ -81,7 +86,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		// Calcul de la zone de déplacement
 		zoneDeplacementBis.add(new ArrayList<Position>());
 		zoneDeplacementBis.get(0).add(pos);
-		for (int k = 1; k < PORTEE_DEPLACEMENT; k++) {
+		for (int k = 1; k < porteeDeplacement; k++) {
 			zoneDeplacementBis.add(new ArrayList<Position>());
 			for (Position p : zoneDeplacementBis.get(k - 1)) {
 				PositionAxiale pA = p.toPositionAxiale();
@@ -96,6 +101,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 			}
 		}
 		// Changement d'échelle
+		zoneDeplacement.add(this);
 		for (List<Position> ligne : zoneDeplacementBis)
 			for (Position pos : ligne)
 				zoneDeplacement.add(carte.getElement(pos));
@@ -128,7 +134,6 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 			pos.setY(cible.getY());
 			// Découverte de nouvelle terres :)
 			majZoneVisuelle();
-			majZoneDeplacement();
 			creerHex();
 		}
 		return possible;

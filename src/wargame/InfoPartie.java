@@ -6,14 +6,12 @@ import java.awt.Graphics;
 
 public class InfoPartie implements IConfig {
 	// Infos
-	private Carte carte;
 	private int nbTours;
 	private char joueur;
 	private int nbHeros, nbMonstres;
 	
 	// Constructeurs
 	public InfoPartie(Carte carte, int nbHeros, int nbMonstres) {
-		this.carte = carte;
 		this.nbTours = 1;
 		this.joueur = GENTILS;
 		this.nbHeros = nbHeros;

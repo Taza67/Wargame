@@ -23,12 +23,11 @@ public class TourOrdi extends Thread implements IConfig {
 	// Fait jouer un tour de jeu à l'ordinateur
 	public void faireJouerOrdi() {
 		for (Element e : listeMonstres) {
-			try {
-				TimeUnit.SECONDS.sleep(1);
-			} catch (InterruptedException e1) {}
 			Soldat s = (Soldat)e;
-			s.seDeplace(s.aleaElem(s.getZoneDeplacement()).pos);
-			carte.getPanPartie().repaint();
+			Element cible = s.aleaElem(s.getZoneDeplacement());
+			CheminDijkstra chemin = new CheminDijkstra(s, cible, s.getZoneDeplacement());
+			DeplacementSoldat dp = new DeplacementSoldat(carte, s, chemin);
+			dp.start();
 		}
 		carte.finirTour(MECHANT);
 	}

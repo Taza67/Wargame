@@ -10,7 +10,7 @@ public abstract class Element implements IConfig {
 	protected Carte carte;
 	protected Position pos;
 	protected Hexagone hex, hexMM;
-	protected boolean visible;
+	protected boolean visible = true;
 	
 	// Méthodes
 	// Crée les deux hexagones

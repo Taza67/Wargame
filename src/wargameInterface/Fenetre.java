@@ -81,7 +81,7 @@ public class Fenetre extends JFrame implements IConfig {
 		            	larg = device.getFullScreenWindow().getWidth();
 		            Carte.HAUTEUR_MAP = haut - 80;
 		            Carte.LARGEUR_MAP = larg - LARGEUR_MINI_MAP - 75;
-		            Carte.recalculerDimensions();
+		            Carte.recalculerMapAff();
 		            partie.setDimensions();
 		            f.revalidate();
 		            f.repaint();

@@ -49,6 +49,12 @@ public class PositionAxiale {
 	public PositionAxiale voisin(int direction) {
 		return add(direction(direction));
 	}
+	public boolean estVoisin(PositionAxiale p) {
+		boolean ret = false;
+		for (int i = 0; i < 6 && !ret; i++)
+			if (voisin(i).equals(p)) ret = true;
+		return ret;
+	}
 	public double distance(PositionAxiale b) {
 	    PositionCubique ac = this.toPositionCubique(),
 	    				bc = b.toPositionCubique();
@@ -57,4 +63,12 @@ public class PositionAxiale {
 	public PositionAxiale round() {
 	    return this.toPositionCubique().round().toPositionAxiale();
 	}
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!(obj instanceof PositionAxiale)) return false;
+		PositionAxiale other = (PositionAxiale) obj;
+		return Double.doubleToLongBits(q) == Double.doubleToLongBits(other.q)
+			&& Double.doubleToLongBits(r) == Double.doubleToLongBits(other.r);
+	}
+	
 }

@@ -25,5 +25,6 @@ public interface IConfig {
 		  // Interaction
 		  COULEUR_SELECTION = Color.orange,
 		  COULEUR_CURSEUR = Color.yellow,
-		  COULEUR_LIGNE = new Color(176, 196, 222);
+		  COULEUR_LIGNE = new Color(176, 196, 222),
+		  COULEUR_CHEMIN = new Color(64, 64, 90);
 }

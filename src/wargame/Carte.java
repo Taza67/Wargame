@@ -7,30 +7,15 @@ import java.util.List;
 
 import wargameInterface.PanneauPartie;
 
-public class Carte implements IConfig {
-	// Map
-	public static int LARGEUR_MAP = 1250, HAUTEUR_MAP = 760;
-	// Position de la fenêtre
-	public static int POSITION_X = 100, POSITION_Y = 50;
+public class Carte extends AConfig implements IConfig {
 	// Infos
-	private final PanneauPartie panPartie;
-	private int largC, hautC;						// Dimensions de la carte réelle
-	private static int largAffC;					// Dimensions de la carte affichée 
-	private static int hautAffC;
-	private int hautMM, largMM;						// Hauteur de la mini-map
-	private static int rayonHex = 25;				// Rayon d'un hexagone
-	private int rayonMM;
-	private static Element[][] grille; 					// Grille du jeu
+	private static Element[][] grille; 						// Grille du jeu
 	private static ZoneR mapAff;							// Carte affichée
 	private static Position centreAff;						// Centre de la carte affichée
-	private InfoBar infoBar;						// Barre d'info
-	// Positionnement
-	private Point origine, origineMM;				// Origine de la carte affichée
+	private InfoBar infoBar;								// Barre d'info
 	// Interactions
 	private Element curseur, selection;
-	private LigneH ligne;
-	// Limites
-	private int nbHeros, nbMonstres;
+	private CheminDijkstra chemin;
 	// Infos sur la partie
 	private InfoPartie infoPartie;
 	// Liste des entités
@@ -77,25 +62,14 @@ public class Carte implements IConfig {
 	}
 	
 	// Accesseurs
-	public int getLargC() { return largC; }
-	public int getHautC() { return hautC; }
-	public int getLargAffC() { return largAffC; }
-	public int getHautAffC() { return hautAffC; }
-	public int getLargMM() { return largMM; }
-	public int getHautMM() { return hautMM; }
-	public int getRayonHex() { return rayonHex; }
-	public int getRayonMM() { return rayonMM; }
 	public Element[][] getGrille() { return grille; }
 	public ZoneR getMapAff() { return mapAff; }
 	public Position getCentreAff() { return centreAff; }
-	public Point getOrigine() { return origine; }
-	public Point getOrigineMM() { return origineMM; }
 	public InfoBar getInfoBar() { return infoBar; }
 	public Element getSelection() { return selection; }
 	public InfoPartie getInfoPartie() { return infoPartie; }
 	public List<Element> getListeMonstres() { return listeMonstres; }
 	public List<Element> getListeHeros() { return listeHeros; }
-	public PanneauPartie getPanPartie() { return panPartie; }
 	//// Pseudo-accesseurs
 	public Element getElement(Position pos) {
 		return (pos.estValide(largC, hautC)) ? grille[pos.getY()][pos.getX()] : null;
@@ -109,7 +83,7 @@ public class Carte implements IConfig {
 	
 	// Méthodes
 	// Recalcules les dimensions de la carte affichées
-	public static void recalculerDimensions() {
+	public static void recalculerMapAff() {
 		int horiz, vert;
 		horiz = (int)(Math.sqrt(3.) * rayonHex);
 		vert = (int)(3 / 2. * rayonHex);
@@ -175,77 +149,65 @@ public class Carte implements IConfig {
 			String nom = "" + (char)('A' + alea(0, 26));
 			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
 			Heros h = new Heros(this, ISoldat.TypesH.getTypeHAlea(), nom, posVide);
-			grille[posVide.getY()][posVide.getX()] = h;
+			this.setElement(posVide, h);
 			listeHeros.add(h);
 		}
 	}
 	// Génère une zone contenant un type d'obstacles donné
-	public void genereObsType(int n, Obstacle.TypeObstacle t) {
-		int voisin = 0;
-		Position pos = trouvePosVide();
-		PositionAxiale posa = new PositionAxiale(pos.getX(),pos.getY());
-		pos = posa.toPosition();
-		while( n > 0) {
-			voisin = alea(0, 5);
-			posa = pos.toPositionAxiale();
-			posa = posa.voisin(voisin);
-			pos = posa.toPosition();
-			if( (pos.getX() >= 0 && pos.getX() <= 49) && (pos.getY() >=0 && pos.getY() <=39 ) ) {
-				grille[pos.getY()][pos.getX()] = new Obstacle(this, t, pos);
+	public void genereZoneObsType(Obstacle.TypeObstacle t) {
+		int nbVoisins, taille;
+		PositionAxiale posA = trouvePosVide().toPositionAxiale();
+		taille = alea(3, 20);
+		while(taille > 0) {
+			nbVoisins = alea(1, 5);
+			for (int i = 0; i < nbVoisins; i++) {
+				Position voisin = posA.voisin(i).toPosition();
+				if (voisin.estValide(LARGEUR_MAP, HAUTEUR_MAP) && this.getElement(voisin) instanceof Sol) {
+					this.setElement(voisin, new Obstacle(this, t, voisin));
+				}
 			}
-			n--;
+			posA = posA.voisin(alea(0, nbVoisins));
+			taille -= nbVoisins;
 		}
 	}
-	// Génère aléatoirement des obstacles 
-	public void genereObstacles() {
-		int nbL,nbR,nbF,nbZone;
-		nbL = alea(100,300);
-		nbZone = alea(1,3);
-		while(nbZone-- > 0) {
-			genereObsType(nbL, Obstacle.TypeObstacle.EAU);
-		}
-		nbZone = alea(1,3);
-		nbR = alea(100,300);
-		while(nbZone-- > 0) {
-			genereObsType(nbR, Obstacle.TypeObstacle.ROCHER);
-		}
-		nbZone = alea(1,3);
-		nbF = alea(100,300);
-		while(nbZone-- > 0) {
-			genereObsType(nbR, Obstacle.TypeObstacle.FORET);
-		}
-		
-	}
-	
-	public int faireVoisinBis(Position p, int nb,Obstacle.TypeObstacle t) {
-		int a = 0;
-		PositionAxiale posVoisin = new PositionAxiale(p.getX(), p.getY());
-		if(nb > 0) {
-			if( (p.getX() >= 0 && p.getX() <= 49) && (p.getY() >=0 && p.getY() <=39 ) ) {
-				grille[p.getY()][p.getX()] = new Obstacle(this, t, p);
-				a = alea(0,5);
-				nb-=a;
+	// Vérsion récursive
+	public int genereObstaclesRecBis(Position p, int nb, Obstacle.TypeObstacle t) {
+		int a;
+		PositionAxiale voisin = p.toPositionAxiale();
+		if (nb > 0) {
+			if (p.estValide(LARGEUR_MAP, HAUTEUR_MAP)) {
+				setElement(p, new Obstacle(this, t, p));
+				nb -= a = alea(0, 5);
 				for (int i = 0; i < a; i++) {
-					posVoisin = p.toPositionAxiale();
-					posVoisin = posVoisin.voisin(i);
-					p = posVoisin.toPosition();
-					if( (p.getX() >= 0 && p.getX() <= 49) && (p.getY() >=0 && p.getY() <=39 ) )
-						grille[p.getY()][p.getX()] = new Obstacle(this, t, p);
+					voisin = p.toPositionAxiale();
+					p = voisin.voisin(i).toPosition();
+					if (p.estValide(LARGEUR_MAP, HAUTEUR_MAP))
+						setElement(p, new Obstacle(this, t, p));
 				}
 				for (int i = 0; i < a; i++) {
-					posVoisin = posVoisin.voisin(i);
-					p = posVoisin.toPosition();
-					nb = faireVoisinBis(p, nb,t);
+					p = voisin.voisin(i).toPosition();
+					nb = genereObstaclesRecBis(p, nb,t);
 				}
 			}
 		}
 		return nb;
 	}
-	
-	public void genereObstaclesrec() {
+	public void genereObstaclesrec(Obstacle.TypeObstacle t) {
 		Position p = trouvePosVide();
-		faireVoisinBis(p,40,Obstacle.TypeObstacle.FORET);
-		
+		genereObstaclesRecBis(p, 40, t);		
+	}
+	
+	// Génère aléatoirement des obstacles 
+	public void genereObstacles() {
+		int nbZone = alea(10, 20);
+		while (nbZone-- > 0)
+			genereZoneObsType(Obstacle.TypeObstacle.EAU);
+		nbZone = alea(10, 20);
+		while (nbZone-- > 0)
+			genereZoneObsType(Obstacle.TypeObstacle.ROCHER);
+		nbZone = alea(10, 20);
+		while (nbZone-- > 0)
+			genereZoneObsType(Obstacle.TypeObstacle.FORET);
 	}
 	// Génère aléatoirement des monstres
 	public void genereMonstres(int n) {
@@ -256,7 +218,7 @@ public class Carte implements IConfig {
 		while (c++ < n) {
 			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
 			Monstre m = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
-			grille[posVide.getY()][posVide.getX()] = m;
+			this.setElement(posVide, m);
 			listeMonstres.add(m);
 		}
 	}
@@ -265,6 +227,21 @@ public class Carte implements IConfig {
 		for (Element[] liste : grille)
 			for (Element e : liste)
 				e.creerHexM();
+	}
+	// Réinitialise les portees de déplacement
+	public void reinitPorteeDep() {
+		for (Element e : listeHeros)
+			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT());
+		for (Element e : listeMonstres)
+			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT());
+		recalculerZonesDep();
+	}
+	// Mets à jour toutes les zones de déplacement
+	public void recalculerZonesDep() {
+		for (Element e : listeHeros)
+			((Soldat)e).majZoneDeplacement();
+		for (Element e : listeMonstres)
+			((Soldat)e).majZoneDeplacement();
 	}
 	
 	// Méthodes d'interaction
@@ -275,7 +252,9 @@ public class Carte implements IConfig {
 			p = p.add(new Position(1, 0));
 		curseur = getElement(p);
 		infoBar.setCurseur(curseur);
-		if (selection instanceof Heros && curseur != null) ligne = new LigneH(selection, curseur, this);
+		if (selection instanceof Heros && curseur != null && ((Heros)selection).getZoneDeplacement().indexOf(curseur) != -1)
+			chemin = new CheminDijkstra(selection, curseur, ((Heros)selection).getZoneDeplacement());
+		else chemin = null;
 	}
 	// Déplace la sélection
 	public void deplacerSelection(Point s) {
@@ -286,25 +265,13 @@ public class Carte implements IConfig {
 		if (selection != null) selection = (p.equals(selection.pos)) ? null : e;
 		else selection = e;
 		infoBar.setSelection(selection);
-		ligne = null;
+		chemin = null;
 	}
 	// Zoome la zone d'affichage
 	public void zoomer(int zoom) {
-		int horiz, vert;
 		if (zoom >= 6 && zoom <= 18) {
 			rayonHex = (int)(2.5 * zoom);
-			horiz = (int)(Math.sqrt(3.) * rayonHex);
-			vert = (int)(3 / 2. * rayonHex);
-			largAffC = LARGEUR_MAP / horiz;
-			hautAffC = HAUTEUR_MAP / vert;
-			// Modification des extremités de la zone de la carte affichée
-			mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
-			mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
-			// Modification des dimensions de cette dernière
-			mapAff.setLargeur(mapAff.calculerLargeur());
-			mapAff.setHauteur(mapAff.calculerHauteur());
-			// Calcul des hexagones
-			calculerHex();
+			recalculerMapAff();
 		}
 	}
 	// Déplace la zone affichée autour du point p
@@ -332,7 +299,11 @@ public class Carte implements IConfig {
 			Position cible = p.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
 			if (mapAff.getUpLeft().getY() % 2 != 0 && cible.getY() % 2 == 0)
 				cible = cible.add(new Position(1, 0));
-			((Heros)selection).seDeplace(cible);
+			chemin = null;
+			CheminDijkstra ch = new CheminDijkstra(selection, getElement(cible), ((Soldat)selection).getZoneDeplacement());
+			DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch);
+			selection = null;
+			ds.start();
 		}
 	}
 	// Mets fin au tour du joueur
@@ -341,28 +312,29 @@ public class Carte implements IConfig {
 			panPartie.getTableauBord().getBoutonsTour().setVisible(false);
 			selection = null;
 			curseur = null;
-			ligne = null;
+			chemin = null;
 			infoPartie.setNbTours(infoPartie.getNbTours() + 1);
 			infoPartie.setJoueur(MECHANT);
 			panPartie.getTableauBord().getActionsHeros().setVisible(false);
 			panPartie.repaint();
 			TourOrdi to = new TourOrdi(this);
 			to.start();
+			while(to.isAlive());
+			reinitPorteeDep();
 		} else if (side == MECHANT) {
-			panPartie.getTableauBord().getBoutonsTour().setVisible(true);
 			infoPartie.setJoueur(GENTILS);
+			reinitPorteeDep();
 		}
 	}
 	
 	// Méthodes graphiques
 	public void seDessiner(Graphics g) {
 		mapAff.seDessiner(g);
-		if (selection != null) {
+		if (selection != null)
 			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacement(g);
-			selection.seDessinerCadre(g, COULEUR_SELECTION);
-		}
-		if (ligne != null) ligne.seDessiner(g);
+		if (chemin != null) chemin.seDessiner(g);
 		if (curseur != null) curseur.seDessinerCadre(g, COULEUR_CURSEUR);
+		if (selection != null) selection.seDessinerCadre(g, COULEUR_SELECTION);
 	}
 	
 	// Dessine la carte reelle sous forme de mini-map
