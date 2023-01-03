@@ -19,16 +19,16 @@ public class DeplacementSoldat extends Thread implements IConfig {
 	
 	// Méthodes
 	public void run() {
-		carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(false);
+		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(false);
 		deplacerSoldat();
-		carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(true);
+		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(true);
 	}
 	// Déplace le soldat case par case
 	public void deplacerSoldat() {
 		List<Element> ch = chemin.getChemin();
 		for (Element e : ch) {
 			try {
-				TimeUnit.SECONDS.sleep(1);
+				TimeUnit.MILLISECONDS.sleep(300);
 			} catch (InterruptedException e1) {}
 			soldat.seDeplace(e.pos);
 			soldat.setPorteeDeplacement(soldat.getPorteeDeplacement() - 1);

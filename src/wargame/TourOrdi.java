@@ -1,12 +1,13 @@
 package wargame;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class TourOrdi extends Thread implements IConfig {
 	// Infos
 	Carte carte;
 	List<Element> listeMonstres, listeHeros;
+	List<Thread> processus;
 	
 	// Constructeurs
 	public TourOrdi(Carte carte) {
@@ -14,7 +15,10 @@ public class TourOrdi extends Thread implements IConfig {
 		this.carte = carte;
 		this.listeMonstres = carte.getListeMonstres();
 		this.listeHeros = carte.getListeHeros();
+		this.processus = new ArrayList<Thread>();
 	}
+	// Accesseurs
+	public List<Thread> getProcessus() { return processus; }
 	
 	// Méthodes
 	public void run() {
@@ -28,7 +32,16 @@ public class TourOrdi extends Thread implements IConfig {
 			CheminDijkstra chemin = new CheminDijkstra(s, cible, s.getZoneDeplacement());
 			DeplacementSoldat dp = new DeplacementSoldat(carte, s, chemin);
 			dp.start();
+			processus.add(dp);
 		}
+		while(threadVivant(processus));
+		carte.reinitPorteeDep();
 		carte.finirTour(MECHANT);
+	}
+	// Vérifie si parmi une liste de threads il y en au moins un d'actif
+	public boolean threadVivant(List<Thread> threads) {
+		boolean ret = false;
+		for (Thread t : threads) ret = ret || t.isAlive();
+		return ret;	
 	}
 }

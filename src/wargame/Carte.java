@@ -229,6 +229,7 @@ public class Carte extends AConfig implements IConfig {
 				e.creerHexM();
 	}
 	// Réinitialise les portees de déplacement
+	// Réinitialise les portées de déplacement
 	public void reinitPorteeDep() {
 		for (Element e : listeHeros)
 			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT());
@@ -236,13 +237,15 @@ public class Carte extends AConfig implements IConfig {
 			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT());
 		recalculerZonesDep();
 	}
+	// Recalcules les zones de déplacement
 	// Mets à jour toutes les zones de déplacement
 	public void recalculerZonesDep() {
 		for (Element e : listeHeros)
 			((Soldat)e).majZoneDeplacement();
 		for (Element e : listeMonstres)
 			((Soldat)e).majZoneDeplacement();
-	}
+	}	
+
 	
 	// Méthodes d'interaction
 	// Déplace le curseur
@@ -319,9 +322,8 @@ public class Carte extends AConfig implements IConfig {
 			panPartie.repaint();
 			TourOrdi to = new TourOrdi(this);
 			to.start();
-			while(to.isAlive());
-			reinitPorteeDep();
 		} else if (side == MECHANT) {
+			panPartie.getTableauBord().getActionsHeros().setVisible(true);
 			infoPartie.setJoueur(GENTILS);
 			reinitPorteeDep();
 		}
