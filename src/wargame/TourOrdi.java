@@ -30,7 +30,7 @@ public class TourOrdi extends Thread implements IConfig {
 			Soldat s = (Soldat)e;
 			Element cible = s.aleaElem(s.getZoneDeplacement());
 			CheminDijkstra chemin = new CheminDijkstra(s, cible, s.getZoneDeplacement());
-			DeplacementSoldat dp = new DeplacementSoldat(carte, s, chemin);
+			DeplacementSoldat dp = new DeplacementSoldat(carte, s, chemin.getChemin());
 			dp.start();
 			processus.add(dp);
 		}

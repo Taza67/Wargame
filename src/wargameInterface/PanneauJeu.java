@@ -1,22 +1,33 @@
 package wargameInterface;
 
-import java.awt.BorderLayout;
-import java.awt.LayoutManager;
+import java.awt.Dimension;
+import java.awt.Insets;
+
+import javax.swing.JPanel;
 
 import wargame.Carte;
 
-public class PanneauJeu extends APanneau {
+public class PanneauJeu extends JPanel {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected PanneauGrille grille;
-	protected PanneauInfoBar infosCurseur;
+	protected PanneauInfoBulle infosBulle;
 	
 	public PanneauJeu(Carte carte) {
-		this.setLayout((LayoutManager)new BorderLayout());
 		this.grille = new PanneauGrille(carte);
-		this.infosCurseur = new PanneauInfoBar(carte);
-		this.add(grille, BorderLayout.NORTH);
-		this.add(infosCurseur, BorderLayout.SOUTH);
-		this.setDim(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP + 55);
+		this.infosBulle = new PanneauInfoBulle(carte);
+		this.add(grille);
+		this.add(infosBulle);
+		Insets insets = this.getInsets();
+		Dimension size;
+		this.setLayout(null);
+		// this.setLayout((LayoutManager)new BorderLayout());
+		// this.add(grille, BorderLayout.NORTH);
+		// this.add(infosCurseur, BorderLayout.SOUTH);
+		this.setPreferredSize(new Dimension(carte.LARGEUR_MAP, carte.HAUTEUR_MAP));
+		size = grille.getPreferredSize();
+		grille.setBounds(0 + insets.left, 0 + insets.top, size.width, size.height);
+		size = infosBulle.getPreferredSize();
+		infosBulle.setBounds(0 + insets.left, 0 + insets.top, size.width, size.height);;
 	}
 }

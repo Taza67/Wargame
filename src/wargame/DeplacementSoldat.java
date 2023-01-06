@@ -7,10 +7,10 @@ public class DeplacementSoldat extends Thread implements IConfig {
 	// Infos
 	Carte carte;
 	Soldat soldat;
-	CheminDijkstra chemin;
+	List<Element> chemin;
 	
 	// Constructeurs
-	public DeplacementSoldat(Carte carte, Soldat soldat, CheminDijkstra chemin) {
+	public DeplacementSoldat(Carte carte, Soldat soldat, List<Element> chemin) {
 		super();
 		this.carte = carte;
 		this.soldat = soldat;
@@ -25,8 +25,7 @@ public class DeplacementSoldat extends Thread implements IConfig {
 	}
 	// Déplace le soldat case par case
 	public void deplacerSoldat() {
-		List<Element> ch = chemin.getChemin();
-		for (Element e : ch) {
+		for (Element e : chemin) {
 			try {
 				TimeUnit.MILLISECONDS.sleep(300);
 			} catch (InterruptedException e1) {}

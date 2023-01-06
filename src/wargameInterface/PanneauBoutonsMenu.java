@@ -3,11 +3,12 @@ package wargameInterface;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauBoutonsMenu extends APanneau implements IConfig {
+public class PanneauBoutonsMenu extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	protected final Carte CARTE;
 	protected JButton menu;
@@ -18,7 +19,7 @@ public class PanneauBoutonsMenu extends APanneau implements IConfig {
 		menu = new JButton("Menu");
 		menu.setPreferredSize(new Dimension(carte.getLargMM(), 50));
 		this.setBackground(COULEUR_VIDE);
-		this.setDim(carte.getLargMM(), 50);
+		this.setPreferredSize(new Dimension(carte.getLargMM(), 50));
 		this.add(menu);
 	}
 

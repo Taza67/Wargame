@@ -1,11 +1,14 @@
 package wargameInterface;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
+
+import javax.swing.JPanel;
 
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauGrille extends APanneau implements IConfig {
+public class PanneauGrille extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	public final Carte CARTE;
@@ -15,7 +18,7 @@ public class PanneauGrille extends APanneau implements IConfig {
 		super();
 		this.CARTE = carte;
 		this.setBackground(COULEUR_VIDE);
-		setDim(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP);
+		this.setPreferredSize(new Dimension(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP));
 	}
 		
 	// Méthodes

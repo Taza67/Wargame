@@ -93,7 +93,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 				for (int d = 0; d < 6; d++) {
 					PositionAxiale vA = pA.voisin(d);
 					Position v = vA.toPosition();
-					if (carte.getElement(v) instanceof Sol && couleurs[v.getY()][v.getX()] != 1) {
+					if ((carte.getElement(v) instanceof Sol || carte.getElement(v) instanceof Soldat) && couleurs[v.getY()][v.getX()] != 1) {
 						zoneDeplacementBis.get(k).add(v);
 						couleurs[v.getY()][v.getX()] = 1;
 					}
@@ -145,8 +145,15 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 			difPow = PUISSANCE - advPow;
 		advPDV -= difPow;
 		pointsDeVie += difPow;
+		
+		advPDV = Math.min(advPDV, adv.getPOINTS_DE_VIE_MAX());
+		pointsDeVie = Math.min(pointsDeVie, POINTS_DE_VIE_MAX);
+		
 		adv.setPointsDeVie(advPDV);
-		if (advPDV <= 0) carte.mort(adv);
+		if (advPDV <= 0) {
+			carte.mort(adv);
+			this.seDeplace(adv.pos);
+		}
 		if (pointsDeVie <= 0) carte.mort(this);
 	}
 	// Attaque le soldat à distance

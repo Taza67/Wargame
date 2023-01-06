@@ -296,19 +296,41 @@ public class Carte extends AConfig implements IConfig {
 			calculerHex();
 		}
 	}
-	// Déplace l'élément sélectionné si c'est un héros
-	public void deplacerHeros(Point p) {
+	// Actions du héros
+	public void faireAgirHeros(Point p) {
+		Element cible;
 		if (selection instanceof Heros) {
-			Position cible = p.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
-			if (mapAff.getUpLeft().getY() % 2 != 0 && cible.getY() % 2 == 0)
-				cible = cible.add(new Position(1, 0));
+			Position posCible = p.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
+			if (mapAff.getUpLeft().getY() % 2 != 0 && posCible.getY() % 2 == 0)
+				posCible = posCible.add(new Position(1, 0));
+			cible = getElement(posCible);
+			if (cible instanceof Monstre)
+				faireAttaquerHeros(cible);
+			else
+				deplacerHeros(cible);
+		}
+	}
+	
+	// Déplace l'élément sélectionné si c'est un héros
+	public void deplacerHeros(Element cible) {
+		if (selection instanceof Heros) {
 			chemin = null;
-			CheminDijkstra ch = new CheminDijkstra(selection, getElement(cible), ((Soldat)selection).getZoneDeplacement());
-			DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch);
+			CheminDijkstra ch = new CheminDijkstra(selection, cible, ((Soldat)selection).getZoneDeplacement());
+			DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch.getChemin());
 			selection = null;
 			ds.start();
 		}
 	}
+	// Fait attaquer le héros
+	public void faireAttaquerHeros(Element cible) {
+		if (selection instanceof Heros) {
+			chemin = null;
+			AttaqueSoldat as = new AttaqueSoldat(this, (Soldat)selection, (Soldat)cible);
+			selection = null;
+			as.start();
+		}
+	}
+	
 	// Mets fin au tour du joueur
 	public void finirTour(char side) {
 		if (side == GENTILS) {

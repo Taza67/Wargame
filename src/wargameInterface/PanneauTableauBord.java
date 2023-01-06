@@ -4,10 +4,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauTableauBord extends APanneau implements IConfig {
+public class PanneauTableauBord extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private final Carte CARTE;
@@ -38,15 +40,10 @@ public class PanneauTableauBord extends APanneau implements IConfig {
 		this.add(boutonsTour);
 		this.add(actionsHeros);
 		this.setBackground(COULEUR_VIDE);
-		this.setDim(carte.getLargMM() + 10, Carte.HAUTEUR_MAP + 55);
+		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, Carte.HAUTEUR_MAP));
 	}
 
 	// Accesseurs
 	public PanneauBoutonsTour getBoutonsTour() { return boutonsTour; }
 	public PanneauActionsHeros getActionsHeros() { return actionsHeros; }
-	
-	// Méthodes
-	public void setDimBlanc() {
-		blanc.setPreferredSize(new Dimension(CARTE.getLargMM() + 10, Carte.HAUTEUR_MAP - CARTE.getHautMM() - 175));
-	}
 }

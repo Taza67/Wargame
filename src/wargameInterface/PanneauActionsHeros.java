@@ -3,10 +3,12 @@ package wargameInterface;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import wargame.Carte;
 import wargame.IConfig;
 
-public class PanneauActionsHeros extends APanneau implements IConfig {
+public class PanneauActionsHeros extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected JButton attaque;
@@ -27,6 +29,6 @@ public class PanneauActionsHeros extends APanneau implements IConfig {
 		add(campement, BorderLayout.CENTER);
 		add(longueMarche, BorderLayout.EAST);
 		this.setBackground(COULEUR_VIDE);
-		this.setDim(carte.getLargMM() + 10, 30);
+		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, 30));
 	}
 }
