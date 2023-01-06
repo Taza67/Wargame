@@ -1,7 +1,9 @@
 package wargame;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.TexturePaint;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class Carte extends AConfig implements IConfig {
 	private InfoPartie infoPartie;
 	// Liste des entités
 	List<Element> listeMonstres, listeHeros;
+	// Textures
+	TexturePaint[] texturesPaint;
 	
 	// Constructeurs
 	public Carte(PanneauPartie panPartie, int largeur, int hauteur) {
@@ -59,6 +63,19 @@ public class Carte extends AConfig implements IConfig {
 		infoBar = new InfoBar(selection, null);
 		// Infos sur la partie
 		infoPartie = new InfoPartie(this, nbHeros, nbMonstres);
+		
+		// Texture
+		String dir = System.getProperty("user.dir");
+		String[] sources = new String[6];
+		sources[0] = dir + "/sol.jpeg";
+		sources[1] = dir + "/foret.jpeg";
+		sources[2] = dir + "/rocher.png";
+		sources[3] = dir + "/eau.jpeg";
+		sources[4] = dir + "/fog.jpeg";
+		sources[5] = dir + "/soldat.png";
+		
+		BufferedImage[] bufferedImages = MethodesTextures.getBufferedImages(sources, panPartie);
+		texturesPaint = MethodesTextures.getTexturesPaint(bufferedImages);
 	}
 	
 	// Accesseurs
@@ -352,7 +369,7 @@ public class Carte extends AConfig implements IConfig {
 	}
 	
 	// Méthodes graphiques
-	public void seDessiner(Graphics g) {
+	public void seDessiner(Graphics2D g) {
 		mapAff.seDessiner(g);
 		if (selection != null)
 			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacement(g);
@@ -362,7 +379,7 @@ public class Carte extends AConfig implements IConfig {
 	}
 	
 	// Dessine la carte reelle sous forme de mini-map
-	public void seDessinerMM(Graphics g) {
+	public void seDessinerMM(Graphics2D g) {
 		for (Element[] liste : grille)
 			for (Element e : liste)
 				e.seDessinerMM(g);

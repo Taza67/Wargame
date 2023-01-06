@@ -5,6 +5,7 @@ import java.awt.Insets;
 
 import javax.swing.JPanel;
 
+import wargame.AConfig;
 import wargame.Carte;
 
 public class PanneauJeu extends JPanel {
@@ -24,7 +25,7 @@ public class PanneauJeu extends JPanel {
 		// this.setLayout((LayoutManager)new BorderLayout());
 		// this.add(grille, BorderLayout.NORTH);
 		// this.add(infosCurseur, BorderLayout.SOUTH);
-		this.setPreferredSize(new Dimension(carte.LARGEUR_MAP, carte.HAUTEUR_MAP));
+		this.setPreferredSize(new Dimension(AConfig.LARGEUR_MAP, AConfig.HAUTEUR_MAP));
 		size = grille.getPreferredSize();
 		grille.setBounds(0 + insets.left, 0 + insets.top, size.width, size.height);
 		size = infosBulle.getPreferredSize();

@@ -1,6 +1,6 @@
 package wargame;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class ZoneR {
 	// Infos
@@ -77,7 +77,7 @@ public class ZoneR {
 	
 	// Méthodes graphique
 	// Dessine une zone de la carte
-	public void seDessiner(Graphics g) { 
+	public void seDessiner(Graphics2D g) { 
 		for (int i = upLeft.getY(); i <= downRight.getY(); i++)
 			for (int j = upLeft.getX(); j <= downRight.getX(); j++)
 				carte.getElement(new Position(j, i)).seDessiner(g);

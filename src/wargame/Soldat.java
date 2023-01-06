@@ -1,7 +1,7 @@
 package wargame;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,12 +176,12 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	
 	// Méthodes graphiques
 	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
-	public void dessinerZoneDeplacement(Graphics g) {
+	public void dessinerZoneDeplacement(Graphics2D g) {
 		for (Element e : zoneDeplacement)
 			e.seDessinerCadre(g, Color.white);
 	}
 	// Dessine un cadre autour des éléments dans la mini-map
-	public void dessinerZoneDeplacementMM(Graphics g) {
+	public void dessinerZoneDeplacementMM(Graphics2D g) {
 		for (Element e : zoneDeplacement)
 			e.seDessinerCadreMM(g, Color.white);
 	}

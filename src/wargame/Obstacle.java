@@ -1,22 +1,19 @@
 package wargame;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 public class Obstacle extends Element implements IConfig {
 	// Type
 	public enum TypeObstacle {
 		// Liste
-		ROCHER(COULEUR_ROCHER), FORET(COULEUR_FORET), EAU(COULEUR_EAU);
+		ROCHER(2), FORET(1), EAU(3);
 		
 		// Infos
-		private final Color COULEUR;
+		private final int NUM_TEXTURE;
 		
 		// Constructeurs
-		private TypeObstacle(Color couleur) { COULEUR = couleur; }
+		private TypeObstacle(int numTexture) { NUM_TEXTURE = numTexture; }
 		
 		// Accesseur
-		public Color getCOULEUR() { return COULEUR; }
+		public int getNUM_TEXTURE() { return NUM_TEXTURE; }
 		// Pseudo-accesseurs
 		public static TypeObstacle getObstacleAlea() { 
 			return values() [(int) (Math.random() * values().length)];
@@ -32,6 +29,7 @@ public class Obstacle extends Element implements IConfig {
 		TYPE = type; 
 		this.pos = pos;
 		creerHex();
+		numTexture = type.getNUM_TEXTURE();
 	}
 	
 	// Accesseurs
@@ -44,27 +42,5 @@ public class Obstacle extends Element implements IConfig {
 		if (visible == true)
 			desc += " : [ Type : " + TYPE + " ]";
 		return desc;
-	}
-	
-	// Méthodes graphiques
-	// Dessine l'obstacle
-	public void seDessiner(Graphics g) {
-		g.setColor(TYPE.getCOULEUR());
-		super.seDessiner(g);
-	}
-	// Dessine l'obstacle avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
-	public void seDessinerCadre(Graphics g, Color cadre) {
-		g.setColor(TYPE.getCOULEUR());
-		super.seDessinerCadre(g, cadre);
-	}
-	// Dessine l'obstacle dans la mini-map
-	public void seDessinerMM(Graphics g) {
-		g.setColor(TYPE.getCOULEUR());
-		super.seDessinerMM(g);
-	}
-	// Dessine l'obstacle avec un cadre qui indique son état dans la mini-map
-	public void seDessinerCadreMM(Graphics g, Color couleurCadre) { 
-		g.setColor(TYPE.getCOULEUR());
-		super.seDessinerCadreMM(g, couleurCadre);
 	}
 }

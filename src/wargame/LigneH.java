@@ -1,6 +1,6 @@
 package wargame;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class LigneH implements IConfig {
 	}
 	
 	// Méthodes graphiques
-	void seDessiner(Graphics g) {
+	void seDessiner(Graphics2D g) {
 		for (Element e : ligne)
 			if (e != null) e.seDessinerCadre(g, COULEUR_LIGNE);
 	}

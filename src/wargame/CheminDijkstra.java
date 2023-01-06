@@ -1,6 +1,6 @@
 package wargame;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +88,7 @@ public class CheminDijkstra implements IConfig {
 	}
 	
 	// Méthodes grahiques
-	public void seDessiner(Graphics g) {
+	public void seDessiner(Graphics2D g) {
 		for (Element e : chemin)
 			if (e != null) e.seDessinerCadre(g, COULEUR_CHEMIN);
 	}

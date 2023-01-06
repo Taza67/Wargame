@@ -2,6 +2,7 @@ package wargameInterface;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
@@ -24,6 +25,7 @@ public class PanneauMiniMap extends JPanel implements IConfig {
 	// Méthodes
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		CARTE.seDessinerMM(g);
+		Graphics2D g2d = (Graphics2D)g;
+		CARTE.seDessinerMM(g2d);
 	}
 }

@@ -3,7 +3,7 @@ package wargame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public abstract class Element implements IConfig {
 	// Infos
@@ -11,6 +11,7 @@ public abstract class Element implements IConfig {
 	protected Position pos;
 	protected Hexagone hex, hexMM;
 	protected boolean visible = true;
+	protected int numTexture;
 	
 	// Méthodes
 	// Crée les deux hexagones
@@ -43,43 +44,44 @@ public abstract class Element implements IConfig {
 		hexMM = new Hexagone(centre, rayon);
 	}
 	// Dessine l'hexagone passé en paramètre
-	public void seDessinerBis(Hexagone h, Graphics g) {
-		if (visible == false) g.setColor(COULEUR_INCONNU);
-		h.seDessiner(g);
+	public void seDessinerBis(Hexagone h, Graphics2D g) {
+		int numT = numTexture;
+		if (visible == false) numT = 4;
+		h.seDessiner(g, carte.texturesPaint[numT]);
 	}
 	// Dessine l'élément
-	public void seDessiner(Graphics g) {
+	public void seDessiner(Graphics2D g) {
 		seDessinerBis(hex, g);
 	}
 	// Dessine l'élément dans la mini-map
-	public void seDessinerMM(Graphics g) {
+	public void seDessinerMM(Graphics2D g) {
 		seDessinerBis(hexMM, g);
 	}
 	// Dessine l'hexagone passé en paramètre avec un cadre
-	public void seDessinerCadreBis(Hexagone h, Graphics g, Color cadre) {
-		int rayon = h.getRayon();
-		Color courante = g.getColor();
-		if (visible == false) courante = COULEUR_INCONNU;
-		g.setColor(courante);
-		h.seDessiner(g);
-		g.setColor(cadre);
+	public void seDessinerCadreBis(Hexagone h, Graphics2D g, Color cadre) {
+		int rayon = h.getRayon(),
+			numT = numTexture;
+		if (visible == false) numT = 4;
+		h.seDessiner(g, carte.texturesPaint[numT]);
+		
 		h.setRayon((int)(rayon * 0.75));
+		g.setColor(cadre);
 		h.seDessiner(g);
-		g.setColor(courante);
+		
 		h.setRayon((int)(rayon * 0.5));
-		h.seDessiner(g);
+		h.seDessiner(g, carte.texturesPaint[numT]);
 		h.setRayon(rayon);
 	}
 	// Dessine l'élément avec un cadre
-	public void seDessinerCadre(Graphics g, Color cadre) {
+	public void seDessinerCadre(Graphics2D g, Color cadre) {
 		seDessinerCadreBis(hex, g, cadre);
 	}
 	// Dessine l'élément avec un cadre dans la mini-map
-	public void seDessinerCadreMM(Graphics g, Color cadre) {
+	public void seDessinerCadreMM(Graphics2D g, Color cadre) {
 		seDessinerCadreBis(hexMM, g, cadre);
 	}
 	// Dessine un texte centré au sein d'un hexagone
-	public void drawCenteredString(Graphics g, String text, Font font) {
+	public void drawCenteredString(Graphics2D g, String text, Font font) {
 		int larg, haut, rayon,
 			x, y;
 		Point centre;

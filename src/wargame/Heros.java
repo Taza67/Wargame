@@ -1,9 +1,5 @@
 package wargame;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-
 public class Heros extends Soldat {
 	// Infos
 	private final String NOM;
@@ -14,6 +10,7 @@ public class Heros extends Soldat {
 		super(carte, pos, type.getPoints(), type.getPorteeVisuelle(), type.getPorteeDeplacement(), type.getPuissance(), type.getTir());
 		NOM = nom; TYPE = type;
 		visible = true;
+		numTexture = 5;
 		this.getZoneVisuelle().rendreVisible();
 	}
 	
@@ -36,29 +33,5 @@ public class Heros extends Soldat {
 			this.getZoneVisuelle().rendreVisible();
 		}
 		return possible;
-	}
-	
-	// Méthodes graphiques
-	// Dessine l'héros
-	public void seDessiner(Graphics g) {
-		g.setColor(COULEUR_HEROS);
-		super.seDessiner(g);
-		drawCenteredString(g, NOM, (new Font("Courier", Font.BOLD, (int)(hex.getRayon() * 0.75))));
-	}
-	// Dessine l'héros avec un cadre qui indique son état (Curseur dessus, Sélectionné, dans Zone Deplacment)
-	public void seDessinerCadre(Graphics g, Color couleurCadre) { 
-		g.setColor(COULEUR_HEROS);
-		super.seDessinerCadre(g, couleurCadre);
-		drawCenteredString(g, NOM, (new Font("Courier", Font.BOLD, (int)(hex.getRayon() * 0.5))));
-	}
-	// Dessine l'héros dans la mini-map
-	public void seDessinerMM(Graphics g) {
-		g.setColor(COULEUR_HEROS);
-		super.seDessinerMM(g);
-	}
-	// Dessine l'héros avec un cadre qui indique son état dans la mini-map
-	public void seDessinerCadreMM(Graphics g, Color couleurCadre) { 
-		g.setColor(COULEUR_HEROS);
-		super.seDessinerCadreMM(g, couleurCadre);
 	}
 }

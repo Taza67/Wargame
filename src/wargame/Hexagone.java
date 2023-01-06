@@ -1,7 +1,10 @@
 package wargame;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.TexturePaint;
 
 public class Hexagone {
 	// Infos
@@ -40,10 +43,7 @@ public class Hexagone {
 		for (int i = 0; i < 6; i++)
 			extremites[i] = calculerAutreSommet(i);
 	}
-	
-	// Méthodes graphiques
-	// Dessine l'hexagone
-	public void seDessiner(Graphics g) {
+	public Polygon toPolygon() {
 		int tabX[], tabY[];
 		tabX = new int[6];
 		tabY = new int[6];
@@ -51,8 +51,22 @@ public class Hexagone {
 			tabX[i] = (int)extremites[i].getX();
 			tabY[i] = (int)extremites[i].getY();
 		}
-		g.fillPolygon(tabX, tabY, 6);
-		g.setColor(Color.darkGray);
-		g.drawPolygon(tabX, tabY, 6);
+		Polygon p = new Polygon(tabX, tabY, 6);
+		return p;
+	}
+	
+	// Méthodes graphiques
+	// Dessine l'hexagone
+	public void seDessiner(Graphics2D g) {
+		Polygon p = this.toPolygon();
+		g.fill(p);
+		g.setStroke(new BasicStroke(2));
+		g.setColor(Color.black);
+		g.draw(p);
+	}
+	
+	public void seDessiner(Graphics2D g, TexturePaint imagePaint) {
+		g.setPaint(imagePaint);
+		seDessiner(g);
 	}
 }
