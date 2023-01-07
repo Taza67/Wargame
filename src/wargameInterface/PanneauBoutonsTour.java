@@ -2,6 +2,8 @@ package wargameInterface;
 
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -23,6 +25,12 @@ public class PanneauBoutonsTour extends JPanel implements IConfig {
 		this.setBackground(COULEUR_VIDE);
 		this.setPreferredSize(new Dimension(carte.getLargMM(), 50));
 		this.add(finTour);
+		
+		finTour.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				carte.finirTour(GENTILS);
+			}
+		});;
 	}
 
 	// Accesseurs

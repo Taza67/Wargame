@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import wargame.Sol.TypeSol;
 import wargameInterface.PanneauPartie;
 
 public class Carte extends AConfig implements IConfig {
@@ -18,6 +19,7 @@ public class Carte extends AConfig implements IConfig {
 	// Interactions
 	private Element curseur, selection;
 	private CheminDijkstra chemin;
+	private int typeAttaque = CORPS_CORPS;				// Type de l'attaque du soldat (DISTANCE, CORPS_CORPS)
 	// Infos sur la partie
 	private InfoPartie infoPartie;
 	// Liste des entités
@@ -47,12 +49,12 @@ public class Carte extends AConfig implements IConfig {
 		centreAff = new Position(largeur / 2, hauteur / 2);
 		mapAff = new ZoneR(this, centreAff, largAffC, hautAffC);
 		// Calcul des origines
-		origine = new Point(rayonHex, rayonHex - 2);
+		origine = new Point(0, 0);
 		origineMM = new Point(rayonMM + 5, rayonMM + 5);
 		// Génération des éléments
 		for (int i = 0; i < hauteur; i++)
 			for (int j = 0; j < largeur; j++)
-				grille[i][j] = new Sol(this, new Position(j, i));	
+				grille[i][j] = new Sol(this, TypeSol.getSolAlea() ,new Position(j, i));	
 		nbHeros = nbMonstres = 6;
 		genereObstacles();
 		genereHeros(nbHeros);
@@ -66,13 +68,18 @@ public class Carte extends AConfig implements IConfig {
 		
 		// Texture
 		String dir = System.getProperty("user.dir");
-		String[] sources = new String[6];
-		sources[0] = dir + "/sol.jpeg";
-		sources[1] = dir + "/foret.jpeg";
-		sources[2] = dir + "/rocher.png";
-		sources[3] = dir + "/eau.jpeg";
-		sources[4] = dir + "/fog.jpeg";
-		sources[5] = dir + "/soldat.png";
+		String[] sources = new String[11];
+		sources[TEX_PLAINE] = dir + "/plaine.jpeg";
+		sources[TEX_MONTAGNE] = dir + "/montagne.jpeg";
+		sources[TEX_COLLINE] = dir + "/colline.jpeg";
+		sources[TEX_VILLAGE] = dir + "/village.jpeg";
+		sources[TEX_DESERT] = dir + "/desert.jpeg";
+		sources[TEX_FORET] = dir + "/foret.jpeg";
+		sources[TEX_ROCHER] = dir + "/rocher.png";
+		sources[TEX_EAU] = dir + "/eau.jpeg";
+		sources[TEX_NUAGE] = dir + "/nuage.jpeg";
+		sources[TEX_HEROS] = dir + "/heros.png";
+		sources[TEX_MONSTRE] = dir + "/monstre.png";
 		
 		BufferedImage[] bufferedImages = MethodesTextures.getBufferedImages(sources, panPartie);
 		texturesPaint = MethodesTextures.getTexturesPaint(bufferedImages);
@@ -96,6 +103,7 @@ public class Carte extends AConfig implements IConfig {
 	// Mutateurs
 	public void setCurseur(Element curseur) { this.curseur = curseur; }
 	public void setSelection(Element selection) { this.selection = selection; }
+	public void setTypeAttaque(int typeAttaque) { this.typeAttaque = typeAttaque; }
 	//// Pseudo-mutateurs
 	public void setElement(Position pos, Element elem) {
 		if (pos.estValide(largC, hautC)) grille[pos.getY()][pos.getX()] = elem;
@@ -156,7 +164,7 @@ public class Carte extends AConfig implements IConfig {
 	}
 	// Tue le soldat
 	public void mort(Soldat victime) {
-		setElement(victime.pos, new Sol(this, new Position(victime.pos.getX(), victime.pos.getY())));
+		setElement(victime.pos, victime.getSol());
 		victime = null;
 	}
 	// Génère aléatoirement des héros 
@@ -252,9 +260,9 @@ public class Carte extends AConfig implements IConfig {
 	// Réinitialise les portées de déplacement
 	public void reinitPorteeDep() {
 		for (Element e : listeHeros)
-			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT());
+			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT_MAX());
 		for (Element e : listeMonstres)
-			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT());
+			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT_MAX());
 		recalculerZonesDep();
 	}
 	// Recalcules les zones de déplacement
@@ -344,10 +352,17 @@ public class Carte extends AConfig implements IConfig {
 	// Fait attaquer le héros
 	public void faireAttaquerHeros(Element cible) {
 		if (selection instanceof Heros) {
-			chemin = null;
-			AttaqueSoldat as = new AttaqueSoldat(this, (Soldat)selection, (Soldat)cible);
-			selection = null;
-			as.start();
+			if (typeAttaque == CORPS_CORPS) {
+				chemin = null;
+				AttaqueSoldatCorps as = new AttaqueSoldatCorps(this, (Soldat)selection, (Soldat)cible);
+				selection = null;
+				as.start();
+			} else if (typeAttaque == DISTANCE) {
+				chemin = null;
+				AttaqueSoldatDistance as = new AttaqueSoldatDistance(this, (Soldat)selection, (Soldat)cible);
+				selection = null;
+				as.start();
+			}
 		}
 	}
 	
@@ -377,14 +392,11 @@ public class Carte extends AConfig implements IConfig {
 		if (selection != null)
 			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacement(g);
 		if (chemin != null) chemin.seDessiner(g);
-		if (curseur != null) {
-			curseur.seDessinerCadre(g, COULEUR_CURSEUR);
-			curseur.dessinerInfoBulle(g);
-		}
-		if (selection != null) {
-			selection.seDessinerCadre(g, COULEUR_SELECTION);
-			selection.dessinerInfoBulle(g);
-		}
+		if (selection instanceof Heros && typeAttaque == DISTANCE) ((Soldat)selection).getZoneVisuelle().seDessiner(g);
+		if (selection != null) selection.seDessinerCadre(g, COULEUR_SELECTION);
+		if (curseur != null) curseur.seDessinerCadre(g, COULEUR_CURSEUR);
+		if (curseur != null) curseur.dessinerInfoBulle(g);
+		if (selection != null) selection.dessinerInfoBulle(g);
 	}
 	
 	// Dessine la carte reelle sous forme de mini-map

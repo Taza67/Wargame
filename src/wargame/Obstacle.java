@@ -4,7 +4,7 @@ public class Obstacle extends Element implements IConfig {
 	// Type
 	public enum TypeObstacle {
 		// Liste
-		ROCHER(2), FORET(1), EAU(3);
+		ROCHER(TEX_ROCHER), FORET(TEX_FORET), EAU(TEX_EAU);
 		
 		// Infos
 		private final int NUM_TEXTURE;

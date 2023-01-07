@@ -1,6 +1,6 @@
 package wargame;
 
-public class Heros extends Soldat {
+public class Heros extends Soldat  {
 	// Infos
 	private final String NOM;
 	private final TypesH TYPE;
@@ -10,7 +10,7 @@ public class Heros extends Soldat {
 		super(carte, pos, type.getPoints(), type.getPorteeVisuelle(), type.getPorteeDeplacement(), type.getPuissance(), type.getTir());
 		NOM = nom; TYPE = type;
 		visible = true;
-		numTexture = 5;
+		numTexture = TEX_HEROS;
 		this.getZoneVisuelle().rendreVisible();
 	}
 	

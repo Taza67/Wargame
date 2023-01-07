@@ -1,5 +1,7 @@
 package wargame;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,5 +60,12 @@ public class ZoneH {
 	}
 	
 	// Méthodes graphiques
+	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
+	public void seDessiner(Graphics2D g) {
+		int n = 0, m = 0;
+		for (Element e : zone)
+			if (e instanceof Monstre)
+				e.seDessinerCadre(g, Color.red);
+	}
 	
 }

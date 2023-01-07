@@ -3,7 +3,7 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AttaqueSoldat extends Thread implements IConfig {
+public class AttaqueSoldatCorps extends Thread implements IConfig {
 	// Infos
 	Carte carte;
 	Soldat soldat;
@@ -11,7 +11,7 @@ public class AttaqueSoldat extends Thread implements IConfig {
 	List<Element> chemin;
 	
 	// Constructeurs
-	public AttaqueSoldat(Carte carte, Soldat soldat, Soldat cible) {
+	public AttaqueSoldatCorps(Carte carte, Soldat soldat, Soldat cible) {
 		super();
 		this.carte = carte;
 		this.soldat = soldat;

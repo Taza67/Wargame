@@ -68,8 +68,9 @@ public class PanneauPartie extends JPanel implements IConfig {
 			public void mouseWheelMoved(MouseWheelEvent e) { 
 				zoom -= e.getWheelRotation(); 
 				tableauBord.boutonsMiniMap.slider.setValue(zoom);
-				carte.zoomer(zoom); 
-				repaint(); 
+				carte.zoomer(zoom);
+				jeu.repaint();
+				tableauBord.miniMap.repaint();
 			}
 		});
 		tableauBord.boutonsMiniMap.slider.addChangeListener(new ChangeListener() {
@@ -79,14 +80,10 @@ public class PanneauPartie extends JPanel implements IConfig {
 			public void actionPerformed(ActionEvent e) {
 				carte.zoomer(10);
 				tableauBord.boutonsMiniMap.slider.setValue(10);
-				repaint();
+				jeu.repaint();
+				tableauBord.miniMap.repaint();
 			};
 		});
-		tableauBord.boutonsTour.finTour.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				carte.finirTour(GENTILS);
-			}
-		});;
 	}
 	
 	// Accesseurs

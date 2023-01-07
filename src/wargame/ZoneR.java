@@ -78,8 +78,8 @@ public class ZoneR {
 	// Méthodes graphique
 	// Dessine une zone de la carte
 	public void seDessiner(Graphics2D g) { 
-		for (int i = upLeft.getY(); i <= downRight.getY(); i++)
-			for (int j = upLeft.getX(); j <= downRight.getX(); j++)
+		for (int i = upLeft.getY(); i <= Math.min(carte.getHautC() - 1, downRight.getY() + 2); i++)
+			for (int j = upLeft.getX(); j <= Math.min(carte.getLargC() - 1, downRight.getX() + 2); j++)
 				carte.getElement(new Position(j, i)).seDessiner(g);
 	}
 }

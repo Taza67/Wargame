@@ -9,22 +9,25 @@ public interface IConfig {
 	char GENTILS = 'g',
 		 MECHANT = 'm';
 	// Couleurs
-	Color COULEUR_VIDE = Color.darkGray,
-		  COULEUR_INCONNU = Color.lightGray,
-		  COULEUR_TEXTE = Color.black,
-		  // Vivants
-		  COULEUR_MONSTRES = Color.black,
-		  COULEUR_HEROS = Color.red, 
-		  COULEUR_HEROS_DEJA_JOUE = Color.pink,
-		  // Obstacles
-		  COULEUR_EAU = new Color(102, 205, 170), 
-		  COULEUR_FORET = new Color(34, 139, 34), 
-		  COULEUR_ROCHER = new Color(112, 128, 144),
-		  // Sol
-		  COULEUR_SOL = new Color(194, 178, 128),
+	Color COULEUR_TEXTE = Color.black,
 		  // Interaction
 		  COULEUR_SELECTION = Color.orange,
 		  COULEUR_CURSEUR = Color.yellow,
 		  COULEUR_LIGNE = new Color(176, 196, 222),
-		  COULEUR_CHEMIN = new Color(64, 64, 90);
+		  COULEUR_CHEMIN = new Color(64, 64, 90),
+		  COULEUR_VIDE = Color.darkGray;
+	// Textures
+	int TEX_PLAINE = 0,
+		TEX_MONTAGNE = 1,
+		TEX_COLLINE = 2,
+		TEX_VILLAGE = 3,
+		TEX_DESERT = 4,
+		TEX_FORET = 5,
+		TEX_ROCHER = 6,
+		TEX_EAU = 7,
+		TEX_NUAGE = 8,
+		TEX_HEROS = 9,
+		TEX_MONSTRE = 10;
+	// Type de l'attaque
+	int CORPS_CORPS = 0, DISTANCE = 1;
 }
