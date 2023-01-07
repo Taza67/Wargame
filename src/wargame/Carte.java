@@ -266,13 +266,13 @@ public class Carte extends AConfig implements IConfig {
 		recalculerZonesDep();
 	}
 	// Recalcules les zones de déplacement
-	// Mets à jour toutes les zones de déplacement
 	public void recalculerZonesDep() {
 		for (Element e : listeHeros)
 			((Soldat)e).majZoneDeplacement();
 		for (Element e : listeMonstres)
 			((Soldat)e).majZoneDeplacement();
 	}
+	// Recalcules les zones visuelles et les appliques
 	public void recalculerZonesVisuelles() {
 		for (Element e : listeHeros) {
 			((Soldat)e).majZoneVisuelle();
@@ -280,6 +280,11 @@ public class Carte extends AConfig implements IConfig {
 		}
 		for (Element e : listeMonstres)
 			((Soldat)e).majZoneVisuelle();
+	}
+	// Applique les guérisons là où il faut
+	public void appliquerGuerisons(List<Element> soldats) {
+		for (Element s : soldats)
+			if (!((Soldat)s).getAJoue()) ((Soldat)s).guerir();
 	}
 
 	
@@ -335,7 +340,7 @@ public class Carte extends AConfig implements IConfig {
 	// Actions du héros
 	public void faireAgirHeros(Point p) {
 		Element cible;
-		if (selection instanceof Heros) {
+		if (selection instanceof Heros && !((Soldat)selection).getAJoue()) {
 			Position posCible = p.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
 			if (mapAff.getUpLeft().getY() % 2 != 0 && posCible.getY() % 2 == 0)
 				posCible = posCible.add(new Position(1, 0));
@@ -348,27 +353,38 @@ public class Carte extends AConfig implements IConfig {
 	}
 	// Déplace l'élément sélectionné si c'est un héros
 	public void deplacerHeros(Element cible) {
+		Heros h = (Heros)selection;
 		if (selection instanceof Heros) {
-			chemin = null;
-			CheminDijkstra ch = new CheminDijkstra(selection, cible, ((Soldat)selection).getZoneDeplacement());
-			DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch.getChemin());
-			selection = null;
-			ds.start();
+			if (((Soldat)selection).zoneDeplacementContient(cible)) {
+				chemin = null;
+				CheminDijkstra ch = new CheminDijkstra(selection, cible, ((Soldat)selection).getZoneDeplacement());
+				DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch.getChemin());
+				selection = null;
+				ds.start();
+				((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
+			}
 		}
 	}
 	// Fait attaquer le héros
 	public void faireAttaquerHeros(Element cible) {
+		Heros h = (Heros)selection;
 		if (selection instanceof Heros) {
 			if (typeAttaque == CORPS_CORPS) {
-				chemin = null;
-				AttaqueSoldatCorps as = new AttaqueSoldatCorps(this, (Soldat)selection, (Soldat)cible);
-				selection = null;
-				as.start();
+				if (((Soldat)selection).zoneDeplacementContient(cible)) {
+					chemin = null;
+					AttaqueSoldatCorps as = new AttaqueSoldatCorps(this, (Soldat)selection, (Soldat)cible);
+					selection = null;
+					as.start();
+					((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
+				}
 			} else if (typeAttaque == DISTANCE) {
-				chemin = null;
-				AttaqueSoldatDistance as = new AttaqueSoldatDistance(this, (Soldat)selection, (Soldat)cible);
-				selection = null;
-				as.start();
+				if (((Soldat)selection).verifieAttaqueDistance((Soldat)cible)) {
+					chemin = null;
+					AttaqueSoldatDistance as = new AttaqueSoldatDistance(this, (Soldat)selection, (Soldat)cible);
+					selection = null;
+					as.start();
+					((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
+				}
 			}
 		}
 	}
@@ -376,6 +392,7 @@ public class Carte extends AConfig implements IConfig {
 	// Mets fin au tour du joueur
 	public void finirTour(char side) {
 		if (side == GENTILS) {
+			appliquerGuerisons(listeMonstres);
 			panPartie.getTableauBord().getBoutonsTour().setVisible(false);
 			selection = null;
 			curseur = null;
@@ -387,6 +404,7 @@ public class Carte extends AConfig implements IConfig {
 			TourOrdi to = new TourOrdi(this);
 			to.start();
 		} else if (side == MECHANT) {
+			appliquerGuerisons(listeHeros);
 			panPartie.getTableauBord().getActionsHeros().setVisible(true);
 			infoPartie.setJoueur(GENTILS);
 			reinitPorteeDep();

@@ -30,4 +30,10 @@ public interface IConfig {
 		TEX_MONSTRE = 10;
 	// Type de l'attaque
 	int CORPS_CORPS = 0, DISTANCE = 1;
+	// Soldats
+	int GUERISON_MIN = 3,
+			MOVE_MIN = 1,
+			POW_MIN = 4,
+			TIR_MIN = 4,
+			VISION_MIN = 1;
 }

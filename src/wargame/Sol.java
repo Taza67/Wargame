@@ -67,27 +67,38 @@ public class Sol extends Element implements IConfig {
 	// Applique les effets du sol au soldat
 	public void appliquerEffets(Soldat soldat) {
 		// Points de vie
-		soldat.setGuerison(soldat.getGuerison() + EFFET_GUERISON);
+		soldat.setGuerison(Math.max(GUERISON_MIN, soldat.getGuerison() + EFFET_GUERISON));
 		// Portee visuelle
-		soldat.setPorteeVisuelle(soldat.getPorteeVisuelle() + EFFET_PORTEE_VISUELLE);
+		appliquerEffetPorteeVisuelle(soldat);
 		// Portee deplacement
-		soldat.setPorteeDeplacement(soldat.getPorteeDeplacement() + EFFET_PORTEE_DEPLACEMENT);
+		soldat.setPorteeDeplacement(Math.max(MOVE_MIN, soldat.getPorteeDeplacement() + EFFET_PORTEE_DEPLACEMENT));
 		// Puissance
-		soldat.setPuissance(soldat.getPuissance() + EFFET_PUISSANCE);
+		soldat.setPuissance(Math.max(POW_MIN, soldat.getPuissance() + EFFET_PUISSANCE));
 		// Tir
-		if (soldat.getTir() > 0) 
-			soldat.setTir(soldat.getTir() + EFFET_TIR);
+		if (soldat.getTir() > 0)
+			soldat.setTir(Math.max(TIR_MIN, soldat.getTir() + EFFET_TIR));
 	}
+	// Applique l'effet de la portee visuelle
+	public void appliquerEffetPorteeVisuelle(Soldat soldat) {
+		soldat.setPorteeVisuelle(Math.max(VISION_MIN, soldat.getPorteeVisuelle() - EFFET_PORTEE_VISUELLE));
+	}
+	
 	// Enlever les effets du sol au soldat
 	public void enleverEffets(Soldat soldat) {
+		// Points de vie
+		soldat.setGuerison(soldat.getGUERISON_BASE());
 		// Portee visuelle
-		soldat.setPorteeVisuelle(soldat.getPorteeVisuelle() - EFFET_PORTEE_VISUELLE);
+		enleverEffetPorteeVisuelle(soldat);
 		// Portee deplacement
-		soldat.setPorteeDeplacement(soldat.getPorteeDeplacement() - EFFET_PORTEE_DEPLACEMENT);
+		soldat.setPorteeDeplacement(Math.max(0, soldat.getPorteeDeplacement() - EFFET_PORTEE_DEPLACEMENT));
 		// Puissance
-		soldat.setPuissance(soldat.getPuissance() - EFFET_PUISSANCE);
+		soldat.setPuissance(soldat.getPUISSANCE_BASE());
 		// Tir
 		if (soldat.getTir() > 0) 
-			soldat.setTir(soldat.getTir() - EFFET_TIR);
+			soldat.setTir(soldat.getTIR_BASE());
+	}
+	// Enlève l'effet de la portee visuelle
+	public void enleverEffetPorteeVisuelle(Soldat soldat) {
+		soldat.setPorteeVisuelle(soldat.getPORTEE_VISUELLE_BASE());
 	}
 }
