@@ -157,9 +157,9 @@ public class Carte extends AConfig implements IConfig {
 	}
 	// Trouve un héros choisi aleatoirement parmi les 8 positions adjacentes de pos
 	public Heros trouveHeros(Position pos) {
-		int xPos = pos.getX(), yPos = pos.getY(),			// Indices de pos
+		int xPos = pos.getX(), yPos = pos.getY(),   // Indices de pos
 			debY = yPos - 1, finY = yPos + 1,		// Indices de ligne
-			debX = xPos - 1, finX = xPos + 1; // Indices de colonne
+			debX = xPos - 1, finX = xPos + 1; 		// Indices de colonne
 		return (Heros)getElement(trouvePosType(debY, finY, debX, finX, 'h'));
 	}
 	// Tue le soldat
@@ -272,7 +272,15 @@ public class Carte extends AConfig implements IConfig {
 			((Soldat)e).majZoneDeplacement();
 		for (Element e : listeMonstres)
 			((Soldat)e).majZoneDeplacement();
-	}	
+	}
+	public void recalculerZonesVisuelles() {
+		for (Element e : listeHeros) {
+			((Soldat)e).majZoneVisuelle();
+			((Heros)e).getZoneVisuelle().rendreVisible();
+		}
+		for (Element e : listeMonstres)
+			((Soldat)e).majZoneVisuelle();
+	}
 
 	
 	// Méthodes d'interaction
@@ -338,7 +346,6 @@ public class Carte extends AConfig implements IConfig {
 				deplacerHeros(cible);
 		}
 	}
-	
 	// Déplace l'élément sélectionné si c'est un héros
 	public void deplacerHeros(Element cible) {
 		if (selection instanceof Heros) {

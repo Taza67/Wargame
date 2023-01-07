@@ -25,6 +25,7 @@ public class DeplacementSoldat extends Thread implements IConfig {
 	}
 	// Déplace le soldat case par case
 	public void deplacerSoldat() {
+		soldat.getSol().enleverEffets(soldat);
 		for (Element e : chemin) {
 			try {
 				TimeUnit.MILLISECONDS.sleep(300);
@@ -32,7 +33,9 @@ public class DeplacementSoldat extends Thread implements IConfig {
 			soldat.seDeplace(e.pos);
 			soldat.setPorteeDeplacement(soldat.getPorteeDeplacement() - 1);
 			carte.recalculerZonesDep();
+			carte.recalculerZonesVisuelles();
 			carte.getPanPartie().repaint();
 		}
+		soldat.getSol().appliquerEffets(soldat);
 	}
 }

@@ -143,10 +143,10 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		if (possible) {
 			carte.setElement(pos, sol);													// Position actuelle du soldat libre
 			sol.creerHexM();
-			sol.enleverEffets(this);													// On enlève d'abord les effets du sol actuel
 			this.sol = (Sol)carte.getElement(cible);									// On récupère le sol cible
 			carte.setElement(cible, this);												// Le soldat se déplace à la position où il doit être
-			sol.appliquerEffets(this);													// On applique les effets du sol cible au soldat
+			if (this instanceof Monstre)
+				visible = sol.visible; 
 			// Les coordonnées du soldat doivent changer
 			pos.setX(cible.getX());
 			pos.setY(cible.getY());
@@ -171,6 +171,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		if (advPDV <= 0) {
 			carte.mort(adv);
 			this.seDeplace(adv.pos);
+			sol.appliquerEffets(this);
 		}
 		if (pointsDeVie <= 0) carte.mort(this);
 	}
@@ -216,7 +217,6 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Méthodes graphiques
 	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
 	public void dessinerZoneDeplacement(Graphics2D g) {
-		int n = 0, m = 0;
 		for (Element e : zoneDeplacement)
 			if (! e.pos.equals(this.pos))
 				e.seDessinerCadre(g, Color.white);
@@ -224,7 +224,11 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Dessine un cadre autour des éléments dans la mini-map
 	public void dessinerZoneDeplacementMM(Graphics2D g) {
 		for (Element e : zoneDeplacement)
-			if (!e.pos.equals(this.pos))
-				e.seDessinerCadreMM(g, Color.white);
+			if (!e.pos.equals(this.pos)) {
+				if (e instanceof Monstre)
+					e.seDessinerCadreMM(g, Color.red);
+				else
+					e.seDessinerCadreMM(g, Color.white);
+			}
 	}
 }
