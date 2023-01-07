@@ -83,16 +83,19 @@ public class Carte extends AConfig implements IConfig {
 	public ZoneR getMapAff() { return mapAff; }
 	public Position getCentreAff() { return centreAff; }
 	public InfoBar getInfoBar() { return infoBar; }
-	public Element getSelection() { return selection; }
 	public InfoPartie getInfoPartie() { return infoPartie; }
 	public List<Element> getListeMonstres() { return listeMonstres; }
 	public List<Element> getListeHeros() { return listeHeros; }
+	public Element getCurseur() { return curseur; }
+	public Element getSelection() { return selection; }
 	//// Pseudo-accesseurs
 	public Element getElement(Position pos) {
 		return (pos.estValide(largC, hautC)) ? grille[pos.getY()][pos.getX()] : null;
 	}
 	
 	// Mutateurs
+	public void setCurseur(Element curseur) { this.curseur = curseur; }
+	public void setSelection(Element selection) { this.selection = selection; }
 	//// Pseudo-mutateurs
 	public void setElement(Position pos, Element elem) {
 		if (pos.estValide(largC, hautC)) grille[pos.getY()][pos.getX()] = elem;
@@ -374,8 +377,14 @@ public class Carte extends AConfig implements IConfig {
 		if (selection != null)
 			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacement(g);
 		if (chemin != null) chemin.seDessiner(g);
-		if (curseur != null) curseur.seDessinerCadre(g, COULEUR_CURSEUR);
-		if (selection != null) selection.seDessinerCadre(g, COULEUR_SELECTION);
+		if (curseur != null) {
+			curseur.seDessinerCadre(g, COULEUR_CURSEUR);
+			curseur.dessinerInfoBulle(g);
+		}
+		if (selection != null) {
+			selection.seDessinerCadre(g, COULEUR_SELECTION);
+			selection.dessinerInfoBulle(g);
+		}
 	}
 	
 	// Dessine la carte reelle sous forme de mini-map

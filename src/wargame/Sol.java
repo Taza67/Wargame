@@ -10,4 +10,10 @@ public class Sol extends Element implements IConfig {
 		this.numTexture = 0;
 		creerHex();
 	}
+	
+	// Méthodes
+	// Renvoie le type de l'élément sous forme de chaine de caractère
+	public String getStringType() {
+		return "sol";
+	}
 }

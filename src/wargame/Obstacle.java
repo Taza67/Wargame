@@ -43,4 +43,7 @@ public class Obstacle extends Element implements IConfig {
 			desc += " : [ Type : " + TYPE + " ]";
 		return desc;
 	}
+	public String getStringType() {
+		return ("" + TYPE).toLowerCase();
+	}
 }

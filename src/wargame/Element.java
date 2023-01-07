@@ -4,13 +4,19 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 
 public abstract class Element implements IConfig {
+	// Constantes statiques
+	private static final int POS = 0, TYPE = 1, PDV = 2, DEP = 3, VISUEL = 4, POW = 5, TIR = 6;
+	
 	// Infos
 	protected Carte carte;
 	protected Position pos;
 	protected Hexagone hex, hexMM;
-	protected boolean visible = true;
+	protected boolean visible = false;
 	protected int numTexture;
 	
 	// Méthodes
@@ -101,4 +107,71 @@ public abstract class Element implements IConfig {
 	    // Draw the String
 	    g.drawString(text, x, y);
 	}
+	// Dessiner l'info-bulle
+	public void dessinerInfoBulle(Graphics2D g) {
+		int rayon, n_infos = 1;
+		double x, y, larg, haut;
+		Point centre;
+		String infos[] = new String[7];
+		FontMetrics metrics = g.getFontMetrics(g.getFont());
+		rayon = carte.getRayonHex();
+		centre = pos.substract(carte.getMapAff().getUpLeft()).toPositionAxiale().toPoint(rayon, carte.getOrigine());
+		if (carte.getMapAff().getUpLeft().getY() % 2 != 0 && pos.getY() % 2 == 0)
+			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));		
+		infos[POS] = "Position : " + pos;
+		
+		if (visible == true) {
+			infos[TYPE] = "Élément : " + this.getStringType();
+			n_infos++;
+			if (this instanceof Soldat) {
+				infos[PDV] = "Points de vie : " + ((Soldat)this).getStringPdv();
+				infos[DEP] = "Portee de déplacement : " + ((Soldat)this).getStringDep();
+				infos[VISUEL] = "Portée visuelle : " + ((Soldat)this).getStringVisuel();
+				infos[POW] = "Puissance : " + ((Soldat)this).getStringPow();
+				infos[TIR] = "Puissance de tir : " + ((Soldat)this).getStringTir();
+				n_infos += 5;
+			}
+		}
+		
+		larg = 200 + 10;
+		haut = n_infos * (metrics.getHeight() + 5) + 10;
+		x = centre.getX();
+		y = centre.getY();
+		if (x + larg > carte.LARGEUR_MAP) x -= larg;
+		if (y + haut > carte.HAUTEUR_MAP) y -= haut;
+		
+		RoundRectangle2D r = new RoundRectangle2D.Double(x, y, larg, haut, 10, 10);
+		
+		if (carte.getCurseur() != null && !carte.getCurseur().estDansShape(r)) {	
+			g.setColor(Color.gray);
+			g.fill(r);
+			g.setColor(Color.black);
+			g.draw(r);
+			
+			x += 5;
+			y += 5;
+			r = new RoundRectangle2D.Double(x, y, larg - 10, haut - 10, 10, 10);
+			g.setColor(Color.darkGray);
+			g.fill(r);
+			g.setColor(Color.black);
+			g.draw(r);
+			
+			g.setColor(Color.white);
+			
+			y += metrics.getHeight();
+			x += 5;
+			for (int i = 0; i < n_infos; i++) {
+				g.drawString(infos[i], (int)x, (int)y);
+				y += metrics.getHeight() + 5;
+			}
+		}
+	}
+	// Vérifie si l'élément en fonction de sa position dans la carte affichée est dans une shape
+	public boolean estDansShape(Shape s) {
+		Rectangle2D r = hex.toPolygon().getBounds2D();
+		return s.intersects(r);
+	}
+	
+	// Méthodes abstraites
+	protected abstract String getStringType();
 }

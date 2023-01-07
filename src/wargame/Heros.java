@@ -34,4 +34,8 @@ public class Heros extends Soldat {
 		}
 		return possible;
 	}
+	// Renvoie le type de l'élément sous forme de chaine de caractère
+	public String getStringType() {
+		return ("" + TYPE).toLowerCase();
+	}
 }

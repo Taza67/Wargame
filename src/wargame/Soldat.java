@@ -86,14 +86,14 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		// Calcul de la zone de déplacement
 		zoneDeplacementBis.add(new ArrayList<Position>());
 		zoneDeplacementBis.get(0).add(pos);
-		for (int k = 1; k < porteeDeplacement; k++) {
+		for (int k = 1; k < porteeDeplacement + 1; k++) {
 			zoneDeplacementBis.add(new ArrayList<Position>());
 			for (Position p : zoneDeplacementBis.get(k - 1)) {
 				PositionAxiale pA = p.toPositionAxiale();
 				for (int d = 0; d < 6; d++) {
 					PositionAxiale vA = pA.voisin(d);
 					Position v = vA.toPosition();
-					if ((carte.getElement(v) instanceof Sol || carte.getElement(v) instanceof Soldat) && couleurs[v.getY()][v.getX()] != 1) {
+					if ((carte.getElement(v) instanceof Sol || carte.getElement(v) instanceof Monstre) && couleurs[v.getY()][v.getX()] != 1) {
 						zoneDeplacementBis.get(k).add(v);
 						couleurs[v.getY()][v.getX()] = 1;
 					}
@@ -132,6 +132,11 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 			// Les coordonnées du soldat doivent changer
 			pos.setX(cible.getX());
 			pos.setY(cible.getY());
+			// Changement éventuel de l'élément selectionné ou de l'élement focalisé par le curseur
+			if (carte.getCurseur().pos.equals(pos))
+				carte.setCurseur(this);
+			if (carte.getCurseur().pos.equals(pos))
+				carte.setCurseur(this);
 			// Découverte de nouvelle terres :)
 			majZoneVisuelle();
 			creerHex();
@@ -173,6 +178,26 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 			alea = Carte.alea(0, t - 1);
 		return listeElem.get(alea);
 	}
+	// Retourne les points de vie du soldat sous forme de chaine de caractères
+	public String getStringPdv() {
+		return pointsDeVie + " / " + POINTS_DE_VIE_MAX;
+	}
+	// Retourne la portee de déplacement du soldat sous forme de chaine de caractères
+	public String getStringDep() {
+		return porteeDeplacement + " / " + PORTEE_DEPLACEMENT;
+	}
+	// Retourne la portee visuelle du soldat sous forme de chaine de caractères
+	public String getStringVisuel() {
+		return PORTEE_VISUELLE + " / " + PORTEE_VISUELLE;
+	}
+	// Retourne la puissance du soldat sous forme de chaine de caractères
+	public String getStringPow() {
+		return PUISSANCE + " / " + PUISSANCE;
+	}
+	// Retourne la puissance de tir du soldat sous forme de chaine de caractères
+	public String getStringTir() {
+		return TIR + " / " + TIR;
+	}
 	
 	// Méthodes graphiques
 	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
@@ -183,6 +208,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Dessine un cadre autour des éléments dans la mini-map
 	public void dessinerZoneDeplacementMM(Graphics2D g) {
 		for (Element e : zoneDeplacement)
-			e.seDessinerCadreMM(g, Color.white);
+			if (! e.pos.equals(this.pos))
+				e.seDessinerCadreMM(g, Color.white);
 	}
 }

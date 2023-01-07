@@ -13,4 +13,9 @@ public class Monstre extends Soldat {
 	
 	// Accesseurs
 	public TypesM getTYPE() { return TYPE; }
+	
+	// Méthodes
+	public String getStringType() {
+		return ("" + TYPE).toLowerCase();
+	}
 }
