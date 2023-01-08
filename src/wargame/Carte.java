@@ -11,7 +11,7 @@ import wargame.Obstacle.TypeObstacle;
 import wargame.Sol.TypeSol;
 import wargameInterface.PanneauPartie;
 
-public class Carte extends AConfig implements IConfig {
+public class Carte extends AConfig implements IConfig , java.io.Serializable{
 	// Infos
 	private static Element[][] grille; 						// Grille du jeu
 	private static ZoneR mapAff;							// Carte affichée
@@ -25,7 +25,7 @@ public class Carte extends AConfig implements IConfig {
 	// Liste des entités
 	List<Element> listeMonstres, listeHeros;
 	// Textures
-	TexturePaint[] texturesPaint;
+	transient TexturePaint[] texturesPaint;
 	// Processus
 	List<Thread> listeThreads;
 	

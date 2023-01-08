@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ZoneH {
+public class ZoneH implements java.io.Serializable{
 	// Infos
 	private Carte carte;
 	private PositionAxiale centre;

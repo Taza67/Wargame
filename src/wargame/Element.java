@@ -8,7 +8,7 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
-public abstract class Element implements IConfig {
+public abstract class Element implements IConfig ,java.io.Serializable{
 	// Constantes statiques
 	private static final int POS = 0, TYPE = 1, SOL = 2, PDV = 3, DEP = 4, VISUEL = 5, POW = 6, TIR = 7;
 	

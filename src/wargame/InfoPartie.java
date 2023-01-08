@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 
-public class InfoPartie implements IConfig {
+public class InfoPartie implements IConfig , java.io.Serializable{
 	// Infos
 	private int nbTours;
 	private char joueur;

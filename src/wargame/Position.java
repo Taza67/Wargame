@@ -1,6 +1,6 @@
 package wargame;
 
-public class Position implements IConfig {
+public class Position implements IConfig , java.io.Serializable{
 	// Infos
 	private int x, y;
 	
