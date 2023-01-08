@@ -19,7 +19,7 @@ import wargame.IConfig;
 import wargame.Point;
 import wargame.Position;
 
-public class PanneauPartie extends JPanel implements IConfig, KeyListener {
+public class PanneauPartie extends JPanel implements IConfig, KeyListener , java.io.Serializable{
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private int zoom = 10;

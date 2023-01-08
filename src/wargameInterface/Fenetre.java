@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.*;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -25,8 +26,8 @@ public class Fenetre extends JFrame implements IConfig {
 		private static final long serialVersionUID = 1L;
 		// Infos
 		private JMenu partieM, affichageM, optionsM, aideM;
-		private JMenuItem nouvelle, charger, quitter, pleinEcran;
-		
+		private JMenuItem nouvelle, charger, quitter, pleinEcran,sauvegarder;
+
 		// Constructeurs
 		public BarreMenu(Fenetre f) {
 			super();
@@ -38,23 +39,26 @@ public class Fenetre extends JFrame implements IConfig {
 			optionsM.setMnemonic(KeyEvent.VK_O);
 			aideM = new JMenu("Aide");
 			aideM.setMnemonic(KeyEvent.VK_H);
-			
+
 			nouvelle = new JMenuItem("Nouvelle partie");
+			sauvegarder = new JMenuItem("Sauvgarder la partie");
 			charger = new JMenuItem("Charger partie");
 			quitter = new JMenuItem("Quitter");
 			pleinEcran = new JMenuItem("Plein écran");
-			
+
+
 			partieM.add(nouvelle);
+			partieM.add(sauvegarder);
 			partieM.add(charger);
 			partieM.add(quitter);
-			
+
 			affichageM.add(pleinEcran);
-			
+
 			this.add(partieM);
 			this.add(affichageM);
 			this.add(optionsM);
 			this.add(aideM);
-			
+
 			nouvelle.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					f.nouvellePartie();
@@ -70,41 +74,47 @@ public class Fenetre extends JFrame implements IConfig {
 					f.passerPleinEcran();
 				}
 			});
+
+			sauvegarder.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					f.sauvegarderPartie("./fichier1.ser");
+				}
+			});
 		}
 	}
-	
+
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected PanneauPartie partie;
 	protected PanneauMenu menu;
 	private BarreMenu mb;
 	private GraphicsDevice device;
-	
+
 	// Constructeurs
 	public Fenetre(String name) {
 		super(name);
-		
+
 		JLayeredPane panneau = new JLayeredPane();
 		partie = new PanneauPartie(this);
 		menu = new PanneauMenu(this);
 		menu.setVisible(false);
 		device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		mb = new BarreMenu(this);
-		
+
 		panneau.add(partie, JLayeredPane.DEFAULT_LAYER);
 		panneau.add(menu, JLayeredPane.PALETTE_LAYER);
-		
+
 		panneau.setPreferredSize(partie.getPreferredSize());
-		
+
 		this.setJMenuBar(mb);
 		this.setContentPane(partie);
-		
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocation(Carte.POSITION_X, Carte.POSITION_Y);
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
 	// Méthodes
 	// Affiche le menu
 	public void afficherMenu() {
@@ -124,64 +134,56 @@ public class Fenetre extends JFrame implements IConfig {
 	}
 	// Passe en plein écran si c'est possible
 	public void passerPleinEcran() {
-        if (this.device.isFullScreenSupported()) {
-        	// f.setUndecorated(true);
-            this.device.setFullScreenWindow(this);
-            int haut = this.device.getFullScreenWindow().getHeight(),
-            	larg = this.device.getFullScreenWindow().getWidth();
-            Carte.HAUTEUR_MAP = haut - 80;
-            Carte.LARGEUR_MAP = larg - LARGEUR_MINI_MAP - 75;
-            Carte.recalculerMapAff();
-            // partie.setDimensions();
-            this.revalidate();
-            this.repaint();
-        }
+		if (this.device.isFullScreenSupported()) {
+			// f.setUndecorated(true);
+			this.device.setFullScreenWindow(this);
+			int haut = this.device.getFullScreenWindow().getHeight(),
+					larg = this.device.getFullScreenWindow().getWidth();
+			Carte.HAUTEUR_MAP = haut - 80;
+			Carte.LARGEUR_MAP = larg - LARGEUR_MINI_MAP - 75;
+			Carte.recalculerMapAff();
+			// partie.setDimensions();
+			this.revalidate();
+			this.repaint();
+		}
 	}
-	public void sauvegarder(String nom) {
-    }
-	
-	public void sauvegarderPartie() {
-        String nom;
-        FileOutputStream fichier = null;
-        ObjectOutputStream output = null;
-        try {
+
+	public void sauvegarderPartie(String nom) {
+		FileOutputStream fichier = null;
+		ObjectOutputStream output = null;
+		try {
 			fichier = new FileOutputStream(nom);
-            output = new ObjectOutputStream(fichier);
-            output.writeObject(this.carte);
-            if(this.carte.getGrille() == null)
-                System.out.println("VIIIIDE");
-            else
-                System.out.println(this.carte);
-            output.close();
-            fichier.close();
-            System.out.printf("Les données ont été sauvgardés dans le fichier " + nom);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+			output = new ObjectOutputStream(fichier);
+			output.writeObject(this.partie);
+			output.close();
+			fichier.close();
+			System.out.printf("Les données ont été sauvgardés dans le fichier " + nom);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void chargerPartie() {
-		String nom;
-        FileInputStream fichier = null;
-        ObjectInputStream lecture = null;
-        Carte c = null;
-        wargame.Element g [][] = new wargame.Element [40][50];
-        try {
-            fichier = new FileInputStream(nom);
-            lecture = new ObjectInputStream(fichier);
-            c = (Carte)lecture.readObject();
-            lecture.close();
-            fichier.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+	public PanneauPartie chargerPartie(String nom) {
+		FileInputStream fichier = null;
+		ObjectInputStream lecture = null;
+		PanneauPartie p = null;
+		try {
+			fichier = new FileInputStream(nom);
+			lecture = new ObjectInputStream(fichier);
+			p = (PanneauPartie)lecture.readObject();
+			lecture.close();
+			fichier.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        catch (ClassNotFoundException ex) {
-            System.out.println("La class Carte n'existe pas");
-            ex.printStackTrace();
-        }
+		catch (ClassNotFoundException ex) {
+			System.out.println("La class Carte n'existe pas");
+			ex.printStackTrace();
+		}
+		return p;
 	}
 
 	public void afficherAide() {

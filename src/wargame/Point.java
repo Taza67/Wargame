@@ -1,6 +1,6 @@
 package wargame;
 
-public class Point {
+public class Point implements java.io.Serializable{
 	// Infos
 	private double x;
 	private double y;

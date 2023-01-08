@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.TexturePaint;
 
-public class Hexagone {
+public class Hexagone implements java.io.Serializable{
 	// Infos
 	private final Point[] extremites;
 	private Point centre;

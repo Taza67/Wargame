@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LigneH implements IConfig {
+public class LigneH implements IConfig ,java.io.Serializable{
 	// Infos
 	private List<Element> ligne;
 	private Carte carte;
