@@ -3,6 +3,7 @@ package wargame;
 import java.awt.Graphics2D;
 
 public class ZoneR implements java.io.Serializable{
+	private static final long serialVersionUID = 1L;
 	// Infos
 	private Carte carte;
 	private Position upLeft, downRight;

@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.*;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -74,10 +73,14 @@ public class Fenetre extends JFrame implements IConfig {
 					f.passerPleinEcran();
 				}
 			});
-
 			sauvegarder.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					f.sauvegarderPartie("./fichier1.ser");
+					f.sauvegarderPartie();
+				}
+			});
+			charger.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					f.chargerPartie();
 				}
 			});
 		}
@@ -120,13 +123,58 @@ public class Fenetre extends JFrame implements IConfig {
 	public void afficherMenu() {
 		menu.setVisible(true);
 	}
-	// Lance une nouvelle partie
-	public void nouvellePartie() {
+	// Change le panneau de la partie
+	public void changerPartie(PanneauPartie p) {
 		this.getContentPane().removeAll();
 		this.invalidate();
-		this.partie = new PanneauPartie(this);
+		this.partie = p;
 		this.setContentPane(partie);
 		this.validate();
+	}
+	// Lance une nouvelle partie
+	public void nouvellePartie() {
+		changerPartie(new PanneauPartie(this));
+	}
+	// Sauvegarde la partie
+	public void sauvegarderPartie() {
+		String nom = "sauvegarde.ser";
+		FileOutputStream fichier = null;
+		ObjectOutputStream output = null;
+		try {
+			fichier = new FileOutputStream(nom);
+			output = new ObjectOutputStream(fichier);
+			output.writeObject(this.partie);
+			output.close();
+			fichier.close();
+			System.out.printf("Les données ont été sauvgardés dans le fichier " + nom);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	// Charge une sauvegarde
+	public void chargerPartie() {
+		String nom = "sauvegarde.ser";
+		FileInputStream fichier = null;
+		ObjectInputStream lecture = null;
+		PanneauPartie p = null;
+		try {
+			fichier = new FileInputStream(nom);
+			lecture = new ObjectInputStream(fichier);
+			p = (PanneauPartie)lecture.readObject();
+			lecture.close();
+			fichier.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		catch (ClassNotFoundException ex) {
+			System.out.println("La class Carte n'existe pas");
+			ex.printStackTrace();
+		}
+		p.carte.chargerTextures(p);
+		changerPartie(p);
 	}
 	// Quitte la partie
 	public void quitter() {
@@ -146,44 +194,6 @@ public class Fenetre extends JFrame implements IConfig {
 			this.revalidate();
 			this.repaint();
 		}
-	}
-
-	public void sauvegarderPartie(String nom) {
-		FileOutputStream fichier = null;
-		ObjectOutputStream output = null;
-		try {
-			fichier = new FileOutputStream(nom);
-			output = new ObjectOutputStream(fichier);
-			output.writeObject(this.partie);
-			output.close();
-			fichier.close();
-			System.out.printf("Les données ont été sauvgardés dans le fichier " + nom);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public PanneauPartie chargerPartie(String nom) {
-		FileInputStream fichier = null;
-		ObjectInputStream lecture = null;
-		PanneauPartie p = null;
-		try {
-			fichier = new FileInputStream(nom);
-			lecture = new ObjectInputStream(fichier);
-			p = (PanneauPartie)lecture.readObject();
-			lecture.close();
-			fichier.close();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		catch (ClassNotFoundException ex) {
-			System.out.println("La class Carte n'existe pas");
-			ex.printStackTrace();
-		}
-		return p;
 	}
 
 	public void afficherAide() {

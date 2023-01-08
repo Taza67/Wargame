@@ -1,6 +1,7 @@
 package wargame;
 
 public class Monstre extends Soldat {
+	private static final long serialVersionUID = 1L;
 	// Infos
 	private final TypesM TYPE;
 	

@@ -39,12 +39,12 @@ public class PanneauMenu extends JPanel {
 		});
 		saveGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				f.sauvegarderPartie("./fichier1.ser");
+				f.sauvegarderPartie();
 			}
 		});
 		loadGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				f.chargerPartie("./fichier1.ser");
+				f.chargerPartie();
 			}
 		});
 		help.addActionListener(new ActionListener() {

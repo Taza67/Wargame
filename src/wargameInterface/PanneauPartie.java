@@ -23,9 +23,9 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener , java
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private int zoom = 10;
-	private Carte carte;
-	private PanneauJeu jeu;
-	private PanneauTableauBord tableauBord;
+	protected Carte carte;
+	protected PanneauJeu jeu;
+	protected PanneauTableauBord tableauBord;
 	
 	// Constructeurs
 	public PanneauPartie(Fenetre f) {

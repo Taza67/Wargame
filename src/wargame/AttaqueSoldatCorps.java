@@ -22,9 +22,7 @@ public class AttaqueSoldatCorps extends Thread implements IConfig {
 	
 	// Méthodes
 	public void run() {
-		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(false);
 		faireAttaquerSoldat();
-		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(true);
 	}
 	// Déplace le soldat case par case
 	public void faireAttaquerSoldat() {
@@ -36,5 +34,6 @@ public class AttaqueSoldatCorps extends Thread implements IConfig {
 		} catch (InterruptedException e1) {}
 		soldat.attaqueSoldatCorps(cible);
 		soldat.setAJoue(true);
+		carte.getPanPartie().repaint();
 	}
 }

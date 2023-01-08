@@ -18,9 +18,7 @@ public class AttaqueSoldatDistance extends Thread implements IConfig {
 	
 	// Méthodes
 	public void run() {
-		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(false);
 		faireAttaquerSoldat();
-		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(true);
 	}
 	// Déplace le soldat case par case
 	public void faireAttaquerSoldat() {
@@ -29,5 +27,6 @@ public class AttaqueSoldatDistance extends Thread implements IConfig {
 		} catch (InterruptedException e1) {}
 		soldat.attaqueSoldatDistance(cible);
 		soldat.setAJoue(true);
+		carte.getPanPartie().repaint();
 	}
 }

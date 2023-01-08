@@ -11,15 +11,30 @@ import wargame.Obstacle.TypeObstacle;
 import wargame.Sol.TypeSol;
 import wargameInterface.PanneauPartie;
 
-public class Carte extends AConfig implements IConfig , java.io.Serializable{
+public class Carte implements IConfig , java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 	// Infos
-	private static Element[][] grille; 						// Grille du jeu
-	private static ZoneR mapAff;							// Carte affichée
-	private static Position centreAff;						// Centre de la carte affichée
+	// Map
+	public static int POSITION_X = 100, POSITION_Y = 50;			// Position de la fenêtre
+	public static int LARGEUR_MAP = 1250, HAUTEUR_MAP = 760;
+	protected PanneauPartie panPartie;
+	protected int largC, hautC;										// Dimensions de la carte réelle
+	protected static int largAffC, hautAffC;						// Dimensions de la carte affichée 
+	protected int hautMM, largMM;									// Hauteur de la mini-map
+	protected static int rayonHex = 25;								// Rayon d'un hexagone
+	protected int rayonMM;
+	// Positionnement
+	protected Point origine, origineMM;								// Origine de la carte affichée
+	// Limites
+	protected int nbHeros, nbMonstres;								// Nombre de héros, monstres
+	
+	private static Element[][] grille; 								// Grille du jeu
+	private static ZoneR mapAff;									// Carte affichée
+	private static Position centreAff;								// Centre de la carte affichée
 	// Interactions
 	private Element curseur, selection;
 	private CheminDijkstra chemin;
-	private int typeAttaque = CORPS_CORPS;				// Type de l'attaque du soldat (DISTANCE, CORPS_CORPS)
+	private int typeAttaque = CORPS_CORPS;							// Type de l'attaque du soldat (DISTANCE, CORPS_CORPS)
 	// Infos sur la partie
 	private InfoPartie infoPartie;
 	// Liste des entités
@@ -66,30 +81,24 @@ public class Carte extends AConfig implements IConfig , java.io.Serializable{
 		selection = trouveHeros();
 		// Infos sur la partie
 		infoPartie = new InfoPartie(this, nbHeros, nbMonstres);
-		
-		// Texture
-		String dir = System.getProperty("user.dir");
-		String[] sources = new String[11];
-		sources[TEX_PLAINE] = dir + "/plaine.jpg";
-		sources[TEX_MONTAGNE] = dir + "/montagne.jpg";
-		sources[TEX_COLLINE] = dir + "/colline.jpg";
-		sources[TEX_VILLAGE] = dir + "/village.jpg";
-		sources[TEX_DESERT] = dir + "/desert.jpeg";
-		sources[TEX_FORET] = dir + "/foret.jpg";
-		sources[TEX_ROCHER] = dir + "/rocher.jpg";
-		sources[TEX_EAU] = dir + "/eau.jpg";
-		sources[TEX_NUAGE] = dir + "/nuage.jpg";
-		sources[TEX_HEROS] = dir + "/heros.png";
-		sources[TEX_MONSTRE] = dir + "/monstre.png";
-		
-		BufferedImage[] bufferedImages = MethodesTextures.getBufferedImages(sources, panPartie);
-		texturesPaint = MethodesTextures.getTexturesPaint(bufferedImages);
-		
+		// Textures
+		chargerTextures(panPartie);
 		// Threads
 		listeThreads = new ArrayList<Thread>();
 	}
 	
 	// Accesseurs
+	public PanneauPartie getPanPartie() { return panPartie; }
+	public int getLargC() { return largC; }
+	public int getHautC() { return hautC; }
+	public int getLargAffC() { return largAffC; }
+	public int getHautAffC() { return hautAffC; }
+	public int getLargMM() { return largMM; }
+	public int getHautMM() { return hautMM; }
+	public int getRayonHex() { return rayonHex; }
+	public int getRayonMM() { return rayonMM; }
+	public Point getOrigine() { return origine; }
+	public Point getOrigineMM() { return origineMM; }
 	public Element[][] getGrille() { return grille; }
 	public ZoneR getMapAff() { return mapAff; }
 	public Position getCentreAff() { return centreAff; }
@@ -113,6 +122,25 @@ public class Carte extends AConfig implements IConfig , java.io.Serializable{
 	}
 	
 	// Méthodes
+	// Charge les textures
+	public void chargerTextures(PanneauPartie p) {
+		String dir = System.getProperty("user.dir");
+		String[] sources = new String[11];
+		sources[TEX_PLAINE] = dir + "/plaine.jpg";
+		sources[TEX_MONTAGNE] = dir + "/montagne.jpg";
+		sources[TEX_COLLINE] = dir + "/colline.jpg";
+		sources[TEX_VILLAGE] = dir + "/village.jpg";
+		sources[TEX_DESERT] = dir + "/desert.jpeg";
+		sources[TEX_FORET] = dir + "/foret.jpg";
+		sources[TEX_ROCHER] = dir + "/rocher.jpg";
+		sources[TEX_EAU] = dir + "/eau.jpg";
+		sources[TEX_NUAGE] = dir + "/nuage.jpg";
+		sources[TEX_HEROS] = dir + "/heros.png";
+		sources[TEX_MONSTRE] = dir + "/monstre.png";
+		
+		BufferedImage[] bufferedImages = MethodesTextures.getBufferedImages(sources, p);
+		texturesPaint = MethodesTextures.getTexturesPaint(bufferedImages);
+	}
 	// Recalcules les dimensions de la carte affichées
 	public static void recalculerMapAff() {
 		int horiz, vert;

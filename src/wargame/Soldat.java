@@ -8,6 +8,7 @@ import java.util.List;
 import wargame.Obstacle.TypeObstacle;
 
 public abstract class Soldat extends Element implements IConfig, ISoldat {
+	private static final long serialVersionUID = 1L;
 	// Infos
 	private final int POINTS_DE_VIE_MAX, PORTEE_DEPLACEMENT_MAX,
 					  PORTEE_VISUELLE_BASE, PUISSANCE_BASE, TIR_BASE, GUERISON_BASE;
@@ -175,29 +176,31 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Attaque le soldat au corps-à-corps
 	public void attaqueSoldatCorps(Soldat adv) {
 		int advPDV = adv.pointsDeVie,
-			advPow = adv.puissance,
-			difPow = puissance - advPow;
-		advPDV -= difPow;
-		pointsDeVie += difPow;
-		
+			ptsAttaque = Carte.alea(3, puissance),
+			advPtsAttaque = Carte.alea(3, adv.puissance);
+		advPDV -= ptsAttaque;
 		advPDV = Math.min(advPDV, adv.pointsDeVie);
-		pointsDeVie = Math.min(pointsDeVie, POINTS_DE_VIE_MAX);
-		
 		adv.pointsDeVie = advPDV;
 		if (advPDV <= 0) {
 			carte.mort(adv);
 			this.seDeplace(adv.getPos());
 			sol.appliquerEffets(this);
-		}
-		if (pointsDeVie <= 0) carte.mort(this);
+		} else
+			pointsDeVie = Math.min(pointsDeVie - advPtsAttaque, pointsDeVie);
+		if (pointsDeVie <= 0)
+			carte.mort(this);
 	}
 	// Attaque le soldat à distance
 	public void attaqueSoldatDistance(Soldat adv) {
 		int advPDV = adv.pointsDeVie;
-		advPDV -= tir;
+		advPDV -= Carte.alea(3, tir);
+		advPDV = Math.min(advPDV, adv.pointsDeVie);
 		adv.pointsDeVie = advPDV;
 		if (advPDV <= 0) carte.mort(adv);
-		else adv.attaqueSoldatDistance(this);
+		else
+			pointsDeVie = Math.min(pointsDeVie - Carte.alea(3, adv.tir), pointsDeVie);
+		if (pointsDeVie <= 0)
+			carte.mort(this);
 	}
 	// Vérifie si une attaque à distance est possible
 	public boolean verifieAttaqueDistance(Soldat adv) {

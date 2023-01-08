@@ -9,6 +9,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 public abstract class Element implements IConfig ,java.io.Serializable{
+	private static final long serialVersionUID = 1L;
+
 	// Constantes statiques
 	private static final int POS = 0, TYPE = 1, SOL = 2, PDV = 3, DEP = 4, VISUEL = 5, POW = 6, TIR = 7;
 	
@@ -152,8 +154,8 @@ public abstract class Element implements IConfig ,java.io.Serializable{
 		haut = nbInfos * (metrics.getHeight() + 5) + 15;
 		x = centre.getX();
 		y = centre.getY();
-		if (x + larg > carte.LARGEUR_MAP) x -= larg;
-		if (y + haut > carte.HAUTEUR_MAP) y -= haut;
+		if (x + larg > Carte.LARGEUR_MAP) x -= larg;
+		if (y + haut > Carte.HAUTEUR_MAP) y -= haut;
 		// Retour
 		return new RoundRectangle2D.Double(x, y, larg, haut, 10, 10);
 	}

@@ -5,6 +5,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 
 public class InfoPartie implements IConfig , java.io.Serializable{
+	private static final long serialVersionUID = 1L;
 	// Infos
 	private int nbTours;
 	private char joueur;

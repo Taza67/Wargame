@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ZoneH implements java.io.Serializable{
+	private static final long serialVersionUID = 1L;
 	// Infos
 	private Carte carte;
 	private PositionAxiale centre;

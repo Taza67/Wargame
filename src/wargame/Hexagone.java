@@ -7,6 +7,7 @@ import java.awt.Polygon;
 import java.awt.TexturePaint;
 
 public class Hexagone implements java.io.Serializable{
+	private static final long serialVersionUID = 1L;
 	// Infos
 	private final Point[] extremites;
 	private Point centre;

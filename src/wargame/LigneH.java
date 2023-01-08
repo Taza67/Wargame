@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LigneH implements IConfig ,java.io.Serializable{
+	private static final long serialVersionUID = 1L;
 	// Infos
 	private List<Element> ligne;
 	private Carte carte;
