@@ -1,5 +1,8 @@
 package wargame;
 
+import java.awt.Font;
+import java.awt.Graphics2D;
+
 public class Heros extends Soldat  {
 	// Infos
 	private final String NOM;
@@ -32,4 +35,12 @@ public class Heros extends Soldat  {
 	public String getStringType() {
 		return ("" + TYPE).toLowerCase();
 	}
+	
+	// Méthodes graphiques
+	// Dessine le héros avec son nom
+	public void seDessiner(Graphics2D g) {
+		super.seDessiner(g);
+		drawCenteredString(g, NOM, new Font("Courier", Font.BOLD, carte.getRayonHex()));
+	}
+	
 }

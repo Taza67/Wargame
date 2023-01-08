@@ -36,5 +36,10 @@ public class DeplacementSoldat extends Thread implements IConfig {
 		}
 		soldat.getSol().enleverEffetPorteeVisuelle(soldat);
 		soldat.getSol().appliquerEffets(soldat);
+		soldat.majZoneDeplacement();
+		soldat.majZoneVisuelle();
+		if (soldat.getPorteeDeplacement() <= 0)
+			soldat.setAJoue(true);
+		carte.getPanPartie().repaint();
 	}
 }

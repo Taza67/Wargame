@@ -154,7 +154,14 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 		case KeyEvent.VK_ENTER:
 			break;
 		case KeyEvent.VK_SPACE:
-			carte.deplacer(carte.getSelection().getPos());
+			if (carte.getSelection() != null)
+				carte.deplacer(carte.getSelection().getPos());
+			else
+				carte.deplacer(new Position(carte.getLargC() / 2, carte.getHautC() / 2));
+			repaint();
+			break;
+		case KeyEvent.VK_ESCAPE:
+			carte.setSelection(null);
 			repaint();
 			break;
 		}

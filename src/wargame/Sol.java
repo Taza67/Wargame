@@ -71,7 +71,10 @@ public class Sol extends Element implements IConfig {
 		// Portee visuelle
 		appliquerEffetPorteeVisuelle(soldat);
 		// Portee deplacement
-		soldat.setPorteeDeplacement(Math.max(MOVE_MIN, soldat.getPorteeDeplacement() + EFFET_PORTEE_DEPLACEMENT));
+		if (soldat.getPorteeDeplacement() > 0)
+			soldat.setPorteeDeplacement(Math.max(MOVE_MIN, soldat.getPorteeDeplacement() + EFFET_PORTEE_DEPLACEMENT));
+		else
+			soldat.setPorteeDeplacement(Math.max(0, soldat.getPorteeDeplacement() + EFFET_PORTEE_DEPLACEMENT));
 		// Puissance
 		soldat.setPuissance(Math.max(POW_MIN, soldat.getPuissance() + EFFET_PUISSANCE));
 		// Tir

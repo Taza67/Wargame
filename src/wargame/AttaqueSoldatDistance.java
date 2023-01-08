@@ -28,5 +28,6 @@ public class AttaqueSoldatDistance extends Thread implements IConfig {
 			TimeUnit.MILLISECONDS.sleep(300);
 		} catch (InterruptedException e1) {}
 		soldat.attaqueSoldatDistance(cible);
+		soldat.setAJoue(true);
 	}
 }

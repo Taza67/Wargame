@@ -35,5 +35,6 @@ public class AttaqueSoldatCorps extends Thread implements IConfig {
 			TimeUnit.MILLISECONDS.sleep(300);
 		} catch (InterruptedException e1) {}
 		soldat.attaqueSoldatCorps(cible);
+		soldat.setAJoue(true);
 	}
 }

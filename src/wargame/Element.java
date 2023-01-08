@@ -148,8 +148,8 @@ public abstract class Element implements IConfig {
 		if (carte.getMapAff().getUpLeft().getY() % 2 != 0 && getPos().getY() % 2 == 0)
 			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));
 		// Calcul des dimensions
-		larg = 200 + 10;
-		haut = nbInfos * (metrics.getHeight() + 5) + 10;
+		larg = 250 + 10;
+		haut = nbInfos * (metrics.getHeight() + 5) + 15;
 		x = centre.getX();
 		y = centre.getY();
 		if (x + larg > carte.LARGEUR_MAP) x -= larg;
@@ -159,6 +159,7 @@ public abstract class Element implements IConfig {
 	}
 	// Dessiner l'info-bulle
 	public void dessinerInfoBulle(Graphics2D g) {
+		g.setFont(new Font("Courier", Font.BOLD, 13));
 		double x, y, larg, haut;
 		boolean croisementInfobulles = false;
 		String infos[] = getStringInfos();

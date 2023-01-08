@@ -64,13 +64,13 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Retourne les points de vie du soldat sous forme de chaine de caractères
 	public String getStringPdv() { return pointsDeVie + " / " + POINTS_DE_VIE_MAX; }
 	// Retourne la portee de déplacement du soldat sous forme de chaine de caractères
-	public String getStringDep() { return porteeDeplacement + " / " + (porteeDeplacement - sol.getTYPE().getEFFET_PORTEE_DEPLACEMENT()); }
+	public String getStringDep() { return porteeDeplacement + " / " + PORTEE_DEPLACEMENT_MAX; }
 	// Retourne la portee visuelle du soldat sous forme de chaine de caractères
-	public String getStringVisuel() { return porteeVisuelle + " / " + (porteeVisuelle - sol.getTYPE().getEFFET_PORTEE_VISUELLE()); }
+	public String getStringVisuel() { return porteeVisuelle + " / " + PORTEE_VISUELLE_BASE; }
 	// Retourne la puissance du soldat sous forme de chaine de caractères
-	public String getStringPow() { return puissance + " / " + (puissance - sol.getTYPE().getEFFET_PUISSANCE()); }
+	public String getStringPow() { return puissance + " / " + PUISSANCE_BASE; }
 	// Retourne la puissance de tir du soldat sous forme de chaine de caractères
-	public String getStringTir() { return tir + " / " + (tir - sol.getTYPE().getEFFET_TIR()); }
+	public String getStringTir() { return tir + " / " + TIR_BASE; }
 	
 	// Mutateurs
 	public void setPointsDeVie(int pointsDeVie) { this.pointsDeVie = pointsDeVie; }
@@ -230,5 +230,12 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 						e.seDessinerCadre(g, Color.white);
 				}
 		}
+	}
+	// Dessine le soldat
+	public void seDessiner(Graphics2D g) {
+		if (aJoue)													// Si le soldat a déjà joué
+			super.seDessinerCadre(g, Color.black);
+		else
+			super.seDessiner(g);
 	}
 }

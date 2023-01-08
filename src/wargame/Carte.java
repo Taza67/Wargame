@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import wargame.Obstacle.TypeObstacle;
 import wargame.Sol.TypeSol;
 import wargameInterface.PanneauPartie;
 
@@ -55,9 +56,10 @@ public class Carte extends AConfig implements IConfig {
 		// Génération des éléments
 		for (int i = 0; i < hauteur; i++)
 			for (int j = 0; j < largeur; j++)
-				grille[i][j] = new Sol(this, TypeSol.getSolAlea() ,new Position(j, i));	
+				grille[i][j] = new Sol(this, TypeSol.PLAINE ,new Position(j, i));
 		nbHeros = nbMonstres = 6;
 		genereObstacles();
+		genereSol();
 		genereHeros(nbHeros);
 		genereMonstres(nbMonstres);
 		// Éléments sélectionnés au départ
@@ -69,14 +71,14 @@ public class Carte extends AConfig implements IConfig {
 		String dir = System.getProperty("user.dir");
 		String[] sources = new String[11];
 		sources[TEX_PLAINE] = dir + "/plaine.jpg";
-		sources[TEX_MONTAGNE] = dir + "/montagne.jpeg";
-		sources[TEX_COLLINE] = dir + "/colline.jpeg";
+		sources[TEX_MONTAGNE] = dir + "/montagne.jpg";
+		sources[TEX_COLLINE] = dir + "/colline.jpg";
 		sources[TEX_VILLAGE] = dir + "/village.jpg";
 		sources[TEX_DESERT] = dir + "/desert.jpeg";
 		sources[TEX_FORET] = dir + "/foret.jpg";
 		sources[TEX_ROCHER] = dir + "/rocher.jpg";
-		sources[TEX_EAU] = dir + "/eau.jpeg";
-		sources[TEX_NUAGE] = dir + "/nuage.jpeg";
+		sources[TEX_EAU] = dir + "/eau.jpg";
+		sources[TEX_NUAGE] = dir + "/nuage.jpg";
 		sources[TEX_HEROS] = dir + "/heros.png";
 		sources[TEX_MONSTRE] = dir + "/monstre.png";
 		
@@ -185,16 +187,20 @@ public class Carte extends AConfig implements IConfig {
 		}
 	}
 	// Génère une zone contenant un type d'obstacles donné
-	public void genereZoneObsType(Obstacle.TypeObstacle t) {
+	public void genereZoneType(int min, int max, Object t) {
 		int nbVoisins, taille;
 		PositionAxiale posA = trouvePosVide().toPositionAxiale();
-		taille = alea(3, 20);
+		taille = alea(min, max);
 		while(taille > 0) {
 			nbVoisins = alea(1, 5);
 			for (int i = 0; i < nbVoisins; i++) {
 				Position voisin = posA.voisin(i).toPosition();
-				if (voisin.estValide(LARGEUR_MAP, HAUTEUR_MAP) && this.getElement(voisin) instanceof Sol)
-					this.setElement(voisin, new Obstacle(this, t, voisin));
+				if (voisin.estValide(LARGEUR_MAP, HAUTEUR_MAP) && this.getElement(voisin) instanceof Sol) {
+					if (t instanceof TypeObstacle)
+						this.setElement(voisin, new Obstacle(this, (TypeObstacle)t, voisin));
+					else if (t instanceof TypeSol && ((Sol)this.getElement(voisin)).getTYPE() == TypeSol.PLAINE)
+						this.setElement(voisin, new Sol(this, (TypeSol)t, voisin));
+				}
 			}
 			posA = posA.voisin(alea(0, nbVoisins));
 			taille -= nbVoisins;
@@ -204,14 +210,30 @@ public class Carte extends AConfig implements IConfig {
 	public void genereObstacles() {
 		int nbZone = alea(10, 20);
 		while (nbZone-- > 0)
-			genereZoneObsType(Obstacle.TypeObstacle.EAU);
-		nbZone = alea(10, 20);
+			genereZoneType(5, 15, TypeObstacle.EAU);
+		nbZone = alea(5, 10);
 		while (nbZone-- > 0)
-			genereZoneObsType(Obstacle.TypeObstacle.ROCHER);
-		nbZone = alea(10, 20);
+			genereZoneType(1, 2, TypeObstacle.ROCHER);
+		nbZone = alea(5, 15);
 		while (nbZone-- > 0)
-			genereZoneObsType(Obstacle.TypeObstacle.FORET);
+			genereZoneType(4, 15, TypeObstacle.FORET);
 	}
+	// Génère aléatoirement des sols
+	public void genereSol() {
+		int nbZone = alea(10, 20);
+		while (nbZone-- > 0)
+			genereZoneType(10, 20, TypeSol.COLLINE);
+		nbZone = alea(5, 10);
+		while (nbZone-- > 0)
+			genereZoneType(2, 3, TypeSol.VILLAGE);
+		nbZone = alea(5, 10);
+		while (nbZone-- > 0)
+			genereZoneType(5, 10, TypeSol.MONTAGNE);
+		nbZone = alea(10, 20);
+		while (nbZone-- > 0)
+			genereZoneType(10, 20, TypeSol.DESERT);
+	}
+	
 	// Calcul tous les hexagones des éléments de la carte
 	public static void calculerHex() {
 		for (Element[] liste : grille)
@@ -319,7 +341,6 @@ public class Carte extends AConfig implements IConfig {
 	}
 	// Déplace l'élément sélectionné si c'est un héros
 	public void deplacerHeros(Element cible) {
-		Heros h = (Heros)selection;
 		if (selection instanceof Heros) {
 			if (((Soldat)selection).zoneDeplacementContient(cible)) {
 				chemin = null;
@@ -328,13 +349,11 @@ public class Carte extends AConfig implements IConfig {
 				selection = null;
 				listeThreads.add(ds);
 				ds.start();
-				((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
 			}
 		}
 	}
 	// Fait attaquer le héros
 	public void faireAttaquerHeros(Element cible) {
-		Heros h = (Heros)selection;
 		if (selection instanceof Heros) {
 			if (typeAttaque == CORPS_CORPS) {
 				if (((Soldat)selection).zoneDeplacementContient(cible)) {
@@ -343,7 +362,6 @@ public class Carte extends AConfig implements IConfig {
 					selection = null;
 					listeThreads.add(as);
 					as.start();
-					((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
 				}
 			} else if (typeAttaque == DISTANCE) {
 				if (((Soldat)selection).verifieAttaqueDistance((Soldat)cible)) {
@@ -352,7 +370,6 @@ public class Carte extends AConfig implements IConfig {
 					selection = null;
 					listeThreads.add(as);
 					as.start();
-					((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
 				}
 			}
 		}

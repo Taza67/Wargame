@@ -5,11 +5,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -137,51 +132,11 @@ public class Fenetre extends JFrame implements IConfig {
             this.repaint();
         }
 	}
-	public void sauvegarder(String nom) {
-    }
 	
 	public void sauvegarderPartie() {
-        String nom;
-        FileOutputStream fichier = null;
-        ObjectOutputStream output = null;
-        try {
-			fichier = new FileOutputStream(nom);
-            output = new ObjectOutputStream(fichier);
-            output.writeObject(this.carte);
-            if(this.carte.getGrille() == null)
-                System.out.println("VIIIIDE");
-            else
-                System.out.println(this.carte);
-            output.close();
-            fichier.close();
-            System.out.printf("Les données ont été sauvgardés dans le fichier " + nom);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
 	}
 
 	public void chargerPartie() {
-		String nom;
-        FileInputStream fichier = null;
-        ObjectInputStream lecture = null;
-        Carte c = null;
-        wargame.Element g [][] = new wargame.Element [40][50];
-        try {
-            fichier = new FileInputStream(nom);
-            lecture = new ObjectInputStream(fichier);
-            c = (Carte)lecture.readObject();
-            lecture.close();
-            fichier.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        catch (ClassNotFoundException ex) {
-            System.out.println("La class Carte n'existe pas");
-            ex.printStackTrace();
-        }
 	}
 
 	public void afficherAide() {
