@@ -231,14 +231,4 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 				}
 		}
 	}
-	// Dessine un cadre autour des éléments dans la mini-map
-	public void dessinerZoneDeplacementMM(Graphics2D g) {
-		for (Element e : zoneDeplacement)
-			if (!e.getPos().equals(this.getPos())) {
-				if (e instanceof Monstre)
-					e.seDessinerCadreMM(g, Color.red);
-				else
-					e.seDessinerCadreMM(g, Color.white);
-			}
-	}
 }

@@ -19,12 +19,6 @@ public class Heros extends Soldat  {
 	public TypesH getTYPE() { return TYPE; }
 	
 	// Méthodes
-	// Renvoie les infos du héros
-	public String toString() {
-		String desc = super.toString();
-		desc += " | [ Type : " + TYPE + " ]";
-		return desc;
-	}
 	// Déplace le soldat à la position pos
 	public boolean seDeplace(Position cible) {
 		boolean possible = super.seDeplace(cible);

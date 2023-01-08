@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -51,32 +52,17 @@ public class Fenetre extends JFrame implements IConfig {
 			
 			nouvelle.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					f.getContentPane().removeAll();
-					f.invalidate();
-					f.partie = new PanneauPartie();
-					f.setContentPane(partie);
-					f.validate();
+					f.nouvellePartie();
 				}
 			});
 			quitter.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					f.dispose();
+					f.quitter();
 				}
 			});
 			pleinEcran.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-			        if (f.device.isFullScreenSupported()) {
-			        	// f.setUndecorated(true);
-			            f.device.setFullScreenWindow(f);
-			            int haut = f.device.getFullScreenWindow().getHeight(),
-			            	larg = f.device.getFullScreenWindow().getWidth();
-			            Carte.HAUTEUR_MAP = haut - 80;
-			            Carte.LARGEUR_MAP = larg - LARGEUR_MINI_MAP - 75;
-			            Carte.recalculerMapAff();
-			            // partie.setDimensions();
-			            f.revalidate();
-			            f.repaint();
-			        }
+					f.passerPleinEcran();
 				}
 			});
 		}
@@ -84,16 +70,26 @@ public class Fenetre extends JFrame implements IConfig {
 	
 	private static final long serialVersionUID = 1L;
 	// Infos
-	private PanneauPartie partie;
+	protected PanneauPartie partie;
+	protected PanneauMenu menu;
 	private BarreMenu mb;
 	private GraphicsDevice device;
 	
 	// Constructeurs
 	public Fenetre(String name) {
 		super(name);
-		partie = new PanneauPartie();
+		
+		JLayeredPane panneau = new JLayeredPane();
+		partie = new PanneauPartie(this);
+		menu = new PanneauMenu(this);
+		menu.setVisible(false);
 		device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		mb = new BarreMenu(this);
+		
+		panneau.add(partie, JLayeredPane.DEFAULT_LAYER);
+		panneau.add(menu, JLayeredPane.PALETTE_LAYER);
+		
+		panneau.setPreferredSize(partie.getPreferredSize());
 		
 		this.setJMenuBar(mb);
 		this.setContentPane(partie);
@@ -105,4 +101,45 @@ public class Fenetre extends JFrame implements IConfig {
 	}
 	
 	// Méthodes
+	// Affiche le menu
+	public void afficherMenu() {
+		menu.setVisible(true);
+	}
+	// Lance une nouvelle partie
+	public void nouvellePartie() {
+		this.getContentPane().removeAll();
+		this.invalidate();
+		this.partie = new PanneauPartie(this);
+		this.setContentPane(partie);
+		this.validate();
+	}
+	// Quitte la partie
+	public void quitter() {
+		this.dispose();
+	}
+	// Passe en plein écran si c'est possible
+	public void passerPleinEcran() {
+        if (this.device.isFullScreenSupported()) {
+        	// f.setUndecorated(true);
+            this.device.setFullScreenWindow(this);
+            int haut = this.device.getFullScreenWindow().getHeight(),
+            	larg = this.device.getFullScreenWindow().getWidth();
+            Carte.HAUTEUR_MAP = haut - 80;
+            Carte.LARGEUR_MAP = larg - LARGEUR_MINI_MAP - 75;
+            Carte.recalculerMapAff();
+            // partie.setDimensions();
+            this.revalidate();
+            this.repaint();
+        }
+	}
+
+	public void sauvegarderPartie() {
+	}
+
+	public void chargerPartie() {
+	}
+
+	public void afficherAide() {
+	}
+
 }

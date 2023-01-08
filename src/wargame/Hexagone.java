@@ -43,6 +43,7 @@ public class Hexagone {
 		for (int i = 0; i < 6; i++)
 			extremites[i] = calculerAutreSommet(i);
 	}
+	// Transforme l'hexagone en java.awt.Polygon
 	public Polygon toPolygon() {
 		int tabX[], tabY[];
 		tabX = new int[6];

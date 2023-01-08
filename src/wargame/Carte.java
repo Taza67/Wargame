@@ -26,6 +26,8 @@ public class Carte extends AConfig implements IConfig {
 	List<Element> listeMonstres, listeHeros;
 	// Textures
 	TexturePaint[] texturesPaint;
+	// Processus
+	List<Thread> listeThreads;
 	
 	// Constructeurs
 	public Carte(PanneauPartie panPartie, int largeur, int hauteur) {
@@ -83,6 +85,9 @@ public class Carte extends AConfig implements IConfig {
 		
 		BufferedImage[] bufferedImages = MethodesTextures.getBufferedImages(sources, panPartie);
 		texturesPaint = MethodesTextures.getTexturesPaint(bufferedImages);
+		
+		// Threads
+		listeThreads = new ArrayList<Thread>();
 	}
 	
 	// Accesseurs
@@ -192,9 +197,8 @@ public class Carte extends AConfig implements IConfig {
 			nbVoisins = alea(1, 5);
 			for (int i = 0; i < nbVoisins; i++) {
 				Position voisin = posA.voisin(i).toPosition();
-				if (voisin.estValide(LARGEUR_MAP, HAUTEUR_MAP) && this.getElement(voisin) instanceof Sol) {
+				if (voisin.estValide(LARGEUR_MAP, HAUTEUR_MAP) && this.getElement(voisin) instanceof Sol)
 					this.setElement(voisin, new Obstacle(this, t, voisin));
-				}
 			}
 			posA = posA.voisin(alea(0, nbVoisins));
 			taille -= nbVoisins;
@@ -219,7 +223,6 @@ public class Carte extends AConfig implements IConfig {
 				e.creerHexM();
 	}
 	// Réinitialise les portees de déplacement
-	// Réinitialise les portées de déplacement
 	public void reinitPorteeDep() {
 		for (Element e : listeHeros)
 			((Soldat)e).setPorteeDeplacement(((Soldat)e).getPORTEE_DEPLACEMENT_MAX());
@@ -253,7 +256,6 @@ public class Carte extends AConfig implements IConfig {
 		for (Element s : soldats)
 			((Soldat)s).setAJoue(false);
 	}
-
 	
 	// Méthodes d'interaction
 	// Déplace le curseur
@@ -307,7 +309,6 @@ public class Carte extends AConfig implements IConfig {
 		// On recalcule tous les hexagones
 		calculerHex();
 	}
-	
 	// Actions du héros
 	public void faireAgirHeros(Point p) {
 		Element cible;
@@ -331,6 +332,7 @@ public class Carte extends AConfig implements IConfig {
 				CheminDijkstra ch = new CheminDijkstra(selection, cible, ((Soldat)selection).getZoneDeplacement());
 				DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch.getChemin());
 				selection = null;
+				listeThreads.add(ds);
 				ds.start();
 				((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
 			}
@@ -345,6 +347,7 @@ public class Carte extends AConfig implements IConfig {
 					chemin = null;
 					AttaqueSoldatCorps as = new AttaqueSoldatCorps(this, (Soldat)selection, (Soldat)cible);
 					selection = null;
+					listeThreads.add(as);
 					as.start();
 					((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
 				}
@@ -353,6 +356,7 @@ public class Carte extends AConfig implements IConfig {
 					chemin = null;
 					AttaqueSoldatDistance as = new AttaqueSoldatDistance(this, (Soldat)selection, (Soldat)cible);
 					selection = null;
+					listeThreads.add(as);
 					as.start();
 					((Soldat)listeHeros.get(listeHeros.indexOf(h))).setAJoue(true);
 				}
@@ -363,24 +367,33 @@ public class Carte extends AConfig implements IConfig {
 	// Mets fin au tour du joueur
 	public void finirTour(char side) {
 		if (side == GENTILS) {
-			appliquerGuerisons(listeMonstres);
-			reinitiAJoue(listeMonstres);
-			panPartie.getTableauBord().getBoutonsTour().setVisible(false);
-			panPartie.getTableauBord().getActionsHeros().setVisible(false);
 			selection = null;
 			curseur = null;
 			chemin = null;
+			// On enlève les boutons destinés au joueur
+			panPartie.getTableauBord().getBoutonsTour().setVisible(false);
+			panPartie.getTableauBord().getActionsHeros().setVisible(false);
+			// On réinitialise les points de guérison, déplacement des monstres
+			appliquerGuerisons(listeMonstres);
+			reinitiAJoue(listeMonstres);
+			reinitPorteeDep();
+			// On change les infos sur la partie
 			infoPartie.setNbTours(infoPartie.getNbTours() + 1);
 			infoPartie.setJoueur(MECHANT);
 			panPartie.repaint();
-			TourOrdi to = new TourOrdi(this);
+			// Lancement du thread du général adversaire
+			TourOrdi to = new TourOrdi(this, listeThreads);
 			to.start();
 		} else if (side == MECHANT) {
+			// On remet les boutons destinés au joueur
+			panPartie.getTableauBord().getBoutonsTour().setVisible(true);
+			// On réinitialise les points de guérison, déplacement des héros
 			appliquerGuerisons(listeHeros);
 			reinitiAJoue(listeHeros);
-			panPartie.getTableauBord().getBoutonsTour().setVisible(true);
-			infoPartie.setJoueur(GENTILS);
 			reinitPorteeDep();
+			// On change les infos sur la partie
+			infoPartie.setJoueur(GENTILS);
+			panPartie.repaint();
 		}
 	}
 	
@@ -402,10 +415,9 @@ public class Carte extends AConfig implements IConfig {
 		for (Element[] liste : grille)
 			for (Element e : liste)
 				e.seDessinerMM(g);
-		if (selection != null) {
+		if (selection != null)
 			// if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacementMM(g);
 			selection.seDessinerCadreMM(g, COULEUR_SELECTION);
-		}
 		if (curseur != null) curseur.seDessinerCadreMM(g, COULEUR_CURSEUR);
 		// Dessin d'un rectangle représentant la zone affichée
 		Point ul = mapAff.getUpLeft().toPositionAxiale().toPoint(rayonMM, origineMM).substract(new Point(rayonMM, rayonMM)),

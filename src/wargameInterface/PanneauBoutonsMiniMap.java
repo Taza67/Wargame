@@ -17,7 +17,7 @@ public class PanneauBoutonsMiniMap extends JPanel implements IConfig {
 	public PanneauBoutonsMiniMap(Carte carte) {
 		super();
 		CARTE = carte;
-		reinit = new JButton("REINIT");
+		reinit = new JButton("Réinitialiser");
 		slider = new JSlider(6, 18, 10);
 		reinit.setPreferredSize(new Dimension(100, 20));
 		add(reinit);

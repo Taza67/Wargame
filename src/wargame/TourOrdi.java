@@ -8,14 +8,16 @@ public class TourOrdi extends Thread implements IConfig {
 	Carte carte;
 	List<Element> listeMonstres, listeHeros;
 	List<Thread> processus;
+	List<Thread> lastProcessus;
 	
 	// Constructeurs
-	public TourOrdi(Carte carte) {
+	public TourOrdi(Carte carte, List<Thread> lastProcessus) {
 		super();
 		this.carte = carte;
 		this.listeMonstres = carte.getListeMonstres();
 		this.listeHeros = carte.getListeHeros();
 		this.processus = new ArrayList<Thread>();
+		this.lastProcessus = lastProcessus;
 	}
 	// Accesseurs
 	public List<Thread> getProcessus() { return processus; }
@@ -26,6 +28,7 @@ public class TourOrdi extends Thread implements IConfig {
 	}
 	// Fait jouer un tour de jeu à l'ordinateur
 	public void faireJouerOrdi() {
+		while(threadVivant(lastProcessus));
 		for (Element e : listeMonstres) {
 			Soldat s = (Soldat)e;
 			Element cible = s.aleaElem(s.getZoneDeplacement());
@@ -35,7 +38,6 @@ public class TourOrdi extends Thread implements IConfig {
 			processus.add(dp);
 		}
 		while(threadVivant(processus));
-		carte.reinitPorteeDep();
 		carte.finirTour(MECHANT);
 	}
 	// Vérifie si parmi une liste de threads il y en au moins un d'actif

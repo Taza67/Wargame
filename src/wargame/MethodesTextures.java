@@ -30,16 +30,6 @@ public class MethodesTextures {
 	    	g2d.drawImage(images[i], 0, 0, c);
 	    }
 	    return bufferedImages;
-    }
-
-	// Attend le chargement complet d'une image
-	public static boolean waitForImage(Image image, Component c) {
-	    MediaTracker tracker = new MediaTracker(c);
-	    tracker.addImage(image, 0);
-	    try {
-	    	tracker.waitForAll();
-	    } catch(InterruptedException ie) {}
-	    return !tracker.isErrorAny();
 	}
 
 	// Attend le chargement complet de plusieurs images

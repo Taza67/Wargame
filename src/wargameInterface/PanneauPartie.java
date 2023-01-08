@@ -28,11 +28,11 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 	private PanneauTableauBord tableauBord;
 	
 	// Constructeurs
-	public PanneauPartie() {
+	public PanneauPartie(Fenetre f) {
 		super();
 		if (isFocusable()) setFocusable(true);
 		this.carte = new Carte(this, 50, 40);
-		this.tableauBord = new PanneauTableauBord(carte);
+		this.tableauBord = new PanneauTableauBord(carte, f);
 		this.jeu = new PanneauJeu(carte);
 		this.add(jeu, BorderLayout.WEST);
 		this.add(tableauBord, BorderLayout.EAST);

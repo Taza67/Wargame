@@ -14,7 +14,7 @@ public abstract class Element implements IConfig {
 	
 	// Infos
 	protected Carte carte;
-	private Position pos;
+	protected Position pos;
 	protected Hexagone hex, hexMM;
 	protected boolean visible = false;
 	protected int numTexture;

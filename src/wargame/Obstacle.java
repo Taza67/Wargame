@@ -34,15 +34,8 @@ public class Obstacle extends Element implements IConfig {
 	
 	// Accesseurs
 	public TypeObstacle getTYPE() { return TYPE; }
-	
-	// Méthodes
-	// Retourne les infos sur l'obstacle
-	public String toString() { 
-		String desc = super.toString();
-		if (visible == true)
-			desc += " : [ Type : " + TYPE + " ]";
-		return desc;
-	}
+	// Pseudo-accesseur
+	// Renvoie le type sous forme de chaine de caractères
 	public String getStringType() {
 		return ("" + TYPE).toLowerCase();
 	}

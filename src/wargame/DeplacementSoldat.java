@@ -19,9 +19,7 @@ public class DeplacementSoldat extends Thread implements IConfig {
 	
 	// Méthodes
 	public void run() {
-		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(false);
 		deplacerSoldat();
-		if (soldat instanceof Heros) carte.getPanPartie().getTableauBord().getBoutonsTour().setVisible(true);
 	}
 	// Déplace le soldat case par case
 	public void deplacerSoldat() {

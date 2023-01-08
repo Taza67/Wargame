@@ -22,13 +22,13 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 	protected Component blanc;
 	
 	// Constructeurs
-	public PanneauTableauBord(Carte carte) {
+	public PanneauTableauBord(Carte carte, Fenetre f) {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.CARTE = carte;
 		this.miniMap = new PanneauMiniMap(CARTE);
 		this.boutonsMiniMap = new PanneauBoutonsMiniMap(CARTE);
 		this.infoPartie = new PanneauInfoPartie(CARTE);
-		this.boutonsMenu = new PanneauBoutonsMenu(CARTE);
+		this.boutonsMenu = new PanneauBoutonsMenu(CARTE, f);
 		this.boutonsTour = new PanneauBoutonsTour(CARTE);
 		this.actionsHeros = new PanneauActionsHeros(CARTE);
 		this.add(miniMap);

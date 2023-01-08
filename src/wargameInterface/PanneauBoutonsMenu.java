@@ -1,6 +1,8 @@
 package wargameInterface;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -14,13 +16,19 @@ public class PanneauBoutonsMenu extends JPanel implements IConfig {
 	protected JButton menu;
 	
 	// Constructeurs
-	public PanneauBoutonsMenu(Carte carte) {
+	public PanneauBoutonsMenu(Carte carte, Fenetre f) {
 		this.CARTE = carte;
 		menu = new JButton("Menu");
 		menu.setPreferredSize(new Dimension(carte.getLargMM(), 50));
 		this.setBackground(COULEUR_VIDE);
 		this.setPreferredSize(new Dimension(carte.getLargMM(), 50));
 		this.add(menu);
+		
+		menu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				f.afficherMenu();
+			}
+		});
 	}
 
 	// Accesseurs

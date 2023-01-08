@@ -17,16 +17,20 @@ public class PositionCubique {
 	public double getS() { return s; }
 	
 	// Méthodes
+	// Convertit la position cubique courante en position axiale
 	public PositionAxiale toPositionAxiale() {
 		return new PositionAxiale(q, r);
 	}
+	// Réduit les coordonnées de la position cubique courante de celles de la position cubique donnée
 	public PositionCubique substract(PositionCubique b) {
 	    return new PositionCubique(q - b.q, r - b.r, s - b.s);
 	}
+	// Calcule la distance entre la position cubique courante et celle donnée
 	public double distance(PositionCubique b) {
 	    PositionCubique vec = substract(b);
 	    return (Math.abs(vec.q) + Math.abs(vec.r) + Math.abs(vec.s)) / 2;
 	}
+	// Arrondi les coordonnées de la position cubique à des coordonnées exactes
 	public PositionCubique round() {
 	    int qR = (int)Math.round(q),
 	    	rR = (int)Math.round(r),

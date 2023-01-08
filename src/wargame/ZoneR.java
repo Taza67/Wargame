@@ -75,7 +75,7 @@ public class ZoneR {
 				carte.getElement(new Position(j, i)).visible = true;
 	}
 	
-	// Méthodes graphique
+	// Méthodes graphiques
 	// Dessine une zone de la carte
 	public void seDessiner(Graphics2D g) {
 		for (int i = upLeft.getY(); i <= Math.min(carte.getHautC() - 1, downRight.getY() + 2); i++)

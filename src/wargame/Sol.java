@@ -82,8 +82,7 @@ public class Sol extends Element implements IConfig {
 	public void appliquerEffetPorteeVisuelle(Soldat soldat) {
 		soldat.setPorteeVisuelle(Math.max(VISION_MIN, soldat.getPorteeVisuelle() + EFFET_PORTEE_VISUELLE));
 	}
-	
-	// Enlever les effets du sol au soldat
+	// Enlève les effets du sol au soldat
 	public void enleverEffets(Soldat soldat) {
 		// Points de vie
 		soldat.setGuerison(soldat.getGUERISON_BASE());
