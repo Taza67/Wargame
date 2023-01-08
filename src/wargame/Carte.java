@@ -15,7 +15,6 @@ public class Carte extends AConfig implements IConfig {
 	private static Element[][] grille; 						// Grille du jeu
 	private static ZoneR mapAff;							// Carte affichée
 	private static Position centreAff;						// Centre de la carte affichée
-	private InfoBar infoBar;								// Barre d'info
 	// Interactions
 	private Element curseur, selection;
 	private CheminDijkstra chemin;
@@ -63,21 +62,19 @@ public class Carte extends AConfig implements IConfig {
 		genereMonstres(nbMonstres);
 		// Éléments sélectionnés au départ
 		selection = trouveHeros();
-		// InfoBar
-		infoBar = new InfoBar(selection, null);
 		// Infos sur la partie
 		infoPartie = new InfoPartie(this, nbHeros, nbMonstres);
 		
 		// Texture
 		String dir = System.getProperty("user.dir");
 		String[] sources = new String[11];
-		sources[TEX_PLAINE] = dir + "/plaine.jpeg";
+		sources[TEX_PLAINE] = dir + "/plaine.jpg";
 		sources[TEX_MONTAGNE] = dir + "/montagne.jpeg";
 		sources[TEX_COLLINE] = dir + "/colline.jpeg";
-		sources[TEX_VILLAGE] = dir + "/village.jpeg";
+		sources[TEX_VILLAGE] = dir + "/village.jpg";
 		sources[TEX_DESERT] = dir + "/desert.jpeg";
-		sources[TEX_FORET] = dir + "/foret.jpeg";
-		sources[TEX_ROCHER] = dir + "/rocher.png";
+		sources[TEX_FORET] = dir + "/foret.jpg";
+		sources[TEX_ROCHER] = dir + "/rocher.jpg";
 		sources[TEX_EAU] = dir + "/eau.jpeg";
 		sources[TEX_NUAGE] = dir + "/nuage.jpeg";
 		sources[TEX_HEROS] = dir + "/heros.png";
@@ -94,7 +91,6 @@ public class Carte extends AConfig implements IConfig {
 	public Element[][] getGrille() { return grille; }
 	public ZoneR getMapAff() { return mapAff; }
 	public Position getCentreAff() { return centreAff; }
-	public InfoBar getInfoBar() { return infoBar; }
 	public InfoPartie getInfoPartie() { return infoPartie; }
 	public List<Element> getListeMonstres() { return listeMonstres; }
 	public List<Element> getListeHeros() { return listeHeros; }
@@ -264,7 +260,6 @@ public class Carte extends AConfig implements IConfig {
 		if (mapAff.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
 			p = p.add(new Position(1, 0));
 		curseur = getElement(p);
-		infoBar.setCurseur(curseur);
 		if (selection instanceof Heros && curseur != null && ((Heros)selection).getZoneDeplacement().indexOf(curseur) != -1)
 			chemin = new CheminDijkstra(selection, curseur, ((Heros)selection).getZoneDeplacement());
 		else chemin = null;
@@ -277,7 +272,6 @@ public class Carte extends AConfig implements IConfig {
 		Element e = getElement(p);
 		if (selection != null) selection = (p.equals(selection.getPos())) ? null : e;
 		else selection = e;
-		infoBar.setSelection(selection);
 		chemin = null;
 	}
 	// Zoome la zone d'affichage
