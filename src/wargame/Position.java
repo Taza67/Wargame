@@ -5,7 +5,7 @@ public class Position implements IConfig {
 	private int x, y;
 	
 	// Constructeurs
-	Position(int x, int y) { this.x = x; this.y = y; }
+	public Position(int x, int y) { this.x = x; this.y = y; }
 	
 	// Accesseurs
 	public int getX() { return x; }

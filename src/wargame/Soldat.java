@@ -25,7 +25,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Constructeurs
 	public Soldat(Carte carte, Position pos, int pts, int porteeVisuelle, int porteeDeplacement, int puissance, int tir) {
 		this.carte = carte;
-		this.pos = pos;
+		this.setPos(pos);
 		this.POINTS_DE_VIE_MAX = this.pointsDeVie = pts;
 		this.PORTEE_VISUELLE_BASE = this.porteeVisuelle = porteeVisuelle;
 		this.PORTEE_DEPLACEMENT_MAX = this.porteeDeplacement = porteeDeplacement;
@@ -92,7 +92,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	}
 	// Calcule la zone visuelle du soldat
 	public void calculerZoneVisuelle() {
-		zoneVisuelle = new ZoneH(pos.toPositionAxiale(), porteeVisuelle, carte);
+		zoneVisuelle = new ZoneH(getPos().toPositionAxiale(), porteeVisuelle, carte);
 		List<Element> realZoneV = new ArrayList<Element>();
 		List<Element> zoneV = zoneVisuelle.getZone();
 		for (Element e : zoneV) {
@@ -119,7 +119,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 				couleurs[i][j] = 0;
 		// Calcul de la zone de déplacement
 		zoneDeplacementBis.add(new ArrayList<Position>());
-		zoneDeplacementBis.get(0).add(pos);
+		zoneDeplacementBis.get(0).add(getPos());
 		for (int k = 1; k < porteeDeplacement + 1; k++) {
 			zoneDeplacementBis.add(new ArrayList<Position>());
 			for (Position p : zoneDeplacementBis.get(k - 1)) {
@@ -145,21 +145,27 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	public boolean seDeplace(Position cible) {
 		boolean possible = true;
 		// Vérifications
-		possible = possible && !(pos.equals(cible));									// Pas la même position que l'actuelle ?
+		possible = possible && !(getPos().equals(cible));									// Pas la même position que l'actuelle ?
 		possible = possible && carte.getElement(cible) instanceof Sol;					// Position cible libre ?
 		possible = possible && (zoneDeplacement.indexOf(carte.getElement(cible)) != -1);
 		if (possible) {
-			carte.setElement(pos, sol);													// Position actuelle du soldat libre
+			carte.setElement(getPos(), sol);													// Position actuelle du soldat libre
+			// L'élément sélectionné ou celui focalisé par le curseur doivent peut-être changé
+			if (carte.getSelection() != null && carte.getSelection().getPos().equals(getPos())) carte.setSelection(sol);
+			if (carte.getCurseur() != null && carte.getCurseur().getPos().equals(getPos())) carte.setCurseur(sol);
 			sol.enleverEffetPorteeVisuelle(this);
 			sol.creerHexM();
 			this.sol = (Sol)carte.getElement(cible);									// On récupère le sol cible
 			sol.appliquerEffetPorteeVisuelle(this);
 			carte.setElement(cible, this);												// Le soldat se déplace à la position où il doit être
 			if (this instanceof Monstre)
-				visible = sol.visible; 
+				visible = sol.visible;
 			// Les coordonnées du soldat doivent changer
-			pos.setX(cible.getX());
-			pos.setY(cible.getY());
+			getPos().setX(cible.getX());
+			getPos().setY(cible.getY());
+			// L'élément sélectionné ou celui focalisé par le curseur doivent peut-être changé
+			if (carte.getSelection() != null && carte.getSelection().getPos().equals(this.getPos())) carte.setSelection(this);
+			if (carte.getCurseur() != null && carte.getCurseur().getPos().equals(this.getPos())) carte.setCurseur(this);
 			// Découverte de nouvelle terres :)
 			majZoneVisuelle();
 			creerHex();
@@ -180,7 +186,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		adv.pointsDeVie = advPDV;
 		if (advPDV <= 0) {
 			carte.mort(adv);
-			this.seDeplace(adv.pos);
+			this.seDeplace(adv.getPos());
 			sol.appliquerEffets(this);
 		}
 		if (pointsDeVie <= 0) carte.mort(this);
@@ -215,18 +221,20 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Méthodes graphiques
 	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
 	public void dessinerZoneDeplacement(Graphics2D g) {
-		for (Element e : zoneDeplacement)
-			if (!e.pos.equals(this.pos)) {
-				if (e instanceof Monstre)
-					e.seDessinerCadre(g, Color.red);
-				else
-					e.seDessinerCadre(g, Color.white);
-			}
+		if (!aJoue) {
+			for (Element e : zoneDeplacement)
+				if (!e.getPos().equals(this.getPos())) {
+					if (e instanceof Monstre)
+						e.seDessinerCadre(g, Color.red);
+					else
+						e.seDessinerCadre(g, Color.white);
+				}
+		}
 	}
 	// Dessine un cadre autour des éléments dans la mini-map
 	public void dessinerZoneDeplacementMM(Graphics2D g) {
 		for (Element e : zoneDeplacement)
-			if (!e.pos.equals(this.pos)) {
+			if (!e.getPos().equals(this.getPos())) {
 				if (e instanceof Monstre)
 					e.seDessinerCadreMM(g, Color.red);
 				else

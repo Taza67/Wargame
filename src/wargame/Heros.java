@@ -29,7 +29,7 @@ public class Heros extends Soldat  {
 	public boolean seDeplace(Position cible) {
 		boolean possible = super.seDeplace(cible);
 		if (possible) {
-			carte.getElement(pos).visible = true;
+			carte.getElement(getPos()).visible = true;
 			this.getZoneVisuelle().rendreVisible();
 		}
 		return possible;

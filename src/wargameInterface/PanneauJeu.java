@@ -1,7 +1,6 @@
 package wargameInterface;
 
 import java.awt.Dimension;
-import java.awt.Insets;
 
 import javax.swing.JPanel;
 

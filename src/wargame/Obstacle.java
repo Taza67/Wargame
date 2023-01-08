@@ -27,7 +27,7 @@ public class Obstacle extends Element implements IConfig {
 	public Obstacle(Carte carte, TypeObstacle type, Position pos) {
 		this.carte = carte; 
 		TYPE = type; 
-		this.pos = pos;
+		this.setPos(pos);
 		creerHex();
 		numTexture = type.getNUM_TEXTURE();
 	}

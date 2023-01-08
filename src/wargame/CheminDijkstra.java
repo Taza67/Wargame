@@ -40,7 +40,7 @@ public class CheminDijkstra implements IConfig {
 		for (Element e : sommets)
 			for (Element f : sommets)
 				poids[sommets.indexOf(e)][sommets.indexOf(f)] = 
-					(e.pos.toPositionAxiale().estVoisin(f.pos.toPositionAxiale())) ? 1 : 0;
+					(e.getPos().toPositionAxiale().estVoisin(f.getPos().toPositionAxiale())) ? 1 : 0;
 		// chemin
 		this.chemin = new ArrayList<Element>();
 	}

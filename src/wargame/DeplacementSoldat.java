@@ -28,14 +28,15 @@ public class DeplacementSoldat extends Thread implements IConfig {
 		soldat.getSol().enleverEffets(soldat);
 		for (Element e : chemin) {
 			try {
-				TimeUnit.MILLISECONDS.sleep(300);
+				TimeUnit.MILLISECONDS.sleep(200);
 			} catch (InterruptedException e1) {}
-			soldat.seDeplace(e.pos);
+			soldat.seDeplace(e.getPos());
 			soldat.setPorteeDeplacement(soldat.getPorteeDeplacement() - 1);
 			carte.recalculerZonesDep();
 			carte.recalculerZonesVisuelles();
 			carte.getPanPartie().repaint();
 		}
+		soldat.getSol().enleverEffetPorteeVisuelle(soldat);
 		soldat.getSol().appliquerEffets(soldat);
 	}
 }

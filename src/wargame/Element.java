@@ -14,10 +14,16 @@ public abstract class Element implements IConfig {
 	
 	// Infos
 	protected Carte carte;
-	protected Position pos;
+	private Position pos;
 	protected Hexagone hex, hexMM;
 	protected boolean visible = false;
 	protected int numTexture;
+	
+	// Accesseurs
+	public Position getPos() { return pos; }
+	
+	// Mutateurs
+	public void setPos(Position pos) { this.pos = pos; }
 	
 	// Méthodes
 	// Crée les deux hexagones
@@ -30,14 +36,14 @@ public abstract class Element implements IConfig {
 		int rayon;
 		Point centre;
 		rayon = carte.getRayonHex();
-		centre = pos.substract(carte.getMapAff().getUpLeft()).toPositionAxiale().toPoint(rayon, carte.getOrigine());
-		if (carte.getMapAff().getUpLeft().getY() % 2 != 0 && pos.getY() % 2 == 0)
+		centre = getPos().substract(carte.getMapAff().getUpLeft()).toPositionAxiale().toPoint(rayon, carte.getOrigine());
+		if (carte.getMapAff().getUpLeft().getY() % 2 != 0 && getPos().getY() % 2 == 0)
 			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));
 		hex = new Hexagone(centre, rayon);
 	}
 	// Renvoie les infos
 	public String toString() {
-		return pos.toString();
+		return getPos().toString();
 	}
 	
 	// Méthodes graphiques
@@ -46,7 +52,7 @@ public abstract class Element implements IConfig {
 		int rayon;
 		Point centre;
 		rayon = carte.getRayonMM();
-		centre = pos.toPositionAxiale().toPoint(rayon, carte.getOrigineMM());
+		centre = getPos().toPositionAxiale().toPoint(rayon, carte.getOrigineMM());
 		hexMM = new Hexagone(centre, rayon);
 	}
 	// Dessine l'hexagone passé en paramètre
@@ -117,7 +123,7 @@ public abstract class Element implements IConfig {
 		}
 		infos = new String[n];
 		// Insertion des infos
-		infos[POS] = "Position : " + pos;
+		infos[POS] = "Position : " + getPos();
 		if (visible == true) {
 			infos[TYPE] = "Élément : " + this.getStringType();
 			if (this instanceof Soldat) {
@@ -138,8 +144,8 @@ public abstract class Element implements IConfig {
 		Point centre;
 		// Calcul du centre, coordonnées de départ de l'infobulle
 		rayon = carte.getRayonHex();
-		centre = pos.substract(carte.getMapAff().getUpLeft()).toPositionAxiale().toPoint(rayon, carte.getOrigine());
-		if (carte.getMapAff().getUpLeft().getY() % 2 != 0 && pos.getY() % 2 == 0)
+		centre = getPos().substract(carte.getMapAff().getUpLeft()).toPositionAxiale().toPoint(rayon, carte.getOrigine());
+		if (carte.getMapAff().getUpLeft().getY() % 2 != 0 && getPos().getY() % 2 == 0)
 			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));
 		// Calcul des dimensions
 		larg = 200 + 10;
@@ -158,7 +164,7 @@ public abstract class Element implements IConfig {
 		String infos[] = getStringInfos();
 		FontMetrics metrics = g.getFontMetrics(g.getFont());
 		RoundRectangle2D r = shapeInfoBulle(metrics, infos.length);
-		if (carte.getCurseur() != null && !carte.getCurseur().pos.equals(this.pos)) {
+		if (carte.getCurseur() != null && !carte.getCurseur().getPos().equals(this.getPos())) {
 			RoundRectangle2D rCurseur = carte.getCurseur().shapeInfoBulle(metrics, carte.getCurseur().getStringInfos().length);
 			croisementInfobulles = r.intersects(rCurseur.getBounds2D());
 		}
@@ -167,7 +173,7 @@ public abstract class Element implements IConfig {
 		larg = r.getWidth();
 		haut = r.getHeight();
 		
-		if (carte.getCurseur() != null && !carte.getCurseur().pos.equals(this.pos) && carte.getCurseur().estDansShape(r)) return;
+		if (carte.getCurseur() != null && !carte.getCurseur().getPos().equals(this.getPos()) && carte.getCurseur().estDansShape(r)) return;
 		if (croisementInfobulles) return;
 		g.setColor(Color.gray);
 		g.fill(r);

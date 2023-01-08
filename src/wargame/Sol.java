@@ -45,7 +45,7 @@ public class Sol extends Element implements IConfig {
 	// Constructeurs
 	public Sol(Carte carte, TypeSol type, Position pos) { 
 		this.carte = carte;
-		this.pos = pos;
+		this.setPos(pos);
 		this.numTexture = type.getNUM_TEXTURE();
 		this.EFFET_GUERISON = type.getEFFET_POINTS_DE_VIE();
 		this.EFFET_PORTEE_VISUELLE = type.getEFFET_PORTEE_VISUELLE();
@@ -80,7 +80,7 @@ public class Sol extends Element implements IConfig {
 	}
 	// Applique l'effet de la portee visuelle
 	public void appliquerEffetPorteeVisuelle(Soldat soldat) {
-		soldat.setPorteeVisuelle(Math.max(VISION_MIN, soldat.getPorteeVisuelle() - EFFET_PORTEE_VISUELLE));
+		soldat.setPorteeVisuelle(Math.max(VISION_MIN, soldat.getPorteeVisuelle() + EFFET_PORTEE_VISUELLE));
 	}
 	
 	// Enlever les effets du sol au soldat

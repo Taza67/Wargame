@@ -144,27 +144,16 @@ public class Carte extends AConfig implements IConfig {
 	public Position trouvePosVide() {
 		return trouvePosType(0, largC - 1, 0, hautC - 1, 's');
 	}
-	// Trouve une position vide choisie aleatoirement parmi les 8 positions adjacentes de pos
-	public Position trouvePosVide(Position pos) {
-		int xPos = pos.getX(), yPos = pos.getY(),			// Indices de pos
-			debY = yPos - 1, finY = yPos + 1,				// Indices de ligne
-			debX = xPos - 1, finX = xPos + 1; 				// Indices de colonne
-		return trouvePosType(debY, finY, debX, finX, 's');
-	}
 	// Trouve aléatoirement un héros sur la carte réelle
 	public Heros trouveHeros() {
-		return (Heros)getElement(trouvePosType(0, largC - 1, 0, hautC - 1, 'h'));
-	}
-	// Trouve un héros choisi aleatoirement parmi les 8 positions adjacentes de pos
-	public Heros trouveHeros(Position pos) {
-		int xPos = pos.getX(), yPos = pos.getY(),   // Indices de pos
-			debY = yPos - 1, finY = yPos + 1,		// Indices de ligne
-			debX = xPos - 1, finX = xPos + 1; 		// Indices de colonne
-		return (Heros)getElement(trouvePosType(debY, finY, debX, finX, 'h'));
+		return (Heros)listeHeros.get((listeHeros.indexOf(selection) + 1) % listeHeros.size());
 	}
 	// Tue le soldat
 	public void mort(Soldat victime) {
-		setElement(victime.pos, victime.getSol());
+		setElement(victime.getPos(), victime.getSol());
+		// L'élément sélectionné ou celui focalisé par le curseur doivent peut-être changé
+		if (selection != null && selection.getPos().equals(victime.getPos())) selection = victime.getSol();
+		if (curseur != null && curseur.getPos().equals(victime.getPos())) curseur = victime.getSol();
 		victime = null;
 	}
 	// Génère aléatoirement des héros 
@@ -179,6 +168,19 @@ public class Carte extends AConfig implements IConfig {
 			Heros h = new Heros(this, ISoldat.TypesH.getTypeHAlea(), nom, posVide);
 			this.setElement(posVide, h);
 			listeHeros.add(h);
+		}
+	}
+	// Génère aléatoirement des monstres
+	public void genereMonstres(int n) {
+		int c = 0,
+			debY = 0, finY = hautC - 1,
+			debX = 0, finX = largC / 2;
+		listeMonstres = new ArrayList<Element>();
+		while (c++ < n) {
+			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
+			Monstre m = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
+			this.setElement(posVide, m);
+			listeMonstres.add(m);
 		}
 	}
 	// Génère une zone contenant un type d'obstacles donné
@@ -198,33 +200,6 @@ public class Carte extends AConfig implements IConfig {
 			taille -= nbVoisins;
 		}
 	}
-	// Vérsion récursive
-	public int genereObstaclesRecBis(Position p, int nb, Obstacle.TypeObstacle t) {
-		int a;
-		PositionAxiale voisin = p.toPositionAxiale();
-		if (nb > 0) {
-			if (p.estValide(LARGEUR_MAP, HAUTEUR_MAP)) {
-				setElement(p, new Obstacle(this, t, p));
-				nb -= a = alea(0, 5);
-				for (int i = 0; i < a; i++) {
-					voisin = p.toPositionAxiale();
-					p = voisin.voisin(i).toPosition();
-					if (p.estValide(LARGEUR_MAP, HAUTEUR_MAP))
-						setElement(p, new Obstacle(this, t, p));
-				}
-				for (int i = 0; i < a; i++) {
-					p = voisin.voisin(i).toPosition();
-					nb = genereObstaclesRecBis(p, nb,t);
-				}
-			}
-		}
-		return nb;
-	}
-	public void genereObstaclesrec(Obstacle.TypeObstacle t) {
-		Position p = trouvePosVide();
-		genereObstaclesRecBis(p, 40, t);		
-	}
-	
 	// Génère aléatoirement des obstacles 
 	public void genereObstacles() {
 		int nbZone = alea(10, 20);
@@ -236,19 +211,6 @@ public class Carte extends AConfig implements IConfig {
 		nbZone = alea(10, 20);
 		while (nbZone-- > 0)
 			genereZoneObsType(Obstacle.TypeObstacle.FORET);
-	}
-	// Génère aléatoirement des monstres
-	public void genereMonstres(int n) {
-		int c = 0,
-			debY = 0, finY = hautC - 1,
-			debX = 0, finX = largC / 2;
-		listeMonstres = new ArrayList<Element>();
-		while (c++ < n) {
-			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
-			Monstre m = new Monstre(this, ISoldat.TypesM.getTypeMAlea(), posVide);
-			this.setElement(posVide, m);
-			listeMonstres.add(m);
-		}
 	}
 	// Calcul tous les hexagones des éléments de la carte
 	public static void calculerHex() {
@@ -286,6 +248,11 @@ public class Carte extends AConfig implements IConfig {
 		for (Element s : soldats)
 			if (!((Soldat)s).getAJoue()) ((Soldat)s).guerir();
 	}
+	// Reinitialise les variables aJoue de la liste de soldats donnée
+	public void reinitiAJoue(List<Element> soldats) {
+		for (Element s : soldats)
+			((Soldat)s).setAJoue(false);
+	}
 
 	
 	// Méthodes d'interaction
@@ -306,7 +273,7 @@ public class Carte extends AConfig implements IConfig {
 		if (mapAff.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
 			p = p.add(new Position(1, 0));
 		Element e = getElement(p);
-		if (selection != null) selection = (p.equals(selection.pos)) ? null : e;
+		if (selection != null) selection = (p.equals(selection.getPos())) ? null : e;
 		else selection = e;
 		infoBar.setSelection(selection);
 		chemin = null;
@@ -320,23 +287,27 @@ public class Carte extends AConfig implements IConfig {
 	}
 	// Déplace la zone affichée autour du point p
 	public void deplacer(Point p) {
-		if (p.estValide(origineMM, (new Point(largMM, hautMM)))) {
-			centreAff = p.toPositionAxiale(rayonMM, origineMM).toPosition();
-			mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
-			mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
-			// Calcul de l'origine
-			int largMAC = mapAff.getLargeur(),							// largMAC = largAffC => pas toujours !
-				hautMAC = mapAff.getHauteur(),							// Idem
-				xC = centreAff.getX(),									// C = Centre de la carte (= zone) affichée
-				yC = centreAff.getY();
-			// Calcul des coordonnées de l'origine de la carte
-			Position po = new Position(xC - largAffC / 2 < 0 ? largAffC - largMAC : 0,
-									   yC - hautAffC / 2 < 0 ? hautAffC - hautMAC : 0);
-			origine = po.toPoint(rayonHex);
-			// On recalcule tous les hexagones
-			calculerHex();
-		}
+		if (p.estValide(origineMM, (new Point(largMM, hautMM))))
+			deplacer(p.toPositionAxiale(rayonMM, origineMM).toPosition());
 	}
+	// Déplace la zone affichée autour de la position p
+	public void deplacer(Position p) {
+		centreAff = p;
+		mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
+		mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
+		// Calcul de l'origine
+		int largMAC = mapAff.getLargeur(),							// largMAC = largAffC => pas toujours !
+			hautMAC = mapAff.getHauteur(),							// Idem
+			xC = centreAff.getX(),									// C = Centre de la carte (= zone) affichée
+			yC = centreAff.getY();
+		// Calcul des coordonnées de l'origine de la carte
+		Position po = new Position(xC - largAffC / 2 < 0 ? largAffC - largMAC : 0,
+								   yC - hautAffC / 2 < 0 ? hautAffC - hautMAC : 0);
+		origine = po.toPoint(rayonHex);
+		// On recalcule tous les hexagones
+		calculerHex();
+	}
+	
 	// Actions du héros
 	public void faireAgirHeros(Point p) {
 		Element cible;
@@ -393,19 +364,21 @@ public class Carte extends AConfig implements IConfig {
 	public void finirTour(char side) {
 		if (side == GENTILS) {
 			appliquerGuerisons(listeMonstres);
+			reinitiAJoue(listeMonstres);
 			panPartie.getTableauBord().getBoutonsTour().setVisible(false);
+			panPartie.getTableauBord().getActionsHeros().setVisible(false);
 			selection = null;
 			curseur = null;
 			chemin = null;
 			infoPartie.setNbTours(infoPartie.getNbTours() + 1);
 			infoPartie.setJoueur(MECHANT);
-			panPartie.getTableauBord().getActionsHeros().setVisible(false);
 			panPartie.repaint();
 			TourOrdi to = new TourOrdi(this);
 			to.start();
 		} else if (side == MECHANT) {
 			appliquerGuerisons(listeHeros);
-			panPartie.getTableauBord().getActionsHeros().setVisible(true);
+			reinitiAJoue(listeHeros);
+			panPartie.getTableauBord().getBoutonsTour().setVisible(true);
 			infoPartie.setJoueur(GENTILS);
 			reinitPorteeDep();
 		}

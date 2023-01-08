@@ -3,6 +3,8 @@ package wargameInterface;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -15,10 +17,12 @@ import wargame.Carte;
 import wargame.Heros;
 import wargame.IConfig;
 import wargame.Point;
+import wargame.Position;
 
-public class PanneauPartie extends JPanel implements IConfig {
+public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 	private static final long serialVersionUID = 1L;
 	// Infos
+	private int zoom = 10;
 	private Carte carte;
 	private PanneauJeu jeu;
 	private PanneauTableauBord tableauBord;
@@ -26,11 +30,13 @@ public class PanneauPartie extends JPanel implements IConfig {
 	// Constructeurs
 	public PanneauPartie() {
 		super();
+		if (isFocusable()) setFocusable(true);
 		this.carte = new Carte(this, 50, 40);
 		this.tableauBord = new PanneauTableauBord(carte);
 		this.jeu = new PanneauJeu(carte);
 		this.add(jeu, BorderLayout.WEST);
 		this.add(tableauBord, BorderLayout.EAST);
+		
 		// Gestion des événéments
 		// Souris
 		tableauBord.miniMap.addMouseListener(new MouseAdapter() {
@@ -64,9 +70,8 @@ public class PanneauPartie extends JPanel implements IConfig {
 			}
 		});
 		jeu.grille.addMouseWheelListener(new MouseAdapter() {
-			int zoom = 10;
-			public void mouseWheelMoved(MouseWheelEvent e) { 
-				zoom -= e.getWheelRotation(); 
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				zoom = (e.getWheelRotation() < 0) ? Math.min(18, zoom + 1) : Math.max(6, zoom - 1); 
 				tableauBord.boutonsMiniMap.slider.setValue(zoom);
 				carte.zoomer(zoom);
 				jeu.repaint();
@@ -84,9 +89,76 @@ public class PanneauPartie extends JPanel implements IConfig {
 				tableauBord.miniMap.repaint();
 			};
 		});
+		this.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				requestFocusInWindow();
+			}
+		});
+		this.addKeyListener(this);
 	}
 	
 	// Accesseurs
 	public PanneauJeu getJeu() { return jeu; }
 	public PanneauTableauBord getTableauBord() { return tableauBord; }
+
+	// Méthodes d'écoute
+	public void keyTyped(KeyEvent e) { }
+	public void keyPressed(KeyEvent e) {
+		switch(e.getKeyCode()) {
+		case KeyEvent.VK_UP:
+		case KeyEvent.VK_Z:
+			carte.deplacer(carte.getCentreAff().substract(new Position(0, 1)));
+			repaint();
+			break;
+		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_S:
+			carte.deplacer(carte.getCentreAff().add(new Position(0, 1)));
+			repaint();
+			break;
+		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_Q:
+			carte.deplacer(carte.getCentreAff().substract(new Position(1, 0)));
+			repaint();
+			break;
+		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_D:
+			carte.deplacer(carte.getCentreAff().add(new Position(1, 0)));
+			repaint();
+			break;
+		case KeyEvent.VK_R:
+			zoom = 10;
+			carte.zoomer(10);
+			tableauBord.boutonsMiniMap.slider.setValue(10);
+			repaint();
+			break;
+		case KeyEvent.VK_H:
+			carte.setSelection(carte.trouveHeros());
+			repaint();
+			break;
+		case KeyEvent.VK_ADD:
+		case KeyEvent.VK_A:
+			zoom = Math.min(18, zoom + 1); 
+			tableauBord.boutonsMiniMap.slider.setValue(zoom);
+			carte.zoomer(zoom);
+			jeu.repaint();
+			tableauBord.miniMap.repaint();
+			break;
+		case KeyEvent.VK_SUBTRACT:
+		case KeyEvent.VK_E:
+			zoom = Math.max(6, zoom - 1); 
+			tableauBord.boutonsMiniMap.slider.setValue(zoom);
+			carte.zoomer(zoom);
+			jeu.repaint();
+			tableauBord.miniMap.repaint();
+			break;
+		case KeyEvent.VK_ENTER:
+			break;
+		case KeyEvent.VK_SPACE:
+			carte.deplacer(carte.getSelection().getPos());
+			repaint();
+			break;
+		}
+	}
+	public void keyReleased(KeyEvent e) {
+	}
 }

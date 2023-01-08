@@ -16,7 +16,7 @@ public class LigneH implements IConfig {
 	}
 	public LigneH(Element dep, Element arr, Carte carte) {
 		this(carte);
-		this.calculerLigne(dep.pos.toPositionAxiale(), arr.pos.toPositionAxiale());
+		this.calculerLigne(dep.getPos().toPositionAxiale(), arr.getPos().toPositionAxiale());
 	}
 	
 	// Accesseurs
