@@ -111,8 +111,10 @@ public abstract class Element implements IConfig {
 	public String[] getStringInfos() {
 		int n = 1;
 		String infos[];
-		if (visible == true) n++;
-		if (this instanceof Soldat) n += 6;
+		if (visible == true) {
+			n++;
+			if (this instanceof Soldat) n += 6;
+		}
 		infos = new String[n];
 		// Insertion des infos
 		infos[POS] = "Position : " + pos;
