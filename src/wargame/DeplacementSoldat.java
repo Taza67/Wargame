@@ -3,8 +3,7 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DeplacementSoldat extends Thread implements IConfig, java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+public class DeplacementSoldat extends Thread implements IConfig {
 	// Infos
 	Carte carte;
 	Soldat soldat;

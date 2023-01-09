@@ -1,11 +1,12 @@
 package wargame;
 
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LigneH implements IConfig ,java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+public class LigneH implements IConfig, Serializable {
+	private static final long serialVersionUID = -389247811436631214L;
 	// Infos
 	private List<Element> ligne;
 	private Carte carte;

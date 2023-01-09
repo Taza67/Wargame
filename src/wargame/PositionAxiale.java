@@ -1,7 +1,9 @@
 package wargame;
 
-public class PositionAxiale implements java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+import java.io.Serializable;
+
+public class PositionAxiale implements Serializable {
+	private static final long serialVersionUID = -4157725586069134304L;
 	// Constantes statiques
 	// Voisins de la position
 	public static PositionAxiale[] vecteurs_directions_axiales = {new PositionAxiale(+1, 0), new PositionAxiale(+1, -1), new PositionAxiale(0, -1),

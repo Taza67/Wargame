@@ -1,7 +1,7 @@
 package wargame;
 
 public class Obstacle extends Element implements IConfig {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 459512988497610851L;
 	// Type
 	public enum TypeObstacle {
 		// Liste

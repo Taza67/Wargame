@@ -3,8 +3,8 @@ package wargame;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
-public class Heros extends Soldat  {
-	private static final long serialVersionUID = 1L;
+public class Heros extends Soldat {
+	private static final long serialVersionUID = -3558011063868665290L;
 	// Infos
 	private final String NOM;
 	private final TypesH TYPE;

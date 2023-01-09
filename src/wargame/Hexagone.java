@@ -5,9 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.TexturePaint;
+import java.io.Serializable;
 
-public class Hexagone implements java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+public class Hexagone implements Serializable {
+	private static final long serialVersionUID = -7787070189042594340L;
 	// Infos
 	private final Point[] extremites;
 	private Point centre;

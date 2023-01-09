@@ -2,8 +2,7 @@ package wargame;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.TexturePaint;
-import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +10,8 @@ import wargame.Obstacle.TypeObstacle;
 import wargame.Sol.TypeSol;
 import wargameInterface.PanneauPartie;
 
-public class Carte implements IConfig , java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+public class Carte implements IConfig , Serializable {
+	private static final long serialVersionUID = -7225736178980752155L;
 	// Infos
 	// Map
 	public static int POSITION_X = 100, POSITION_Y = 50;			// Position de la fenêtre
@@ -28,9 +27,9 @@ public class Carte implements IConfig , java.io.Serializable {
 	// Limites
 	protected int nbHeros, nbMonstres;								// Nombre de héros, monstres
 	
-	private static Element[][] grille; 								// Grille du jeu
-	private static ZoneR mapAff;									// Carte affichée
-	private static Position centreAff;								// Centre de la carte affichée
+	private Element[][] grille; 									// Grille du jeu
+	private ZoneR mapAff;											// Carte affichée
+	private Position centreAff;										// Centre de la carte affichée
 	// Interactions
 	private Element curseur, selection;
 	private CheminDijkstra chemin;
@@ -39,8 +38,6 @@ public class Carte implements IConfig , java.io.Serializable {
 	private InfoPartie infoPartie;
 	// Liste des entités
 	List<Element> listeMonstres, listeHeros;
-	// Textures
-	transient TexturePaint[] texturesPaint;
 	// Processus
 	List<Thread> listeThreads;
 	
@@ -81,8 +78,6 @@ public class Carte implements IConfig , java.io.Serializable {
 		selection = trouveHeros();
 		// Infos sur la partie
 		infoPartie = new InfoPartie(this, nbHeros, nbMonstres);
-		// Textures
-		chargerTextures(panPartie);
 		// Threads
 		listeThreads = new ArrayList<Thread>();
 	}
@@ -116,33 +111,15 @@ public class Carte implements IConfig , java.io.Serializable {
 	public void setCurseur(Element curseur) { this.curseur = curseur; }
 	public void setSelection(Element selection) { this.selection = selection; }
 	public void setTypeAttaque(int typeAttaque) { this.typeAttaque = typeAttaque; }
+	public void setPanPartie(PanneauPartie panPartie) { this.panPartie = panPartie; }
 	//// Pseudo-mutateurs
 	public void setElement(Position pos, Element elem) {
 		if (pos.estValide(largC, hautC)) grille[pos.getY()][pos.getX()] = elem;
 	}
 	
 	// Méthodes
-	// Charge les textures
-	public void chargerTextures(PanneauPartie p) {
-		String dir = System.getProperty("user.dir");
-		String[] sources = new String[11];
-		sources[TEX_PLAINE] = dir + "/plaine.jpg";
-		sources[TEX_MONTAGNE] = dir + "/montagne.jpg";
-		sources[TEX_COLLINE] = dir + "/colline.jpg";
-		sources[TEX_VILLAGE] = dir + "/village.jpg";
-		sources[TEX_DESERT] = dir + "/desert.jpeg";
-		sources[TEX_FORET] = dir + "/foret.jpg";
-		sources[TEX_ROCHER] = dir + "/rocher.jpg";
-		sources[TEX_EAU] = dir + "/eau.jpg";
-		sources[TEX_NUAGE] = dir + "/nuage.jpg";
-		sources[TEX_HEROS] = dir + "/heros.png";
-		sources[TEX_MONSTRE] = dir + "/monstre.png";
-		
-		BufferedImage[] bufferedImages = MethodesTextures.getBufferedImages(sources, p);
-		texturesPaint = MethodesTextures.getTexturesPaint(bufferedImages);
-	}
 	// Recalcules les dimensions de la carte affichées
-	public static void recalculerMapAff() {
+	public void recalculerMapAff() {
 		int horiz, vert;
 		horiz = (int)(Math.sqrt(3.) * rayonHex);
 		vert = (int)(3 / 2. * rayonHex);
@@ -263,7 +240,7 @@ public class Carte implements IConfig , java.io.Serializable {
 	}
 	
 	// Calcul tous les hexagones des éléments de la carte
-	public static void calculerHex() {
+	public void calculerHex() {
 		for (Element[] liste : grille)
 			for (Element e : liste)
 				e.creerHexM();

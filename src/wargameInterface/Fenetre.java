@@ -98,7 +98,8 @@ public class Fenetre extends JFrame implements IConfig {
 		super(name);
 
 		JLayeredPane panneau = new JLayeredPane();
-		partie = new PanneauPartie(this);
+		Carte carte = new Carte(null, 50, 40);
+		partie = new PanneauPartie(this, carte);
 		menu = new PanneauMenu(this);
 		menu.setVisible(false);
 		device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -133,7 +134,8 @@ public class Fenetre extends JFrame implements IConfig {
 	}
 	// Lance une nouvelle partie
 	public void nouvellePartie() {
-		changerPartie(new PanneauPartie(this));
+		Carte carte = new Carte(null, 50, 40);
+		changerPartie(new PanneauPartie(this, carte));
 	}
 	// Sauvegarde la partie
 	public void sauvegarderPartie() {
@@ -143,7 +145,7 @@ public class Fenetre extends JFrame implements IConfig {
 		try {
 			fichier = new FileOutputStream(nom);
 			output = new ObjectOutputStream(fichier);
-			output.writeObject(this.partie);
+			output.writeObject(this.partie.carte);
 			output.close();
 			fichier.close();
 			System.out.printf("Les données ont été sauvgardés dans le fichier " + nom);
@@ -157,11 +159,12 @@ public class Fenetre extends JFrame implements IConfig {
 		String nom = "sauvegarde.ser";
 		FileInputStream fichier = null;
 		ObjectInputStream lecture = null;
+		Carte carte = null;
 		PanneauPartie p = null;
 		try {
 			fichier = new FileInputStream(nom);
 			lecture = new ObjectInputStream(fichier);
-			p = (PanneauPartie)lecture.readObject();
+			carte = (Carte)lecture.readObject();
 			lecture.close();
 			fichier.close();
 		}
@@ -173,7 +176,7 @@ public class Fenetre extends JFrame implements IConfig {
 			System.out.println("La class Carte n'existe pas");
 			ex.printStackTrace();
 		}
-		p.carte.chargerTextures(p);
+		p = new PanneauPartie(this, carte);
 		changerPartie(p);
 	}
 	// Quitte la partie
@@ -189,7 +192,7 @@ public class Fenetre extends JFrame implements IConfig {
 					larg = this.device.getFullScreenWindow().getWidth();
 			Carte.HAUTEUR_MAP = haut - 80;
 			Carte.LARGEUR_MAP = larg - LARGEUR_MINI_MAP - 75;
-			Carte.recalculerMapAff();
+			// Carte.recalculerMapAff();
 			// partie.setDimensions();
 			this.revalidate();
 			this.repaint();

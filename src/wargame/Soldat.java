@@ -8,7 +8,7 @@ import java.util.List;
 import wargame.Obstacle.TypeObstacle;
 
 public abstract class Soldat extends Element implements IConfig, ISoldat {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7215342942160817886L;
 	// Infos
 	private final int POINTS_DE_VIE_MAX, PORTEE_DEPLACEMENT_MAX,
 					  PORTEE_VISUELLE_BASE, PUISSANCE_BASE, TIR_BASE, GUERISON_BASE;

@@ -3,9 +3,10 @@ package wargame;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.io.Serializable;
 
-public class InfoPartie implements IConfig , java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+public class InfoPartie implements IConfig, Serializable {
+	private static final long serialVersionUID = -2099696797421917005L;
 	// Infos
 	private int nbTours;
 	private char joueur;

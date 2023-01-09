@@ -2,11 +2,12 @@ package wargame;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ZoneH implements java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+public class ZoneH implements Serializable {
+	private static final long serialVersionUID = 4780267211740884717L;
 	// Infos
 	private Carte carte;
 	private PositionAxiale centre;

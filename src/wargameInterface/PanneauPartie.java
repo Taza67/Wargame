@@ -1,6 +1,7 @@
 package wargameInterface;
 
 import java.awt.BorderLayout;
+import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -16,26 +17,33 @@ import javax.swing.event.ChangeListener;
 import wargame.Carte;
 import wargame.Heros;
 import wargame.IConfig;
+import wargame.MethodesTextures;
 import wargame.Point;
 import wargame.Position;
 
-public class PanneauPartie extends JPanel implements IConfig, KeyListener , java.io.Serializable{
+public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	private int zoom = 10;
 	protected Carte carte;
 	protected PanneauJeu jeu;
 	protected PanneauTableauBord tableauBord;
+	// Textures
+	public static TexturePaint[] texturesPaint;
 	
 	// Constructeurs
-	public PanneauPartie(Fenetre f) {
+	public PanneauPartie(Fenetre f, Carte carte) {
 		super();
 		if (isFocusable()) setFocusable(true);
-		this.carte = new Carte(this, 50, 40);
+		carte.setPanPartie(this);
+		this.carte = carte;
 		this.tableauBord = new PanneauTableauBord(carte, f);
 		this.jeu = new PanneauJeu(carte);
 		this.add(jeu, BorderLayout.WEST);
 		this.add(tableauBord, BorderLayout.EAST);
+		
+		// Textures
+		texturesPaint = MethodesTextures.chargerTextures(this, carte.getRayonHex());
 		
 		// Gestion des événéments
 		// Souris
@@ -95,6 +103,8 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener , java
 			}
 		});
 		this.addKeyListener(this);
+		
+		
 	}
 	
 	// Accesseurs

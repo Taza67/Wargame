@@ -1,7 +1,9 @@
 package wargame;
 
-public class Point implements java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+import java.io.Serializable;
+
+public class Point implements Serializable {
+	private static final long serialVersionUID = 1085181307746823815L;
 	// Infos
 	private double x;
 	private double y;

@@ -1,7 +1,9 @@
 package wargame;
 
-public class Position implements IConfig , java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+import java.io.Serializable;
+
+public class Position implements IConfig, Serializable {
+	private static final long serialVersionUID = 4047705877020738793L;
 	// Infos
 	private int x, y;
 	

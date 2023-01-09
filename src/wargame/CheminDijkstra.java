@@ -1,10 +1,12 @@
 package wargame;
 
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheminDijkstra implements IConfig {
+public class CheminDijkstra implements IConfig, Serializable {
+	private static final long serialVersionUID = -1614658200180524351L;
 	// Infos
 	List<Element> sommets;
 	int[] d, pred;

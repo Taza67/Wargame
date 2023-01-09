@@ -1,7 +1,7 @@
 package wargame;
 
 public class Sol extends Element implements IConfig {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -124005016652526706L;
 	// Type
 	public enum TypeSol {
 		// Liste

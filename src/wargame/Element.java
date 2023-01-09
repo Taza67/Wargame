@@ -7,10 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.io.Serializable;
 
-public abstract class Element implements IConfig ,java.io.Serializable{
-	private static final long serialVersionUID = 1L;
+import wargameInterface.PanneauPartie;
 
+public abstract class Element implements IConfig, Serializable {
+	private static final long serialVersionUID = -2180721218940141556L;
 	// Constantes statiques
 	private static final int POS = 0, TYPE = 1, SOL = 2, PDV = 3, DEP = 4, VISUEL = 5, POW = 6, TIR = 7;
 	
@@ -61,7 +63,7 @@ public abstract class Element implements IConfig ,java.io.Serializable{
 	public void seDessinerBis(Hexagone h, Graphics2D g) {
 		int numT = numTexture;
 		if (visible == false) numT = TEX_NUAGE;
-		h.seDessiner(g, carte.texturesPaint[numT]);
+		h.seDessiner(g, PanneauPartie.texturesPaint[numT]);
 	}
 	// Dessine l'élément
 	public void seDessiner(Graphics2D g) {
@@ -76,14 +78,14 @@ public abstract class Element implements IConfig ,java.io.Serializable{
 		int rayon = h.getRayon(),
 			numT = numTexture;
 		if (visible == false) numT = TEX_NUAGE;
-		h.seDessiner(g, carte.texturesPaint[numT]);
+		h.seDessiner(g, PanneauPartie.texturesPaint[numT]);
 		
 		h.setRayon((int)(rayon * 0.75));
 		g.setColor(cadre);
 		h.seDessiner(g);
 		
 		h.setRayon((int)(rayon * 0.5));
-		h.seDessiner(g, carte.texturesPaint[numT]);
+		h.seDessiner(g, PanneauPartie.texturesPaint[numT]);
 		h.setRayon(rayon);
 	}
 	// Dessine l'élément avec un cadre
