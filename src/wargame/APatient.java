@@ -4,7 +4,7 @@ import java.util.List;
 
 public abstract class APatient extends Thread {
 	// Infos
-	List<Thread> processusAttendre;
+	transient List<Thread> processusAttendre;
 	
 	// Méthodes
 	// Attend la fin des threads à attendre
