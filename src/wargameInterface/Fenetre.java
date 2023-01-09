@@ -34,10 +34,12 @@ public class Fenetre extends JFrame implements IConfig {
 		private JMenu partieM, affichageM, optionsM, aideM, chargerM;
 		private JMenuItem nouvelle, quitter, pleinEcran, sauvegarder;
 		private List<JMenuItem> sauvegardes;
+		private Fenetre f;
 
 		// Constructeurs
 		public BarreMenu(Fenetre f) {
 			super();
+			this.f = f;
 			sauvegardes = new ArrayList<JMenuItem>();
 			
 			partieM = new JMenu("Partie");
@@ -103,6 +105,11 @@ public class Fenetre extends JFrame implements IConfig {
 		// Ajoute un JMenuItem <sauvegarde> à la liste
 		public void ajouterSauvegarde(String fileName) {
 			JMenuItem newSave = new JMenuItem(fileName);
+			newSave.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					f.chargerPartie(fileName);
+				}
+			});
 			chargerM.add(newSave);
 		}
 		// Renvoie une liste de boutons liés aux sauvegardes
@@ -131,8 +138,12 @@ public class Fenetre extends JFrame implements IConfig {
 	// Constructeurs
 	public Fenetre(String name) {
 		super(name);
+		
+		DialogueNouvellePartie dialogue = new DialogueNouvellePartie(this);
+		if (!dialogue.showDialogue()) System.exit(0);
+		
 		nomSauvegardes = new LinkedHashSet<>();
-		Carte carte = new Carte(null, 50, 40);
+		Carte carte = new Carte(null, dialogue.getLarg(), dialogue.getHaut(), dialogue.getNbH(), dialogue.getNbM());
 		partie = new PanneauPartie(this, carte);
 		device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		mb = new BarreMenu(this);
@@ -158,7 +169,9 @@ public class Fenetre extends JFrame implements IConfig {
 	}
 	// Lance une nouvelle partie
 	public void nouvellePartie() {
-		Carte carte = new Carte(null, 50, 40);
+		DialogueNouvellePartie dialogue = new DialogueNouvellePartie(this);
+		if (!dialogue.showDialogue()) return;
+		Carte carte = new Carte(null, dialogue.getLarg(), dialogue.getHaut(), dialogue.getNbH(), dialogue.getNbM());
 		changerPartie(new PanneauPartie(this, carte));
 	}
 	// Sauvegarde la partie

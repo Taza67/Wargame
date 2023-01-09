@@ -14,13 +14,14 @@ public class Carte implements IConfig , Serializable {
 	private static final long serialVersionUID = -7225736178980752155L;
 	// Infos
 	// Map
+	public static int largeurFenetre = 1500, hauteurFen = 760;
 	public static int largeurMap = 1250, hauteurMap = 760;
 	protected PanneauPartie panPartie;
 	protected int largC, hautC;										// Dimensions de la carte réelle
 	protected static int largAffC, hautAffC;						// Dimensions de la carte affichée 
 	protected int hautMM, largMM;									// Hauteur de la mini-map
 	protected static int rayonHex = 25;								// Rayon d'un hexagone
-	protected int rayonMM;
+	protected int rayonMM = 4;
 	// Positionnement
 	protected Point origine, origineMM;								// Origine de la carte affichée
 	// Limites
@@ -38,25 +39,27 @@ public class Carte implements IConfig , Serializable {
 	// Liste des entités
 	List<Element> listeMonstres, listeHeros;
 	// Processus
-	List<Thread> listeThreads;
+	transient List<Thread> listeThreads;
 	
 	// Constructeurs
-	public Carte(PanneauPartie panPartie, int largeur, int hauteur) {
+	public Carte(PanneauPartie panPartie, int largeur, int hauteur, int nbHeros, int nbMonstres) {
 		int horiz, vert, horizMM, vertMM;
 		horiz = (int)(Math.sqrt(3.) * rayonHex);
 		vert = (int)(3 / 2. * rayonHex);
 		// Initialisations
+		//// Mini-map
+		horizMM = (int)(Math.sqrt(3.) * rayonMM); 
+		vertMM = (int)(3 / 2. * rayonMM);
+		hautMM = hauteur * vertMM + hauteur / 10;
+		largMM = largeur * horizMM + largeur;
+		
+		largeurMap = largeurFenetre - largMM;
 		this.panPartie = panPartie;
 		largC = largeur;
 		hautC = hauteur;
-		largAffC = largeurMap / horiz;
 		hautAffC = hauteurMap / vert;
-		//// Mini-map
-		horizMM = LARGEUR_MINI_MAP / largeur + 1; 
-		rayonMM = (int)(horizMM / Math.sqrt(3));
-		vertMM = (int)(3 / 2. * rayonMM);
-		hautMM = hauteur * vertMM;
-		largMM = largeur * horizMM;
+		largAffC = largeurMap / horiz;
+		
 		//// Grille + Map affichée
 		grille = new Element[hauteur][largeur];
 		centreAff = new Position(largeur / 2, hauteur / 2);
@@ -68,7 +71,8 @@ public class Carte implements IConfig , Serializable {
 		for (int i = 0; i < hauteur; i++)
 			for (int j = 0; j < largeur; j++)
 				grille[i][j] = new Sol(this, TypeSol.PLAINE ,new Position(j, i));
-		nbHeros = nbMonstres = 6;
+		this.nbHeros = nbHeros;
+		this.nbMonstres = nbMonstres;
 		genereObstacles();
 		genereSol();
 		genereHeros(nbHeros);
@@ -171,7 +175,7 @@ public class Carte implements IConfig , Serializable {
 		victime = null;
 		panPartie.repaint();
 	}
-	// Génère aléatoirement des héros 
+	// Génère aléatoirement des héros
 	public void genereHeros(int n) {
 		int c = 0,
 			debY = 0, finY = hautC - 1,

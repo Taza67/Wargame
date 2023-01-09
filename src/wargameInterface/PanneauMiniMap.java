@@ -19,7 +19,7 @@ public class PanneauMiniMap extends JPanel implements IConfig {
 		super();
 		this.CARTE = carte;
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, CARTE.getHautMM()));
+		this.setPreferredSize(new Dimension(carte.getLargMM(), CARTE.getHautMM()));
 	}
 		
 	// Méthodes
