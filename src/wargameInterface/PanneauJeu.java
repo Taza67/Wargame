@@ -12,11 +12,12 @@ public class PanneauJeu extends JPanel {
 	protected PanneauGrille grille;
 	
 	public PanneauJeu(Carte carte) {
+		super();
 		this.grille = new PanneauGrille(carte);
 		this.add(grille);
 		// this.setLayout((LayoutManager)new BorderLayout());
 		// this.add(grille, BorderLayout.NORTH);
 		// this.add(infosCurseur, BorderLayout.SOUTH);
-		this.setPreferredSize(new Dimension(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP));
+		this.setPreferredSize(new Dimension(Carte.largeurMap, Carte.hauteurMap));
 	}
 }

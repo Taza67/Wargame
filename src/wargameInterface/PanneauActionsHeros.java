@@ -1,7 +1,7 @@
 package wargameInterface;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,24 +15,29 @@ public class PanneauActionsHeros extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	// Infos
 	protected JButton frontale;
-	protected JButton campement;
 	protected JButton distance;
 	public final Carte CARTE;
 
 	public PanneauActionsHeros(Carte carte) {
 		super();
+		this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		int largB = carte.getLargMM() / 2 - 4,
+			hautB = 30,
+			haut = (hautB + 5) * 1;
+		
 		CARTE = carte;
+		
 		frontale = new JButton("Attaque frontale");
-		campement = new JButton("Camper");
 		distance = new JButton("Attaque à distance");
-		frontale.setPreferredSize(new Dimension(carte.getLargMM() / 3 - 3, 20));
-		campement.setPreferredSize(new Dimension(carte.getLargMM() / 3 - 3, 20));
-		distance.setPreferredSize(new Dimension(carte.getLargMM() / 3 - 3, 20));
-		add(frontale, BorderLayout.WEST);
-		add(campement, BorderLayout.CENTER);
-		add(distance, BorderLayout.EAST);
+		
+		frontale.setPreferredSize(new Dimension(largB, hautB));
+		distance.setPreferredSize(new Dimension(largB, hautB));
+		
+		add(frontale);
+		add(distance);
+		
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, 30));
+		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, haut));
 		
 		frontale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

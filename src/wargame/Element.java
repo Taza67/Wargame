@@ -156,8 +156,8 @@ public abstract class Element implements IConfig, Serializable {
 		haut = nbInfos * (metrics.getHeight() + 5) + 15;
 		x = centre.getX();
 		y = centre.getY();
-		if (x + larg > Carte.LARGEUR_MAP) x -= larg;
-		if (y + haut > Carte.HAUTEUR_MAP) y -= haut;
+		if (x + larg > Carte.largeurMap) x -= larg;
+		if (y + haut > Carte.hauteurMap) y -= haut;
 		// Retour
 		return new RoundRectangle2D.Double(x, y, larg, haut, 10, 10);
 	}

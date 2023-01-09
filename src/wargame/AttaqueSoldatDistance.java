@@ -1,16 +1,18 @@
 package wargame;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AttaqueSoldatDistance extends Thread implements IConfig {
+public class AttaqueSoldatDistance extends APatient implements IConfig {
 	// Infos
 	Carte carte;
 	Soldat soldat;
 	Soldat cible;
 	
 	// Constructeurs
-	public AttaqueSoldatDistance(Carte carte, Soldat soldat, Soldat cible) {
+	public AttaqueSoldatDistance(Carte carte, Soldat soldat, Soldat cible, List<Thread> processusAttendre) {
 		super();
+		this.processusAttendre = processusAttendre;
 		this.carte = carte;
 		this.soldat = soldat;
 		this.cible = cible;
@@ -18,6 +20,7 @@ public class AttaqueSoldatDistance extends Thread implements IConfig {
 	
 	// Méthodes
 	public void run() {
+		attendre();
 		faireAttaquerSoldat();
 	}
 	// Déplace le soldat case par case

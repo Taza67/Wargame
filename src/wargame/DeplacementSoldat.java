@@ -3,15 +3,16 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DeplacementSoldat extends Thread implements IConfig {
+public class DeplacementSoldat extends APatient implements IConfig {
 	// Infos
 	Carte carte;
 	Soldat soldat;
 	List<Element> chemin;
 	
 	// Constructeurs
-	public DeplacementSoldat(Carte carte, Soldat soldat, List<Element> chemin) {
+	public DeplacementSoldat(Carte carte, Soldat soldat, List<Element> chemin, List<Thread> processusAttendre) {
 		super();
+		this.processusAttendre = processusAttendre;
 		this.carte = carte;
 		this.soldat = soldat;
 		this.chemin = chemin;
@@ -19,6 +20,7 @@ public class DeplacementSoldat extends Thread implements IConfig {
 	
 	// Méthodes
 	public void run() {
+		attendre();
 		deplacerSoldat();
 	}
 	// Déplace le soldat case par case

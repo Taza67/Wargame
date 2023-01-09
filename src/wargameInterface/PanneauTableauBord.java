@@ -23,6 +23,8 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 	
 	// Constructeurs
 	public PanneauTableauBord(Carte carte, Fenetre f) {
+		super();
+		int hautBlanc;
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.CARTE = carte;
 		this.miniMap = new PanneauMiniMap(CARTE);
@@ -34,13 +36,17 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 		this.add(miniMap);
 		this.add(boutonsMiniMap);
 		this.add(infoPartie);
-		blanc = Box.createRigidArea(new Dimension(carte.getLargMM() + 10, Carte.HAUTEUR_MAP - carte.getHautMM() - 200));
+		
+		hautBlanc = Math.max(0, Carte.hauteurMap - miniMap.getPreferredSize().height - boutonsMiniMap.getPreferredSize().height
+				  - infoPartie.getPreferredSize().height  - boutonsMenu.getPreferredSize().height
+				  - boutonsTour.getPreferredSize().height  - actionsHeros.getPreferredSize().height - 10);
+		blanc = Box.createRigidArea(new Dimension(carte.getLargMM() + 10, hautBlanc));
 		this.add(blanc);
 		this.add(boutonsMenu);
 		this.add(boutonsTour);
 		this.add(actionsHeros);
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, Carte.HAUTEUR_MAP));
+		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, Carte.hauteurMap));
 	}
 
 	// Accesseurs

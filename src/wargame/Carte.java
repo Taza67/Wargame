@@ -14,8 +14,7 @@ public class Carte implements IConfig , Serializable {
 	private static final long serialVersionUID = -7225736178980752155L;
 	// Infos
 	// Map
-	public static int POSITION_X = 100, POSITION_Y = 50;			// Position de la fenêtre
-	public static int LARGEUR_MAP = 1250, HAUTEUR_MAP = 760;
+	public static int largeurMap = 1250, hauteurMap = 760;
 	protected PanneauPartie panPartie;
 	protected int largC, hautC;										// Dimensions de la carte réelle
 	protected static int largAffC, hautAffC;						// Dimensions de la carte affichée 
@@ -50,8 +49,8 @@ public class Carte implements IConfig , Serializable {
 		this.panPartie = panPartie;
 		largC = largeur;
 		hautC = hauteur;
-		largAffC = LARGEUR_MAP / horiz;
-		hautAffC = HAUTEUR_MAP / vert;
+		largAffC = largeurMap / horiz;
+		hautAffC = hauteurMap / vert;
 		//// Mini-map
 		horizMM = LARGEUR_MINI_MAP / largeur + 1; 
 		rayonMM = (int)(horizMM / Math.sqrt(3));
@@ -123,8 +122,8 @@ public class Carte implements IConfig , Serializable {
 		int horiz, vert;
 		horiz = (int)(Math.sqrt(3.) * rayonHex);
 		vert = (int)(3 / 2. * rayonHex);
-		largAffC = LARGEUR_MAP / horiz;
-		hautAffC = HAUTEUR_MAP / vert;
+		largAffC = largeurMap / horiz;
+		hautAffC = hauteurMap / vert;
 		// Modification des extremités de la zone de la carte affichée
 		mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
 		mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
@@ -162,7 +161,15 @@ public class Carte implements IConfig , Serializable {
 		// L'élément sélectionné ou celui focalisé par le curseur doivent peut-être changé
 		if (selection != null && selection.getPos().equals(victime.getPos())) selection = victime.getSol();
 		if (curseur != null && curseur.getPos().equals(victime.getPos())) curseur = victime.getSol();
+		if (victime instanceof Heros) {
+			listeHeros.remove(listeHeros.indexOf((Element)victime));
+			infoPartie.setNbHeros(--nbHeros);
+		} else if (victime instanceof Monstre) {
+			listeMonstres.remove(listeMonstres.indexOf((Element)victime));
+			infoPartie.setNbMonstres(--nbMonstres);
+		}
 		victime = null;
+		panPartie.repaint();
 	}
 	// Génère aléatoirement des héros 
 	public void genereHeros(int n) {
@@ -200,7 +207,7 @@ public class Carte implements IConfig , Serializable {
 			nbVoisins = alea(1, 5);
 			for (int i = 0; i < nbVoisins; i++) {
 				Position voisin = posA.voisin(i).toPosition();
-				if (voisin.estValide(LARGEUR_MAP, HAUTEUR_MAP) && this.getElement(voisin) instanceof Sol) {
+				if (voisin.estValide(largeurMap, hauteurMap) && this.getElement(voisin) instanceof Sol) {
 					if (t instanceof TypeObstacle)
 						this.setElement(voisin, new Obstacle(this, (TypeObstacle)t, voisin));
 					else if (t instanceof TypeSol && ((Sol)this.getElement(voisin)).getTYPE() == TypeSol.PLAINE)
@@ -350,7 +357,7 @@ public class Carte implements IConfig , Serializable {
 			if (((Soldat)selection).zoneDeplacementContient(cible)) {
 				chemin = null;
 				CheminDijkstra ch = new CheminDijkstra(selection, cible, ((Soldat)selection).getZoneDeplacement());
-				DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch.getChemin());
+				DeplacementSoldat ds = new DeplacementSoldat(this, (Soldat)selection, ch.getChemin(), new ArrayList<Thread>(listeThreads));
 				selection = null;
 				listeThreads.add(ds);
 				ds.start();
@@ -363,7 +370,7 @@ public class Carte implements IConfig , Serializable {
 			if (typeAttaque == CORPS_CORPS) {
 				if (((Soldat)selection).zoneDeplacementContient(cible)) {
 					chemin = null;
-					AttaqueSoldatCorps as = new AttaqueSoldatCorps(this, (Soldat)selection, (Soldat)cible);
+					AttaqueSoldatCorps as = new AttaqueSoldatCorps(this, (Soldat)selection, (Soldat)cible, new ArrayList<Thread>(listeThreads));
 					selection = null;
 					listeThreads.add(as);
 					as.start();
@@ -371,7 +378,7 @@ public class Carte implements IConfig , Serializable {
 			} else if (typeAttaque == DISTANCE) {
 				if (((Soldat)selection).verifieAttaqueDistance((Soldat)cible)) {
 					chemin = null;
-					AttaqueSoldatDistance as = new AttaqueSoldatDistance(this, (Soldat)selection, (Soldat)cible);
+					AttaqueSoldatDistance as = new AttaqueSoldatDistance(this, (Soldat)selection, (Soldat)cible, new ArrayList<Thread>(listeThreads));
 					selection = null;
 					listeThreads.add(as);
 					as.start();

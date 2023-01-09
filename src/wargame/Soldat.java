@@ -3,6 +3,7 @@ package wargame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import wargame.Obstacle.TypeObstacle;
@@ -111,7 +112,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	}
 	// Calcule la zone de déplacement du soldat
 	public void calculerZoneDeplacement() {
-		zoneDeplacement = new ArrayList<Element>();
+		zoneDeplacement = new LinkedList<Element>();
 		List<List<Position>> zoneDeplacementBis = new ArrayList<List<Position>>();
 		//// Couleurs : 0 = BLANC, 1 = NOIR
 		int[][] couleurs = new int[carte.getHautC()][carte.getLargC()];
@@ -128,7 +129,9 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 				for (int d = 0; d < 6; d++) {
 					PositionAxiale vA = pA.voisin(d);
 					Position v = vA.toPosition();
-					if ((carte.getElement(v) instanceof Sol || carte.getElement(v) instanceof Monstre) && couleurs[v.getY()][v.getX()] != 1) {
+					if ((carte.getElement(v) instanceof Sol ||
+						((this instanceof Heros && carte.getElement(v) instanceof Monstre) ||
+						(this instanceof Monstre && carte.getElement(v) instanceof Heros))) && couleurs[v.getY()][v.getX()] != 1) {
 						zoneDeplacementBis.get(k).add(v);
 						couleurs[v.getY()][v.getX()] = 1;
 					}
@@ -220,6 +223,10 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	public boolean zoneDeplacementContient(Element e) {
 		return zoneDeplacement.indexOf(e) != -1;
 	}
+	// Vérifie si le soldat est mourrant ou pas
+	public boolean estMourrant() {
+		return pointsDeVie < POINTS_DE_VIE_MAX / 5;
+	}
 	
 	// Méthodes graphiques
 	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
@@ -236,7 +243,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	}
 	// Dessine le soldat
 	public void seDessiner(Graphics2D g) {
-		if (aJoue)													// Si le soldat a déjà joué
+		if (aJoue && visible)										// Si le soldat a déjà joué
 			super.seDessinerCadre(g, Color.black);
 		else
 			super.seDessiner(g);

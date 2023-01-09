@@ -19,7 +19,7 @@ public class PanneauGrille extends JPanel implements IConfig {
 		super();
 		this.CARTE = carte;
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(Carte.LARGEUR_MAP, Carte.HAUTEUR_MAP));
+		this.setPreferredSize(new Dimension(Carte.largeurMap, Carte.hauteurMap));
 	}
 		
 	// Méthodes
