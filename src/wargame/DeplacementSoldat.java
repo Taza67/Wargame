@@ -3,11 +3,11 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DeplacementSoldat extends APatient implements IConfig, java.io.Serializable{
+public class DeplacementSoldat extends APatient implements IConfig {
 	// Infos
 	Carte carte;
 	Soldat soldat;
-	transient List<Element> chemin;
+	private List<Element> chemin;
 	
 	// Constructeurs
 	public DeplacementSoldat(Carte carte, Soldat soldat, List<Element> chemin, List<Thread> processusAttendre) {

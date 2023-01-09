@@ -31,7 +31,7 @@ public class TourOrdi extends APatient implements IConfig {
 		for (Element e : listeMonstres) {
 			reflechirStrategie((Soldat)e);
 		}
-		while(threadVivant(processus));
+		while(MethodesAuxiliaires.threadVivant(processus));
 		carte.finirTour(MECHANT);
 	}
 	

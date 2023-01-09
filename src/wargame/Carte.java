@@ -105,6 +105,7 @@ public class Carte implements IConfig , Serializable {
 	public List<Element> getListeHeros() { return listeHeros; }
 	public Element getCurseur() { return curseur; }
 	public Element getSelection() { return selection; }
+	public List<Thread> getListeThreads() { return listeThreads; }
 	//// Pseudo-accesseurs
 	public Element getElement(Position pos) {
 		return (pos.estValide(largC, hautC)) ? grille[pos.getY()][pos.getX()] : null;
@@ -409,7 +410,8 @@ public class Carte implements IConfig , Serializable {
 			infoPartie.setJoueur(MECHANT);
 			panPartie.repaint();
 			// Lancement du thread du général adversaire
-			TourOrdi to = new TourOrdi(this, listeThreads);
+			TourOrdi to = new TourOrdi(this, new ArrayList<Thread>(listeThreads));
+			listeThreads.add(to);
 			to.start();
 		} else if (side == MECHANT) {
 			// On remet les boutons destinés au joueur

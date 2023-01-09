@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 
 import wargame.Carte;
 import wargame.IConfig;
+import wargame.MethodesAuxiliaires;
 
 public class Fenetre extends JFrame implements IConfig {
 	public class BarreMenu extends JMenuBar {
@@ -178,6 +179,7 @@ public class Fenetre extends JFrame implements IConfig {
 	public void sauvegarderPartie() {
 		String nom = JOptionPane.showInputDialog(this, "Nom de la sauvegarde : "),
 			   nomFichier = nom;
+		while(MethodesAuxiliaires.threadVivant(partie.carte.getListeThreads()));
 		FileOutputStream fichier = null;
 		ObjectOutputStream output = null;
 		if (nom == null) return;
