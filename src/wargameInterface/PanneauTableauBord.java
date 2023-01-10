@@ -1,6 +1,7 @@
 package wargameInterface;
 
 import java.awt.Component;
+
 import java.awt.Dimension;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -9,19 +10,69 @@ import javax.swing.JPanel;
 import wargame.Carte;
 import wargame.IConfig;
 
+
+
+
+/**
+ * <b>Classe PanneauTableauBord extension de JPanel implémentation de IConfig/b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Une Carte CARTE</li>
+ * <li>Un PanneauMiniMap MiniMap</li>
+ * <li>Un PanneauBoutonsMiniMap boutonsMiniMap</li>
+ * <li>Un PanneauInfoPartie infoPartie</li>
+ * <li>Un PanneauBoutonsMenu boutonsMenu</li>
+ * <li>Un PanneauBoutonsTour boutonsTour</li>
+ * <li>Un PanneauActionsHeros actionsHeros</li>
+ * <li>Un Component blanc</li>
+ * </ul>
+ * </p>
+ * 
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
 public class PanneauTableauBord extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
-	// Infos
+	/**
+	 * Carte CARTE
+	 */
 	private final Carte CARTE;
+	/**
+	 * PanneauMiniMap miniMap
+	 */
 	protected PanneauMiniMap miniMap;
+	/**
+	 * PanneauBoutonsMiniMap boutonsMiniMap
+	 */
 	protected PanneauBoutonsMiniMap boutonsMiniMap;
+	/**
+	 * PanneauInfoPartie infoPartie
+	 */
 	protected PanneauInfoPartie infoPartie;
+	/**
+	 * PanneauBoutonsMenu boutonsMenu
+	 */
 	protected PanneauBoutonsMenu boutonsMenu;
+	/**
+	 * PanneauBoutonsTour boutonsTour
+	 */
 	protected PanneauBoutonsTour boutonsTour;
+	/**
+	 * PanneauActionHeros actionsHeros
+	 */
 	protected PanneauActionsHeros actionsHeros;
+	/**
+	 * Component blanc
+	 */
 	protected Component blanc;
 	
-	// Constructeurs
+	/**
+	 * Constructeur PanneauTableauBord
+	 * @param carte
+	 * @param f
+	 */
 	public PanneauTableauBord(Carte carte, Fenetre f) {
 		super();
 		int hautBlanc;
@@ -49,7 +100,14 @@ public class PanneauTableauBord extends JPanel implements IConfig {
 		this.setPreferredSize(new Dimension(carte.getLargMM() + 10, Carte.hauteurMap));
 	}
 
-	// Accesseurs
+	/**
+	 * Accesseur boutonTour
+	 * @return PanneauBoutonsTour
+	 */
 	public PanneauBoutonsTour getBoutonsTour() { return boutonsTour; }
+	/**
+	 * Accesseur ActionHeros
+	 * @return PanneauActionsHeros
+	 */
 	public PanneauActionsHeros getActionsHeros() { return actionsHeros; }
 }
