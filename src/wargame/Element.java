@@ -123,14 +123,19 @@ public abstract class Element implements IConfig, Serializable {
 			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));
 		hex = new Hexagone(centre, rayon);
 	}
-	
-	// Renvoie les infos
+
+	/**
+	 * Renvoie les infos sur la position.
+	 * 
+	 */
 	public String toString() {
 		return getPos().toString();
 	}
 	
-	// Méthodes graphiques
-	// Crée l'hexagone de la mini-map
+	/**
+	 * Crée l'hexagone de la mini-map.
+	 * 
+	 */ 
 	public void creerHexMM() {
 		int rayon;
 		Point centre;
@@ -138,21 +143,44 @@ public abstract class Element implements IConfig, Serializable {
 		centre = getPos().toPositionAxiale().toPoint(rayon, carte.getOrigineMM());
 		hexMM = new Hexagone(centre, rayon);
 	}
-	// Dessine l'hexagone passé en paramètre
+	
+	/**
+	 * Dessine l'hexagone passé en paramètre.
+	 * 
+	 * @param h
+	 * @param g
+	 */
 	public void seDessinerBis(Hexagone h, Graphics2D g) {
 		int numT = numTexture;
 		if (visible == false) numT = TEX_NUAGE;
 		h.seDessiner(g, PanneauPartie.texturesPaint[numT]);
 	}
-	// Dessine l'élément
+	
+	/**
+	 * Dessine l'élément.
+	 * 
+	 * @param g
+	 */
 	public void seDessiner(Graphics2D g) {
 		seDessinerBis(hex, g);
 	}
-	// Dessine l'élément dans la mini-map
+	
+	/**
+	 *  Dessine l'élément dans la mini-map.
+	 * 
+	 * @param g
+	 */
 	public void seDessinerMM(Graphics2D g) {
 		seDessinerBis(hexMM, g);
 	}
-	// Dessine l'hexagone passé en paramètre avec un cadre
+	
+	/**
+	 * Dessine l'hexagone passé en paramètre avec un cadre.
+	 * 
+	 * @param h
+	 * @param g
+	 * @param cadre
+	 */
 	public void seDessinerCadreBis(Hexagone h, Graphics2D g, Color cadre) {
 		int rayon = h.getRayon(),
 			numT = numTexture;
@@ -167,15 +195,34 @@ public abstract class Element implements IConfig, Serializable {
 		h.seDessiner(g, PanneauPartie.texturesPaint[numT]);
 		h.setRayon(rayon);
 	}
-	// Dessine l'élément avec un cadre
+	
+	/**
+	 * Dessine l'élément avec un cadre
+	 * 
+	 * @param g
+	 * @param cadre
+	 */
 	public void seDessinerCadre(Graphics2D g, Color cadre) {
 		seDessinerCadreBis(hex, g, cadre);
 	}
-	// Dessine l'élément avec un cadre dans la mini-map
+	
+	/**
+	 * Dessine l'élément avec un cadre dans la mini-map
+	 * 
+	 * @param g
+	 * @param cadre
+	 */
 	public void seDessinerCadreMM(Graphics2D g, Color cadre) {
 		seDessinerCadreBis(hexMM, g, cadre);
 	}
-	// Dessine un texte centré au sein d'un hexagone
+	
+	/**
+	 * Dessine un texte centré au sein d'un hexagone
+	 * 
+	 * @param g
+	 * @param text
+	 * @param font
+	 */
 	public void drawCenteredString(Graphics2D g, String text, Font font) {
 		int larg, haut, rayon,
 			x, y;
@@ -196,7 +243,11 @@ public abstract class Element implements IConfig, Serializable {
 	    // Draw the String
 	    g.drawString(text, x, y);
 	}
-	// Renvoie les infos sur un élément sous forme de chaines de caracteres
+	
+	/**
+	 * Renvoie les infos sur un élément sous forme de chaines de caracteres
+	 * 
+	 */
 	public String[] getStringInfos() {
 		int n = 1;
 		String infos[];
@@ -220,7 +271,13 @@ public abstract class Element implements IConfig, Serializable {
 		}
 		return infos;
 	}
-	// Renvoie la shape Rectangle de l'infobulle
+	
+	/**
+	 * Renvoie la shape Rectangle de l'infobulle
+	 * 
+	 * @param metrics
+	 * @param nbInfos
+	 */
 	public RoundRectangle2D shapeInfoBulle(FontMetrics metrics, int nbInfos) {
 		int rayon;
 		double x, y, larg, haut;
@@ -240,7 +297,12 @@ public abstract class Element implements IConfig, Serializable {
 		// Retour
 		return new RoundRectangle2D.Double(x, y, larg, haut, 10, 10);
 	}
-	// Dessiner l'info-bulle
+	
+	/**
+	 * Dessiner l'info-bulle
+	 * 
+	 * @param g
+	 */
 	public void dessinerInfoBulle(Graphics2D g) {
 		g.setFont(new Font("Courier", Font.BOLD, 13));
 		double x, y, larg, haut;
@@ -281,12 +343,20 @@ public abstract class Element implements IConfig, Serializable {
 			y += metrics.getHeight() + 5;
 		}
 	}
-	// Vérifie si l'élément en fonction de sa position dans la carte affichée est dans une shape
+	
+	/**
+	 * Vérifie si l'élément en fonction de sa position dans la carte affichée est dans une shape
+	 * 
+	 * @param s
+	 */
 	public boolean estDansShape(Shape s) {
 		Rectangle2D r = hex.toPolygon().getBounds2D();
 		return s.intersects(r);
 	}
 	
-	// Méthodes abstraites
+	/**
+	 * Renvoie le type de l'élément sous forme de chaine de caractère.
+	 * 
+	 */
 	protected abstract String getStringType();
 }
