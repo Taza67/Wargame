@@ -7,12 +7,47 @@ import java.util.LinkedList;
 import java.util.List;
 
 import wargame.Obstacle.TypeObstacle;
+import wargameInterface.Fenetre;
+import wargameInterface.PanneauPartie;
+
+
+
+
+/**
+ * <b>Soldat est la class qui gère les enemenis et les heros.</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Les données sur les personnages (points de vie, portée visuelle et déplacement).</li>
+ * <li>Zone visuelle.</li>
+ * </ul>
+ * </p>
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
 
 public abstract class Soldat extends Element implements IConfig, ISoldat {
 	private static final long serialVersionUID = -7215342942160817886L;
-	// Infos
+	
+	/**
+	 * Points de vie max du soldat
+	 * Portée deplacement maximal du soldat
+	 * Portée visuelle de base du soldat
+	 * Puissance de base du soldat
+	 * Tir de base du soldat
+	 * Guerison de base du soldat
+	 */
 	private final int POINTS_DE_VIE_MAX, PORTEE_DEPLACEMENT_MAX,
 					  PORTEE_VISUELLE_BASE, PUISSANCE_BASE, TIR_BASE, GUERISON_BASE;
+	
+	/**
+	 * Points de vie courant du soldat
+	 * Portée deplacement courant du soldat
+	 * Portée visuelle courant du soldat
+	 * Puissance de base courant du soldat
+	 * Tir de base courant du soldat
+	 */
+	
 	private int pointsDeVie,
 				porteeVisuelle,
 				porteeDeplacement,
