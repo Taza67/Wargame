@@ -18,7 +18,10 @@ public class PanneauBoutonsTour extends JPanel implements IConfig {
 	protected JButton finTour;
 	protected JButton nextHeros;
 	
-	// Constructeurs
+	/**
+	 * Constructeur du panneau bouton responsable des tours de jeux
+	 * @param carte
+	 */
 	public PanneauBoutonsTour(Carte carte) {
 		super();
 		int largB = carte.getLargMM() / 2 - 4,
@@ -45,7 +48,10 @@ public class PanneauBoutonsTour extends JPanel implements IConfig {
 		});;
 	}
 
-	// Accesseurs
+	/**
+	 * Retourne un bouton
+	 * @return un bouton
+	 */
 	public JButton getFinTour() { return finTour; }
 	
 	
