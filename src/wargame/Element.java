@@ -9,7 +9,31 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.io.Serializable;
 
+import wargameInterface.Fenetre;
 import wargameInterface.PanneauPartie;
+
+
+
+
+
+/**
+ * <b>Element est la classe responsable de la gestion des éléments hexagonaux de la carte.</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Une carte représentant la carte du jeu.</li>
+ * <li>La position de chaque élément dans la grille.</li>
+ * </ul>
+ * </p>
+ * @see ZoneR 
+ * @see Hexagone
+ * @see Position
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
+
+
 
 public abstract class Element implements IConfig, Serializable {
 	private static final long serialVersionUID = -2180721218940141556L;
