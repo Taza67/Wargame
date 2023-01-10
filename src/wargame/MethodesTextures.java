@@ -86,7 +86,7 @@ public class MethodesTextures implements IConfig {
 	 * @return TexturePaint[]
 	 */
 	public static TexturePaint[] chargerTextures(PanneauPartie p, int rayon) {
-		String dir = System.getProperty("user.dir");
+		String dir = "./images";
 		String[] sources = new String[11];
 		sources[TEX_PLAINE] = dir + "/plaine.jpg";
 		sources[TEX_MONTAGNE] = dir + "/montagne.jpg";
