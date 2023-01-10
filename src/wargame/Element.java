@@ -119,6 +119,8 @@ public abstract class Element implements IConfig, Serializable {
 	/**
 	 * Crée l'hexagone de la map affichée.
 	 * 
+	 * @see Carte#calculerHex()
+	 * @see Soldat#seDeplace(Position)
 	 */
 	public void creerHexM() {
 		int rayon;
@@ -154,7 +156,11 @@ public abstract class Element implements IConfig, Serializable {
 	 * Dessine l'hexagone passé en paramètre.
 	 * 
 	 * @param h
+	 * 		l'hexagone à dessiner
 	 * @param g
+	 * 		Graphics 2D 
+	 * @see Element#seDessiner(Graphics2D)
+	 * @see Element#seDessinerCadreMM(Graphics2D, Color)
 	 */
 	public void seDessinerBis(Hexagone h, Graphics2D g) {
 		int numT = numTexture;
@@ -166,6 +172,7 @@ public abstract class Element implements IConfig, Serializable {
 	 * Dessine l'élément.
 	 * 
 	 * @param g
+	 * 		Graphics2D
 	 */
 	public void seDessiner(Graphics2D g) {
 		seDessinerBis(hex, g);
@@ -175,6 +182,7 @@ public abstract class Element implements IConfig, Serializable {
 	 *  Dessine l'élément dans la mini-map.
 	 * 
 	 * @param g
+	 * 		Graphics2D 
 	 */
 	public void seDessinerMM(Graphics2D g) {
 		seDessinerBis(hexMM, g);
@@ -184,8 +192,11 @@ public abstract class Element implements IConfig, Serializable {
 	 * Dessine l'hexagone passé en paramètre avec un cadre.
 	 * 
 	 * @param h
+	 * 		hexagone à dessiner
 	 * @param g
+	 * 		Graphics2D
 	 * @param cadre
+	 * 		couleur du cadre
 	 */
 	public void seDessinerCadreBis(Hexagone h, Graphics2D g, Color cadre) {
 		int rayon = h.getRayon(),
@@ -206,7 +217,9 @@ public abstract class Element implements IConfig, Serializable {
 	 * Dessine l'élément avec un cadre
 	 * 
 	 * @param g
+	 * 		Graphics2D
 	 * @param cadre
+	 * 		Couleur du cadre
 	 */
 	public void seDessinerCadre(Graphics2D g, Color cadre) {
 		seDessinerCadreBis(hex, g, cadre);
@@ -218,7 +231,8 @@ public abstract class Element implements IConfig, Serializable {
 	 * @param g
 	 * 		paramètre Graphics2D pour dessiner
 	 * @param cadre
-	 * 		couleur du cadre		
+	 * 		couleur du cadre
+	 * @see Element#seDessinerCadre(Graphics2D, Color)
 	 */
 	public void seDessinerCadreMM(Graphics2D g, Color cadre) {
 		seDessinerCadreBis(hexMM, g, cadre);
@@ -228,8 +242,12 @@ public abstract class Element implements IConfig, Serializable {
 	 * Dessine un texte centré au sein d'un hexagone
 	 * 
 	 * @param g
+	 * 		Graphics2D
 	 * @param text
+	 * 		chaine de caractère à écrire
 	 * @param font
+	 * 		font de la chaine à écrire
+	 * @see Heros#seDessiner(Graphics2D)
 	 */
 	public void drawCenteredString(Graphics2D g, String text, Font font) {
 		int larg, haut, rayon,
@@ -254,6 +272,8 @@ public abstract class Element implements IConfig, Serializable {
 	
 	/**
 	 * Renvoie les infos sur un élément sous forme de chaines de caracteres
+	 * 
+	 * @see Element#dessinerInfoBulle
 	 * 
 	 */
 	public String[] getStringInfos() {
@@ -284,7 +304,10 @@ public abstract class Element implements IConfig, Serializable {
 	 * Renvoie la shape Rectangle de l'infobulle
 	 * 
 	 * @param metrics
+	 * 		FontMetrics
 	 * @param nbInfos
+	 * 		nombre d'informations à écrire
+	 * @see Element#dessinerInfoBulle(Graphics2D)
 	 */
 	public RoundRectangle2D shapeInfoBulle(FontMetrics metrics, int nbInfos) {
 		int rayon;
@@ -310,6 +333,9 @@ public abstract class Element implements IConfig, Serializable {
 	 * Dessiner l'info-bulle
 	 * 
 	 * @param g
+	 * 		Graphics2D
+	 * @see Carte#seDessiner(Graphics2D)
+	 * @see Element#shapeInfoBulle(FontMetrics, int)
 	 */
 	public void dessinerInfoBulle(Graphics2D g) {
 		g.setFont(new Font("Courier", Font.BOLD, 13));
@@ -356,6 +382,8 @@ public abstract class Element implements IConfig, Serializable {
 	 * Vérifie si l'élément en fonction de sa position dans la carte affichée est dans une shape
 	 * 
 	 * @param s
+	 * 		Shape de java.awt.Shape
+	 * @see Element#dessinerInfoBulle(Graphics2D)
 	 */
 	public boolean estDansShape(Shape s) {
 		Rectangle2D r = hex.toPolygon().getBounds2D();
