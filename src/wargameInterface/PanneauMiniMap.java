@@ -14,7 +14,10 @@ public class PanneauMiniMap extends JPanel implements IConfig {
 	// Infos
 	public final Carte CARTE;
 	
-	// Constructeurs
+	/**
+	 * Constructeur du panneau de la mini-map
+	 * @param carte
+	 */
 	public PanneauMiniMap(Carte carte) {
 		super();
 		this.CARTE = carte;
@@ -22,7 +25,10 @@ public class PanneauMiniMap extends JPanel implements IConfig {
 		this.setPreferredSize(new Dimension(carte.getLargMM(), CARTE.getHautMM()));
 	}
 		
-	// Méthodes
+	/**
+	 * Methode paintcomponent responsable du dessin graphique
+	 * Graphics g
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D)g;
