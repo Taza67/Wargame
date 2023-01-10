@@ -4,35 +4,50 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+
+
+/**
+ * <b>Classe TourOrdi gère la stratégie de l'ordinateur extension de APatient et implémentation de IConfig</b>
+ * <p>Elle est caractérisée par:
+ * <ul>
+ * <li>Une carte</li>
+ * <li>Une liste de monstres</li>
+ * <li> une liste de héros</li>
+ * <li> Une liste des ciblées attaquées </li>
+ * <li> Une liste des processus </li>
+ * </ul>
+ * </p>
+ * 
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
 public class TourOrdi extends APatient implements IConfig {
-	// Infos
+	/**
+	 * Carte
+	 */
 	Carte carte;
-	List<Element> listeMonstres, listeHeros, listeCiblesAttaquees;
+	/**
+	 * Liste de Monstres
+	 */
+	List<Element> listeMonstres, 
+	/**
+	 * Liste de héros
+	 */
+	listeHeros, 
+	/**
+	 * Liste des cibles attaquées
+	 */
+	listeCiblesAttaquees;
+	/**
+	 * Liste des processus
+	 */
 	List<Thread> processus;
 
 	
 	/**
-	 * Constructeur TourOrdi.
-	 * <p>
-	 * A la construction, les dimensions en pixels et en cases sont calculées, la partie affichée est construite et la grille de jeu est générée aléatoirement.
-	 * Les éléments interactifs sont générés.
-	 * </p>
-	 * 
-	 * @param panPartie
-	 * 				Le panneauPartie qui contiendra la carte.
-	 * @param largeur
-	 *            	La largeur de la grille.
-	 * @param hauteur
-	 * 			  	La hauteur de la grile.
-	 * @param nbHeros
-	 * 				Le nombre de héros
-	 * @param nbMonstre
-	 * 				Le nombre de monstres
-	 * @see Carte#panPartie
-	 * @see Carte#LARGC
-	 * @see Carte#HAUTC
-	 * @see Carte#nbHeros
-	 * @see Carte#nbMonstres
+	 * Constructeur d'un tour
+	 * @param carte
+	 * @param lastProcessus
 	 */
 	public TourOrdi(Carte carte, List<Thread> lastProcessus) {
 		super();
@@ -44,12 +59,16 @@ public class TourOrdi extends APatient implements IConfig {
 		this.processus = new ArrayList<Thread>();
 	}
 	
-	// Méthodes
+	/**
+	 * run
+	 */
 	public void run() {
 		attendre();
 		faireJouerOrdi();
 	}
-	// Fait jouer un tour de jeu à l'ordinateur
+	/**
+	 *  Fait jouer un tour de jeu à l'ordinateur
+	 */
 	public void faireJouerOrdi() {
 		for (Element e : listeMonstres) {
 			reflechirStrategie((Soldat)e);
@@ -58,8 +77,13 @@ public class TourOrdi extends APatient implements IConfig {
 		carte.finirTour(MECHANT);
 	}
 	
-	// Méthodes (Stratégie)
-	// Recherche les cibles possibles du soldat en fonction du type de l'attaque (corps-à-corps ou à distance)
+	
+	/**
+	 * Recherche les cibles possibles du soldat en fonction du type de l'attaque (corps-à-corps ou à distance)
+	 * @param soldat
+	 * @param typeAttaque
+	 * @return List<Element>
+	 */
 	public List<Element> chercherCiblesPossibles(Soldat soldat, int typeAttaque) {
 		List<Element> ciblesPossibles = new LinkedList<Element>();
 		if (typeAttaque == CORPS_CORPS) {
@@ -73,7 +97,12 @@ public class TourOrdi extends APatient implements IConfig {
 		}
 		return ciblesPossibles;
 	}
-	// Recherche la cible la plus faible en fonction du type de l'attaque
+	/**
+	 * Recherche la cible la plus faible en fonction du type de l'attaque
+	 * @param cibles
+	 * @param typeAttaque
+	 * @return Soldat
+	 */
 	public Soldat chercherCibleFaible(List<Element> cibles, int typeAttaque) {
 		Element faible = cibles.size() == 0 ? null : cibles.get(0);
 		if (typeAttaque == CORPS_CORPS) {
@@ -87,7 +116,11 @@ public class TourOrdi extends APatient implements IConfig {
 		}
 		return (Soldat)faible;	
 	}
-	// Retourne la cible avec le moins de points de vie
+	/**
+	 *  Retourne la cible avec le moins de points de vie
+	 * @param cibles
+	 * @return Soldat
+	 */
 	public Soldat chercherCibleLessPTS(List<Element> cibles) {
 		Element nearDeath = cibles.size() == 0 ? null : cibles.get(0);
 		for (Element c : cibles)
@@ -95,7 +128,13 @@ public class TourOrdi extends APatient implements IConfig {
 				nearDeath = c;
 		return (Soldat)nearDeath;
 	}
-	// Recherche des cibles qui pourrait être tuée par l'attaque
+	/**
+	 *  Recherche des cibles qui pourrait être tuée par l'attaque
+	 * @param soldat
+	 * @param cibles
+	 * @param typeAttaque
+	 * @return List<Element>
+	 */
 	public List<Element> chercherVictoires(Soldat soldat, List<Element> cibles, int typeAttaque) {
 		List<Element> victoires = new LinkedList<Element>();
 		if (typeAttaque == CORPS_CORPS) {
@@ -109,7 +148,10 @@ public class TourOrdi extends APatient implements IConfig {
 		}
 		return victoires;
 	}
-	// Fait déplacer le soldat à une position cible aléatoire
+	/**
+	 * Fait déplacer le soldat à une position cible aléatoire
+	 * @param soldat
+	 */
 	public void deplacerMonstre(Soldat soldat) {
 		Element cible;
 		do cible = soldat.aleaElem(soldat.getZoneDeplacement());
@@ -120,7 +162,10 @@ public class TourOrdi extends APatient implements IConfig {
 		dp.start();
 	}
 	
-	// Réfléchit à la stratégie à employer
+	/**
+	 * Réfléchit à la stratégie à employer
+	 * @param soldat
+	 */
 	public void reflechirStrategie(Soldat soldat) {
 		List<Element> ciblesFrontale = chercherCiblesPossibles(soldat, CORPS_CORPS),
 				 	  ciblesDistance = chercherCiblesPossibles(soldat, DISTANCE),
