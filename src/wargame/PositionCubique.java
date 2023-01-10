@@ -8,49 +8,87 @@ package wargame;
  * <p>
  * Elle est caractérisée par :
  * <ul>
- * <li>La carte qui contient cet élément.</li>
- * <li>La position de cet élément dans la grille.</li>
+ * <li>Une variable r</li>
+ * <li>Une variable q</li>
+ * <li>Une variable s</li>
  * </ul>
  * </p>
- * @see Carte
- * @see Hexagone
- * @see Position
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */
 
 
 public class PositionCubique {
-	// Infos
-	private double r, q, s;
+	/**
+	 * variable r
+	 */
+	private double r, 
+	/**
+	 * variable q
+	 */
+	q,
+	/**
+	 * variable s
+	 */
+	s;
 	
-	// Constructeurs
+	/**
+	 *  Constructeurs
+	 * @param r
+	 * @param q
+	 * @param s
+	 */
 	public PositionCubique(double r, double q, double s) {
 		this.r = r;
 		this.q = q;
 		this.s = s;
 	}
 	
-	// Accesseurs
+	/**
+	 * Accesseur de r
+	 * @return double
+	 */
 	public double getR() { return r; }
+	/**
+	 * accesseur de q
+	 * @return double
+	 */
 	public double getQ() { return q; }
+	/**
+	 * accesseur de s
+	 * @return double
+	 */
 	public double getS() { return s; }
 	
-	// Méthodes
-	// Convertit la position cubique courante en position axiale
+	
+	/**
+	 *  Convertit la position cubique courante en position axiale
+	 * @return PositionAxiale
+	 */
 	public PositionAxiale toPositionAxiale() {
 		return new PositionAxiale(q, r);
 	}
-	// Réduit les coordonnées de la position cubique courante de celles de la position cubique donnée
+	/**
+	 * Réduit les coordonnées de la position cubique courante de celles de la position cubique donnée
+	 * @param b
+	 * @return PositionCubique
+	 */
 	public PositionCubique substract(PositionCubique b) {
 	    return new PositionCubique(q - b.q, r - b.r, s - b.s);
 	}
-	// Calcule la distance entre la position cubique courante et celle donnée
+	/**
+	 * Calcule la distance entre la position cubique courante et celle donnée
+	 * @param b
+	 * @return distance (double)
+	 */
 	public double distance(PositionCubique b) {
 	    PositionCubique vec = substract(b);
 	    return (Math.abs(vec.q) + Math.abs(vec.r) + Math.abs(vec.s)) / 2;
 	}
-	// Arrondi les coordonnées de la position cubique à des coordonnées exactes
+	/**
+	 * Arrondi les coordonnées de la position cubique à des coordonnées exactes
+	 * @return PositionCubique
+	 */
 	public PositionCubique round() {
 	    int qR = (int)Math.round(q),
 	    	rR = (int)Math.round(r),
