@@ -3,13 +3,52 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <b>DeplacementSoldat est la classe qui gère les déplacements des troupes </b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Une carte</li>
+ * <li>Un soldat</li>
+ * <li>Une liste de processus</li>
+ * </ul>
+ * </p>
+ * @see Carte
+ * @see Soldat
+ * @see CheminDijkstra
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
 public class DeplacementSoldat extends APatient implements IConfig {
-	// Infos
+
+	
+	/**
+	 * La carte qui contient le soldat.
+	 * @see Carte#deplacerHeros(Element)
+	 */	
 	Carte carte;
+	
+
+	/**
+	 * Le soldat à déplacer.
+	 * @see Heros#calculerZoneDeplacement()
+	 */	
 	Soldat soldat;
+	
+
+	/**
+	 * La Liste contenant les cases pour le déplacment
+	 * @see Carte#deplacerHeros(Element)
+	 */	
 	private List<Element> chemin;
 	
-	// Constructeurs
+	/**
+	 * Crée l'hexagone de la map affichée.
+	 * 
+	 * @see Carte#calculerHex()
+	 * @see Soldat#seDeplace(Position)
+	 */
 	public DeplacementSoldat(Carte carte, Soldat soldat, List<Element> chemin, List<Thread> processusAttendre) {
 		super();
 		this.processusAttendre = processusAttendre;
@@ -18,12 +57,21 @@ public class DeplacementSoldat extends APatient implements IConfig {
 		this.chemin = chemin;
 	}
 	
-	// Méthodes
+
+	/**
+	 * Attente de la fin des processus puis déplacement des soldats 
+	 * 
+	 */	
 	public void run() {
 		attendre();
 		deplacerSoldat();
 	}
-	// Déplace le soldat case par case
+	
+
+	/**
+	 * Déplace le soldat case par case.
+	 * @see run
+	 */	
 	public void deplacerSoldat() {
 		soldat.getSol().enleverEffets(soldat);
 		for (Element e : chemin) {
