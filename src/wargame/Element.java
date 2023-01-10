@@ -21,8 +21,8 @@ import wargameInterface.PanneauPartie;
  * <p>
  * Elle est caractérisée par :
  * <ul>
- * <li>Une carte représentant la carte du jeu. ---> la Carte qui le contient</li>
- * <li>La position de chaque élément dans la grille. ---> la position de cet élément </li>
+ * <li>La carte qui contient cet élément.</li>
+ * <li>La position de cet élément dans la grille.</li>
  * </ul>
  * </p>
  * @see Carte

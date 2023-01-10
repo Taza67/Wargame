@@ -115,9 +115,9 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		zoneDeplacement = new LinkedList<Element>();
 		List<List<Position>> zoneDeplacementBis = new ArrayList<List<Position>>();
 		//// Couleurs : 0 = BLANC, 1 = NOIR
-		int[][] couleurs = new int[carte.getHautC()][carte.getLargC()];
-		for (int i = 0; i < carte.getHautC(); i++)
-			for (int j = 0; j < carte.getLargC(); j++)
+		int[][] couleurs = new int[carte.getHAUTC()][carte.getLARGC()];
+		for (int i = 0; i < carte.getHAUTC(); i++)
+			for (int j = 0; j < carte.getLARGC(); j++)
 				couleurs[i][j] = 0;
 		// Calcul de la zone de déplacement
 		zoneDeplacementBis.add(new ArrayList<Position>());
