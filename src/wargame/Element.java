@@ -93,16 +93,27 @@ public abstract class Element implements IConfig, Serializable {
      */
 	public Position getPos() { return pos; }
 	
-	// Mutateurs
+	/**
+	 * Modifie la position de l'élement.
+	 * 
+	 * @param pos
+	 */
 	public void setPos(Position pos) { this.pos = pos; }
 	
-	// Méthodes
-	// Crée les deux hexagones
+	
+	/**
+	 * Crée les deux hexagones.
+	 * 
+	 */
 	public void creerHex() {
 		creerHexM();
 		creerHexMM();
 	}
-	// Crée l'hexagone de la map affichée
+	
+	/**
+	 * Crée l'hexagone de la map affichée.
+	 * 
+	 */
 	public void creerHexM() {
 		int rayon;
 		Point centre;
@@ -112,6 +123,7 @@ public abstract class Element implements IConfig, Serializable {
 			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));
 		hex = new Hexagone(centre, rayon);
 	}
+	
 	// Renvoie les infos
 	public String toString() {
 		return getPos().toString();
