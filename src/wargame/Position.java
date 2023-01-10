@@ -6,13 +6,11 @@ import java.io.Serializable;
 
 /**
  * <b>Position est la classe qui gère la position d'un élément</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une variable x</li>
  * <li>Une variable y</li>
  * </ul>
- * </p>
  * @see Carte
  * @see Hexagone
  * @see Position

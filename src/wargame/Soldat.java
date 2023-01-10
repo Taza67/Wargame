@@ -15,13 +15,11 @@ import wargameInterface.PanneauPartie;
 
 /**
  * <b>Soldat est la class qui gère les enemenis et les heros.</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Les données sur les personnages (points de vie, portée visuelle et déplacement).</li>
  * <li>Zone visuelle.</li>
  * </ul>
- * </p>
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */

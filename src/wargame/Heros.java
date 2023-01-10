@@ -6,14 +6,12 @@ import java.awt.Graphics2D;
 
 /**
  * <b> Heros est la classe qui gère les personnages joueur, les positionne sur la map, les dessine, leur permet de se déplacer.</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Un nom</li>
  * <li>Un type</li>
  * <li>Une texture</li>
  * </ul>
- * </p>
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */

@@ -22,7 +22,6 @@ import wargame.IConfig;
 
 /**
  * <b>Classe DialogueNouvellePartie extension de JDialog et implémentation de IConfig</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Un JSpinner nbHeros</li>
@@ -35,7 +34,6 @@ import wargame.IConfig;
  * <li>Une nbH (int)</li>
  * <li>Une nbM (int)</li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
@@ -89,6 +87,7 @@ public class DialogueNouvellePartie extends JDialog implements IConfig {
 	/**
 	 *  Constructeur
 	 * @param f
+	 * 		fenetre 
 	 */
 	public DialogueNouvellePartie(Fenetre f) {
 		super(f, "Nouvelle Partie", Dialog.ModalityType.APPLICATION_MODAL);

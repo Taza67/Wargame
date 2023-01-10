@@ -17,7 +17,6 @@ import wargameInterface.PanneauPartie;
 
 /**
  * <b>Carte est la classe principale du programme, elle représente toute la grille de jeu.</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Des dimensions en pixels et en cases.</li>
@@ -26,7 +25,6 @@ import wargameInterface.PanneauPartie;
  * <li>Des éléments "interactifs" qui changent en fonction des actions de l'utilisateurs.</li>
  * <li>Une zone rectangulaire représentant la partie affichée de la carte entière.</li>
  * </ul>
- * </p>
  * @see Element 
  * @see ZoneR 
  * @see InfoPartie
@@ -50,7 +48,6 @@ public class Carte implements IConfig , Serializable {
 	/**
 	 * Le panneau qui contiendra la carte de jeu. Il peut changer.
 	 * @see Carte#Carte(PanneauPartie, int, int, int, int)
-	 * @see PanneaPartie
 	 */
 	private PanneauPartie panPartie;
 	/**
@@ -167,7 +164,7 @@ public class Carte implements IConfig , Serializable {
      * 			  	La hauteur de la grile.
      * @param nbHeros
      * 				Le nombre de héros
-     * @param nbMonstre
+     * @param nbMonstres
      * 				Le nombre de monstres
      * @see Carte#panPartie
      * @see Carte#LARGC
@@ -264,7 +261,6 @@ public class Carte implements IConfig , Serializable {
      * 
      * @return Largeur en pixels de la mini-map. 
      * 
-     * @see Carte#LargMM
      */
 	public int getLargMM() { return largMM; }
     /**
@@ -272,7 +268,6 @@ public class Carte implements IConfig , Serializable {
      * 
      * @return Hauteur en pixels de la mini-map. 
      * 
-     * @see Carte#HautMM
      */
 	public int getHautMM() { return hautMM; }
     /**
@@ -280,7 +275,6 @@ public class Carte implements IConfig , Serializable {
      * 
      * @return Rayon d'un hexagone représentant une case de la partie affichée.
      * 
-     * @see Carte#rayonHex
      */
 	public int getRayonHex() { return rayonHex; }
     /**
@@ -371,14 +365,14 @@ public class Carte implements IConfig , Serializable {
      * @see Carte#listeThreads
      */
 	public List<Thread> getListeThreads() { return listeThreads; }
+	
     /**
      * Retourne l'élément dont la position est donnée
      * 
-     * @param Position de l'élément dans la grille
+     * @param pos
+     * 		position d'un element
      * @return Élément dont la position est donnée. 
      * 
-     * @see Position
-     * @see Carte#GRILLE
      */
 	public Element getElement(Position pos) {
 		return (pos.estValide(LARGC, HAUTC)) ? GRILLE[pos.getY()][pos.getX()] : null;
@@ -394,6 +388,7 @@ public class Carte implements IConfig , Serializable {
 	 * @see Carte#curseur
 	 */
 	public void setCurseur(Element curseur) { this.curseur = curseur; }
+	
 	/**
 	 * Modifie l'élement sélectionné
 	 * 
@@ -404,6 +399,7 @@ public class Carte implements IConfig , Serializable {
 	 * @see Carte#selection
 	 */
 	public void setSelection(Element selection) { this.selection = selection; }
+	
 	/**
 	 * Modifie le type de l'attaque (DISTANCE, CORPS_CORPS)
 	 * 
@@ -415,6 +411,7 @@ public class Carte implements IConfig , Serializable {
 	 * @see IConfig#DISTANCE
 	 */
 	public void setTypeAttaque(int typeAttaque) { this.typeAttaque = typeAttaque; }
+	
 	/**
 	 * Modifie le PanneauPartie sur lequel est la carte
 	 * 
@@ -576,7 +573,6 @@ public class Carte implements IConfig , Serializable {
 	 * 			Nombre de héros à générer
 	 * 
 	 * @see Carte#listeHeros
-	 * @see 
 	 * @see Position
 	 * @see Carte#trouvePosType(int, int, int, int, char)
 	 * @see Heros
@@ -860,7 +856,7 @@ public class Carte implements IConfig , Serializable {
 	 * Zoome la zone d'affichage
 	 * 
 	 * @param zoom
-	 * 			Valeur du zoom (6 <= zoom <= 18)
+	 * 			Valeur du zoom
 	 * 
 	 * @see Carte#rayonHex
 	 * @see Carte#recalculerMapAff()
@@ -1097,7 +1093,6 @@ public class Carte implements IConfig , Serializable {
 	 * @see Carte#selection
 	 * @see Soldat
 	 * @see Carte#chemin
-	 * @see Carte#Curseur
 	 * @see Element
 	 */
 	public void seDessiner(Graphics2D g) {

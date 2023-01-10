@@ -12,12 +12,10 @@ import wargame.Carte;
 
 /**
  * <b>Classe PanneauJeu extention de JPanel</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Un PanneauGrille grille</li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *

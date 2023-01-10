@@ -15,12 +15,10 @@ import wargame.IConfig;
 
 /**
  * <b>Classe PanneauGrille extension du JPanel et implementation de IConfig</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une Carte</li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *

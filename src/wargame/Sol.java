@@ -5,7 +5,6 @@ package wargame;
 
 /**
  * <b>Classe sol extension de la classe Element</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Un type de sol</li>
@@ -16,7 +15,6 @@ package wargame;
  * <li>Un effet de puissance (int)</li>
  * <li>Un effet de tir (int)</li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *

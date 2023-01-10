@@ -9,14 +9,12 @@ import wargameInterface.PanneauPartie;
 
 /**
  * <b>AttaqueSoldatDistance est responsable de la gestion des attaques à distance.</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une carte sur laquelle se situe le soldat.</li>
  * <li>Le soldat attaquant .</li>
  * <li>Le soldat attaqué.</li>
  * </ul>
- * </p>
  * @see Element 
  * @see Carte 
  * @see Soldat

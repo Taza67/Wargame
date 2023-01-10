@@ -11,7 +11,6 @@ import java.io.Serializable;
 
 /**
  * <b>Classe ZoneR implémente Serializable</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une carte</li>
@@ -20,7 +19,6 @@ import java.io.Serializable;
  * <li>Une Largeur(int)</li>
  * <li>Une hauteur(int)</li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *

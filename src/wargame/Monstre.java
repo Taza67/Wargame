@@ -2,12 +2,10 @@ package wargame;
 
 /**
  * Classe monstre extension de la classe Soldat
- * <p>
  * Est caractérisé par :
  * <ul>
  * <li>Un type de monstre </li>
  * </ul>
- * </p>
  *
  */
 

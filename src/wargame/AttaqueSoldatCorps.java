@@ -9,7 +9,6 @@ import wargameInterface.Fenetre;
 
 /**
  * <b>AttaqueSoldatCorps est responsable des attaques de corps.</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>La carte qui contient le soldat.</li>
@@ -17,7 +16,6 @@ import wargameInterface.Fenetre;
  * <li>Le soldat attaqué.</li>
  * <li>La liste des chemins du soldat.</li>
  * </ul>
- * </p>
  * @see Carte
  * @see Soldat
  * @author AKIL M., BAYAZID H., AMIROUCHE A.

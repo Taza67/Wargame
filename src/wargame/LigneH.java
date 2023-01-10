@@ -46,7 +46,7 @@ public class LigneH implements IConfig, Serializable {
 	
 	/**
 	 * Permet d'acceder à la liste materialisant une ligne
-	 * @return ligne (List<Element>)
+	 * @return ligne List Element 
 	 */
 	public List<Element> getLigne() { return ligne; }
 	

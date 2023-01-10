@@ -13,7 +13,6 @@ import java.io.Serializable;
 
 /**
  * <b>InfoPartie regroupe toutes les informations faisant état de l'avancement de la partie</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Un variable nb tours pour le nombre de tours</li>
@@ -21,23 +20,39 @@ import java.io.Serializable;
  * <li>Une variable int nbHeros qui indique le nombre de héros présents dans la partie</li>
  * <li>Une variable int nbMonstre qui indique le nombre d'ennemis présents dans la partie</li>
  * </ul>
- * </p>
  *
  */
 
 public class InfoPartie implements IConfig, Serializable {
 	private static final long serialVersionUID = -2099696797421917005L;
-	// Infos
+	/**
+	 * nombre de tours
+	 */
 	private int nbTours;
+	
+	/**
+	 * Type joueur 
+	 */
 	private char joueur;
+	
+	/**
+	 * nombre de heros, nombre de monstre
+	 */
 	private int nbHeros, nbMonstres;
+	
+	/**
+	 * Carte de la partie
+	 */
 	private Carte carte;
 	
 	/**
 	 * Constructeur InfoPartie qui initialise les caractéristiques de la classe.
 	 * @param carte
+	 * 		Carte du jeu
 	 * @param nbHeros
+	 * 		nombre de heros
 	 * @param nbMonstres
+	 * 		nombre de monstre
 	 */
 	public InfoPartie(Carte carte, int nbHeros, int nbMonstres) {
 		this.nbTours = 1;
@@ -71,17 +86,20 @@ public class InfoPartie implements IConfig, Serializable {
 	/**
 	 * Mutateur servant à modifier le nombre de tours
 	 * @param nbTours
+	 * 		nombre de tours
 	 */
 	public void setNbTours(int nbTours) { this.nbTours = nbTours; }
 	/**
 	 * Mutateur servabt à modifier le type du joueur 
 	 * @param joueur
+	 * 		type joueur
 	 */
 	public void setJoueur(char joueur) { this.joueur = joueur; }
 	
 	/**
 	 * Mutateur servant à modifiant le nombre de héros présents dans la partie.
 	 * @param nbHeros
+	 * 		nombre de heros
 	 */
 	 
 	public void setNbHeros(int nbHeros) { this.nbHeros = nbHeros; }
@@ -89,12 +107,14 @@ public class InfoPartie implements IConfig, Serializable {
 	/**
 	 * Mutateur servant à modifier le nombre de monstres présents dans la partie.
 	 * @param nbMonstres
+	 * 		nombre de monstre
 	 */
 	public void setNbMonstres(int nbMonstres) { this.nbMonstres = nbMonstres; }
 	
 	/**
 	 * Permet d'inscrire les infos relatifs à l'avancement dans la partie dans l'interface graphique
 	 * @param g
+	 * 		Graphics g
 	 */
 	public void seDessiner(Graphics g) {
 		String nbToursS = "Nombre de tours : " + nbTours,

@@ -16,14 +16,12 @@ import wargame.IConfig;
 
 /**
  * <b>Classe PanneauBoutonMiniMap extension de JPanel et implémentation de IConfig</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Un JButton reinit</li>
  * <li>Un JSlider slider</li>
  * <li>Une carte CARTE</li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *

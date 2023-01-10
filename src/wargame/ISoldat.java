@@ -4,7 +4,6 @@ package wargame;
 
 
 /**<b>ISoldat est l'interface relative aux soldats en général</b>
-* <p>
 * Elle est caractérisée par :
 * <ul>
 * <li>Une énumération du type de soldat(humain, nain, elfe, hobbit), avec leurs caractéristiques respectives</li>
@@ -15,7 +14,6 @@ package wargame;
 * <li>Une variable qui indique le tir(int)</li>
 * <li>Une variable qui indique le camp de l'unité</li>
 * </ul>
-* </p>
 * @author AKIL M., BAYAZID H., AMIROUCHE A.
 */
 public interface ISoldat extends IConfig {

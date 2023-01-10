@@ -6,12 +6,10 @@ import wargameInterface.Fenetre;
 
 
 /**<b>Apatient est l'interface qui gère les processus .</b>
-* <p>
 * Elle est caractérisée par :
 * <ul>
 * <li>Une liste de processus.</li>
 * </ul>
-* </p>
 * @see AttaqueSoldatCorps
 * @author AKIL M., BAYAZID H., AMIROUCHE A.
 */

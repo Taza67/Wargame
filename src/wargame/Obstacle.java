@@ -4,13 +4,11 @@ package wargame;
 
 /**
  * <b>Obstacle est la classe qui gère les obstacles type montagne, foret ou eau Extension de Element</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une enumération de types d'obstacles</li>
  * <li>Un numéro de texture</li>
  * </ul>
- * </p>
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */
@@ -48,7 +46,9 @@ public class Obstacle extends Element implements IConfig {
 		}
 	}
 	
-	// Infos
+	/**
+	 * Type d'obstacle
+	 */
 	private final TypeObstacle TYPE;
 	
 	/**

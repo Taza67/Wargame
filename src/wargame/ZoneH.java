@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * <b>Classe ZoneH implémente Serializable</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une carte</li>
@@ -19,7 +18,6 @@ import java.util.List;
  * <li>Un rayon(int)</li>
  * <li>Une Zone sous la forme d'une liste d'éléments</li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
@@ -39,7 +37,7 @@ public class ZoneH implements Serializable {
 	 */
 	private int rayon;
 	/**
-	 * zone( List<Element>)
+	 * zone Liste des élements dans une zone
 	 */
 	List<Element> zone;
 	
@@ -69,7 +67,7 @@ public class ZoneH implements Serializable {
 	public int getRayon() { return rayon; }
 	/**
 	 * Accesseur de la zone
-	 * @return zone (List<Element>)
+	 * @return liste des éléments dans une zone
 	 */
 	public List<Element> getZone() { return zone; }
 	

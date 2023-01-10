@@ -6,14 +6,12 @@ import java.io.Serializable;
 
 /**
  * <b>Point est la classe qui gère les points sur la map, les points étaient des positions sur la carte</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>La carte qui contient cet élément.</li>
  * <li>Une coordonnée x(int)</li>
  * <li>Une coordonnée y(int)</li>
  * </ul>
- * </p>
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */

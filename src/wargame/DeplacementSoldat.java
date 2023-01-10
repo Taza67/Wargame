@@ -5,14 +5,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * <b>DeplacementSoldat est la classe qui gère les déplacements des troupes </b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une carte</li>
  * <li>Un soldat</li>
  * <li>Une liste de processus</li>
  * </ul>
- * </p>
  * @see Carte
  * @see Soldat
  * @see CheminDijkstra

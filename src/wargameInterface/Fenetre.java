@@ -40,6 +40,7 @@ public class Fenetre extends JFrame implements IConfig {
 		/**
 		 * Constructeur de la barreMenu
 		 * @param f
+		 * 		fenetre f de barre menu
 		 */
 		public BarreMenu(Fenetre f) {
 			super();
@@ -108,8 +109,9 @@ public class Fenetre extends JFrame implements IConfig {
 		}
 		
 		/**
-		 * Ajoute un JMenuItem <sauvegarde> à la liste
+		 * Ajoute un JMenuItem sauvegarde à la liste
 		 * @param fileName
+		 * 		nom du fichier
 		 */
 		public void ajouterSauvegarde(String fileName) {
 			JMenuItem newSave = new JMenuItem(fileName);
@@ -163,6 +165,7 @@ public class Fenetre extends JFrame implements IConfig {
 	/**
 	 * Constructeur d'une fenêtre de jeu
 	 * @param name
+	 * 		nom de la fenêtre du jeu
 	 */
 	public Fenetre(String name) {
 		super(name);
@@ -189,6 +192,7 @@ public class Fenetre extends JFrame implements IConfig {
 	/**
 	 * Change le panneau de la partie
 	 * @param p
+	 * 		panneau partie du jeu
 	 */
 	public void changerPartie(PanneauPartie p) {
 		this.getContentPane().removeAll();

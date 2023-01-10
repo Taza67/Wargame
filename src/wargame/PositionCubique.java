@@ -5,14 +5,12 @@ package wargame;
 
 /**
  * <b>PositionCubique est une classe intermédiaire dans la gestion des positions entre des positions rectangulaires et des positions hexagonales</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une variable r</li>
  * <li>Une variable q</li>
  * <li>Une variable s</li>
  * </ul>
- * </p>
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */

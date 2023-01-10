@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <b>Classe TourOrdi gère la stratégie de l'ordinateur extension de APatient et implémentation de IConfig</b>
- * <p>Elle est caractérisée par:
+ * Elle est caractérisée par:
  * <ul>
  * <li>Une carte</li>
  * <li>Une liste de monstres</li>
@@ -16,7 +16,6 @@ import java.util.List;
  * <li> Une liste des ciblées attaquées </li>
  * <li> Une liste des processus </li>
  * </ul>
- * </p>
  * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
@@ -82,7 +81,7 @@ public class TourOrdi extends APatient implements IConfig {
 	 * Recherche les cibles possibles du soldat en fonction du type de l'attaque (corps-à-corps ou à distance)
 	 * @param soldat
 	 * @param typeAttaque
-	 * @return List<Element>
+	 * @return List Element
 	 */
 	public List<Element> chercherCiblesPossibles(Soldat soldat, int typeAttaque) {
 		List<Element> ciblesPossibles = new LinkedList<Element>();
@@ -133,7 +132,7 @@ public class TourOrdi extends APatient implements IConfig {
 	 * @param soldat
 	 * @param cibles
 	 * @param typeAttaque
-	 * @return List<Element>
+	 * @return List Element
 	 */
 	public List<Element> chercherVictoires(Soldat soldat, List<Element> cibles, int typeAttaque) {
 		List<Element> victoires = new LinkedList<Element>();

@@ -5,12 +5,10 @@ import java.awt.Color;
 
 /**<b>IConfig est l'interface qui répertorie et initialise les variables liées aux couleurs des curseurs,
  * aux textures des personnages, et à leurs caractéristiques propres et de déplacement.</b>
-* <p>
 * Elle est caractérisée par :
 * <ul>
 * <li>Une liste de processus.</li>
 * </ul>
-* </p>
 * @see AttaqueSoldatCorps
 * @author AKIL M., BAYAZID H., AMIROUCHE A.
 */

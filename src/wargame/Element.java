@@ -18,13 +18,11 @@ import wargameInterface.PanneauPartie;
 
 /**
  * <b>Element est la classe responsable de la gestion des éléments hexagonaux de la carte.</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>La carte qui contient cet élément.</li>
  * <li>La position de cet élément dans la grille.</li>
  * </ul>
- * </p>
  * @see Carte
  * @see Hexagone
  * @see Position

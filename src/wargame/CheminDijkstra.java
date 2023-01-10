@@ -10,14 +10,12 @@ import wargameInterface.PanneauPartie;
 
 /**
  * <b>CheminDjikstra permet de trouver le chemin le plus court d'un soldat.</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Une liste de sommets représentés par des éléments.</li>
  * <li>Une liste de sommets contenant le chemins le plus court.</li>
  * <li>Un tableau contenant le poids de chaque sommet.</li>
  * </ul>
- * </p>
  * @see AttaqueSoldatCorps
  * @see Carte
  * @see TourOrdi

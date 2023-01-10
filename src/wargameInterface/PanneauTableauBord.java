@@ -8,31 +8,30 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import wargame.Carte;
+import wargame.Element;
 import wargame.IConfig;
+import wargame.InfoPartie;
+import wargame.ZoneR;
 
 
 
 
 /**
- * <b>Classe PanneauTableauBord extension de JPanel implémentation de IConfig/b>
- * <p>
+ * <b>Classe PanneauTableauBord extension de JPanel implémentation de IConfig</b>
  * Elle est caractérisée par :
  * <ul>
- * <li>Une Carte CARTE</li>
+ * <li>Une Carte CARTE.</li>
  * <li>Un PanneauMiniMap MiniMap</li>
- * <li>Un PanneauBoutonsMiniMap boutonsMiniMap</li>
- * <li>Un PanneauInfoPartie infoPartie</li>
+ * <li>Un PanneauBoutonsMiniMap boutonsMiniMap.</li>
+ * <li>Un PanneauInfoPartie infoPartie.</li>
  * <li>Un PanneauBoutonsMenu boutonsMenu</li>
- * <li>Un PanneauBoutonsTour boutonsTour</li>
+ * <li>Un PanneauBoutonsTour boutonsTour</li> 
  * <li>Un PanneauActionsHeros actionsHeros</li>
  * <li>Un Component blanc</li>
  * </ul>
- * </p>
- * 
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */
-
 public class PanneauTableauBord extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	/**

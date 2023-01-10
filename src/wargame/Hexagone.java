@@ -10,14 +10,12 @@ import java.io.Serializable;
 
 /**
  * <b>Hexagone est la classe qui permet de dessiner les cases de la carte</b>
- * <p>
  * Elle est caractérisée par :
  * <ul>
  * <li>Un tableau de point</li>
  * <li>Un point centre de l'hexagone</li>
  * <li>un entier qui représente le rayon</li>
  * </ul>
- * </p>
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
  *
  */
@@ -25,9 +23,17 @@ import java.io.Serializable;
 
 public class Hexagone implements Serializable {
 	private static final long serialVersionUID = -7787070189042594340L;
-	// Infos
+	/**
+	 * Tableau d'extremités
+	 */
 	private final Point[] extremites;
+	/**
+	 * Centre de l'hexagone
+	 */
 	private Point centre;
+	/**
+	 * rayon de l'hexagone
+	 */
 	private int rayon;
 	
 	/**
