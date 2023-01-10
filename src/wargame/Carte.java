@@ -8,27 +8,107 @@ import java.util.List;
 
 import wargame.Obstacle.TypeObstacle;
 import wargame.Sol.TypeSol;
+import wargameInterface.Fenetre;
 import wargameInterface.PanneauPartie;
 
+
+/**
+ * <b>Carte est la classe principale du programme, elle représente toute la grille de jeu.</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Des dimensions en pixels et en cases.</li>
+ * <li>Les dimesions des hexagones représentant les cases de la grille.</li>
+ * <li>Les nombres de certains types d'éléments comme les monstres ou héros.</li>
+ * <li>Des éléments "interactifs" qui changent en fonction des actions de l'utilisateurs.</li>
+ * <li>Une zone rectangulaire représentant la partie affichée de la carte entière.</li>
+ * </ul>
+ * </p>
+ * @see Element 
+ * @see ZoneR 
+ * @see InfoPartie
+ * @see Fenetre 
+ * @see PanneauPartie
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
 public class Carte implements IConfig , Serializable {
 	private static final long serialVersionUID = -7225736178980752155L;
-	// Infos
-	// Map
+	/**
+	 * Les dimensions en pixels de la fenêtre. Ces dimensions peuvent changer.
+	 * @see Fenetre#passerPleinEcran()
+	 */
 	public static int largeurFenetre = 1500, hauteurFen = 760;
+	/**
+	 * Les dimensions en pixels de la zone affichée. Ces dimensions peuvent changer.
+	 * @see Fenetre#passerPleinEcran()
+	 */
 	public static int largeurMap = 1250, hauteurMap = 760;
-	protected PanneauPartie panPartie;
-	protected int largC, hautC;										// Dimensions de la carte réelle
-	protected static int largAffC, hautAffC;						// Dimensions de la carte affichée 
-	protected int hautMM, largMM;									// Hauteur de la mini-map
-	protected static int rayonHex = 25;								// Rayon d'un hexagone
-	protected int rayonMM = 4;
-	// Positionnement
-	protected Point origine, origineMM;								// Origine de la carte affichée
-	// Limites
-	protected int nbHeros, nbMonstres;								// Nombre de héros, monstres
-	
-	private Element[][] grille; 									// Grille du jeu
-	private ZoneR mapAff;											// Carte affichée
+	/**
+	 * Le panneau qui contiendra la carte de jeu. Il peut changer.
+	 * @see Carte#Carte(PanneauPartie, int, int, int, int)
+	 * @see PanneaPartie
+	 */
+	private PanneauPartie panPartie;
+	/**
+	 * Les dimensions en cases de la carte. Ces dimensions ne peuvent pas changer.
+	 * @see Carte#Carte(PanneauPartie, int, int, int, int)
+	 */
+	private final int LARGC, HAUTC;
+	/**
+	 * Les dimensions en cases de la partie affichée. Ces dimensions peuvent changer.
+	 * @see Carte#Carte(PanneauPartie, int, int, int, int)
+	 * @see Carte#zoomer(int)
+	 */
+	private int largAffC, hautAffC;
+	/**
+	 * Les dimensions en pixels de la mini-map. Ces dimensions peuvent changer.
+	 * @see Fenetre#passerPleinEcran()
+	 * @see Carte#zoomer(int)
+	 */
+	private int hautMM, largMM;
+	/**
+	 * Le rayon d'une case représenté par un hexagone sur la map affichée. Il peut changer.
+	 * @see Fenetre#passerPleinEcran()
+	 */
+	private int rayonHex = 25;
+	/**
+	 * Le rayon d'une case représenté par un hexagone sur la mini-map. Il peut changer.
+	 * @see Fenetre#passerPleinEcran()
+	 */
+	private int rayonMM = 4;
+	/**
+	 * Le point d'origine de la map affichée. Il peut changer.
+	 * @see Carte#deplacer(Position)
+	 * @see Point
+	 */
+	private Point origine;
+	/**
+	 * Le point d'origine de la mini-map. Il peut changer.
+	 * @see Fenetre#passerPleinEcran()
+	 * @see Point
+	 */
+	private Point origineMM;
+	/**
+	 * Les nombres de héros et monstres sur la grille. Ils peuvent changer.
+	 * @see Carte#mort(Soldat)
+	 */
+	private int nbHeros, nbMonstres;
+	/**
+	 * La grille représentant toute la carte. Ces éléments peuvent changer, la grille elle-même, non.
+	 * @see Element
+	 */
+	private final Element[][] GRILLE;
+	/**
+	 * Une zone rectangulaire représentant la partie de la carte qui sera affichée, elle peut changer.
+	 * @see Carte#recalculerMapAff()
+	 * @see ZoneR
+	 */
+	private final ZoneR MAPAFF;
+	/**
+	 * La position du centre de la zone rectangulaire représentant la carte qui sera affichée, elle peut changer
+	 * @see Carte#deplacer(Position)
+	 */
 	private Position centreAff;										// Centre de la carte affichée
 	// Interactions
 	private Element curseur, selection;
@@ -55,22 +135,22 @@ public class Carte implements IConfig , Serializable {
 		
 		largeurMap = largeurFenetre - largMM;
 		this.panPartie = panPartie;
-		largC = largeur;
-		hautC = hauteur;
+		LARGC = largeur;
+		HAUTC = hauteur;
 		hautAffC = hauteurMap / vert;
 		largAffC = largeurMap / horiz;
 		
 		//// Grille + Map affichée
-		grille = new Element[hauteur][largeur];
+		GRILLE = new Element[hauteur][largeur];
 		centreAff = new Position(largeur / 2, hauteur / 2);
-		mapAff = new ZoneR(this, centreAff, largAffC, hautAffC);
+		MAPAFF = new ZoneR(this, centreAff, largAffC, hautAffC);
 		// Calcul des origines
 		origine = new Point(0, 0);
 		origineMM = new Point(rayonMM + 5, rayonMM + 5);
 		// Génération des éléments
 		for (int i = 0; i < hauteur; i++)
 			for (int j = 0; j < largeur; j++)
-				grille[i][j] = new Sol(this, TypeSol.PLAINE ,new Position(j, i));
+				GRILLE[i][j] = new Sol(this, TypeSol.PLAINE ,new Position(j, i));
 		this.nbHeros = nbHeros;
 		this.nbMonstres = nbMonstres;
 		genereObstacles();
@@ -87,8 +167,8 @@ public class Carte implements IConfig , Serializable {
 	
 	// Accesseurs
 	public PanneauPartie getPanPartie() { return panPartie; }
-	public int getLargC() { return largC; }
-	public int getHautC() { return hautC; }
+	public int getLargC() { return LARGC; }
+	public int getHautC() { return HAUTC; }
 	public int getLargAffC() { return largAffC; }
 	public int getHautAffC() { return hautAffC; }
 	public int getLargMM() { return largMM; }
@@ -97,8 +177,8 @@ public class Carte implements IConfig , Serializable {
 	public int getRayonMM() { return rayonMM; }
 	public Point getOrigine() { return origine; }
 	public Point getOrigineMM() { return origineMM; }
-	public Element[][] getGrille() { return grille; }
-	public ZoneR getMapAff() { return mapAff; }
+	public Element[][] getGrille() { return GRILLE; }
+	public ZoneR getMapAff() { return MAPAFF; }
 	public Position getCentreAff() { return centreAff; }
 	public InfoPartie getInfoPartie() { return infoPartie; }
 	public List<Element> getListeMonstres() { return listeMonstres; }
@@ -108,7 +188,7 @@ public class Carte implements IConfig , Serializable {
 	public List<Thread> getListeThreads() { return listeThreads; }
 	//// Pseudo-accesseurs
 	public Element getElement(Position pos) {
-		return (pos.estValide(largC, hautC)) ? grille[pos.getY()][pos.getX()] : null;
+		return (pos.estValide(LARGC, HAUTC)) ? GRILLE[pos.getY()][pos.getX()] : null;
 	}
 	
 	// Mutateurs
@@ -118,7 +198,7 @@ public class Carte implements IConfig , Serializable {
 	public void setPanPartie(PanneauPartie panPartie) { this.panPartie = panPartie; }
 	//// Pseudo-mutateurs
 	public void setElement(Position pos, Element elem) {
-		if (pos.estValide(largC, hautC)) grille[pos.getY()][pos.getX()] = elem;
+		if (pos.estValide(LARGC, HAUTC)) GRILLE[pos.getY()][pos.getX()] = elem;
 	}
 	
 	// Méthodes
@@ -130,11 +210,11 @@ public class Carte implements IConfig , Serializable {
 		largAffC = largeurMap / horiz;
 		hautAffC = hauteurMap / vert;
 		// Modification des extremités de la zone de la carte affichée
-		mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
-		mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
+		MAPAFF.setUpLeft(MAPAFF.calculerUpLeft(centreAff, largAffC, hautAffC));
+		MAPAFF.setDownRight(MAPAFF.calculerDownRight(centreAff, largAffC, hautAffC));
 		// Modification des dimensions de cette dernière
-		mapAff.setLargeur(mapAff.calculerLargeur());
-		mapAff.setHauteur(mapAff.calculerHauteur());
+		MAPAFF.setLargeur(MAPAFF.calculerLargeur());
+		MAPAFF.setHauteur(MAPAFF.calculerHauteur());
 		// Calcul des hexagones
 		calculerHex();
 	}
@@ -146,7 +226,7 @@ public class Carte implements IConfig , Serializable {
 		do {
 			int x = alea(debX, finX), 
 				y = alea(debY, finY);
-			elemVide = grille[y][x];
+			elemVide = GRILLE[y][x];
 			posElemVide = new Position(x, y);
 			test = typeof(elemVide, type);
 		} while (!(test)); // Tant que l'élément du type recherche n'a pas été retrouvé
@@ -154,7 +234,7 @@ public class Carte implements IConfig , Serializable {
 	}
 	// Trouve aléatoirement une position vide sur la carte réelle
 	public Position trouvePosVide() {
-		return trouvePosType(0, largC - 1, 0, hautC - 1, 's');
+		return trouvePosType(0, LARGC - 1, 0, HAUTC - 1, 's');
 	}
 	// Trouve aléatoirement un héros sur la carte réelle
 	public Heros trouveHeros() {
@@ -179,8 +259,8 @@ public class Carte implements IConfig , Serializable {
 	// Génère aléatoirement des héros
 	public void genereHeros(int n) {
 		int c = 0,
-			debY = 0, finY = hautC - 1,
-			debX = largC / 2 + 1, finX = largC - 1;
+			debY = 0, finY = HAUTC - 1,
+			debX = LARGC / 2 + 1, finX = LARGC - 1;
 		listeHeros = new ArrayList<Element>();
 		while (c++ < n) {
 			String nom = "" + (char)('A' + alea(0, 26));
@@ -193,8 +273,8 @@ public class Carte implements IConfig , Serializable {
 	// Génère aléatoirement des monstres
 	public void genereMonstres(int n) {
 		int c = 0,
-			debY = 0, finY = hautC - 1,
-			debX = 0, finX = largC / 2;
+			debY = 0, finY = HAUTC - 1,
+			debX = 0, finX = LARGC / 2;
 		listeMonstres = new ArrayList<Element>();
 		while (c++ < n) {
 			Position posVide = trouvePosType(debX, finX, debY, finY, 's');
@@ -253,7 +333,7 @@ public class Carte implements IConfig , Serializable {
 	
 	// Calcul tous les hexagones des éléments de la carte
 	public void calculerHex() {
-		for (Element[] liste : grille)
+		for (Element[] liste : GRILLE)
 			for (Element e : liste)
 				e.creerHexM();
 	}
@@ -295,8 +375,8 @@ public class Carte implements IConfig , Serializable {
 	// Méthodes d'interaction
 	// Déplace le curseur
 	public void deplacerCurseur(Point c) {
-		Position p = c.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
-		if (mapAff.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
+		Position p = c.toPositionAxiale(rayonHex, origine).toPosition().add(MAPAFF.getUpLeft());
+		if (MAPAFF.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
 			p = p.add(new Position(1, 0));
 		curseur = getElement(p);
 		if (selection instanceof Heros && curseur != null && ((Heros)selection).getZoneDeplacement().indexOf(curseur) != -1)
@@ -305,8 +385,8 @@ public class Carte implements IConfig , Serializable {
 	}
 	// Déplace la sélection
 	public void deplacerSelection(Point s) {
-		Position p = s.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
-		if (mapAff.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
+		Position p = s.toPositionAxiale(rayonHex, origine).toPosition().add(MAPAFF.getUpLeft());
+		if (MAPAFF.getUpLeft().getY() % 2 != 0 && p.getY() % 2 == 0)
 			p = p.add(new Position(1, 0));
 		Element e = getElement(p);
 		if (selection != null) selection = (p.equals(selection.getPos())) ? null : e;
@@ -328,11 +408,11 @@ public class Carte implements IConfig , Serializable {
 	// Déplace la zone affichée autour de la position p
 	public void deplacer(Position p) {
 		centreAff = p;
-		mapAff.setUpLeft(mapAff.calculerUpLeft(centreAff, largAffC, hautAffC));
-		mapAff.setDownRight(mapAff.calculerDownRight(centreAff, largAffC, hautAffC));
+		MAPAFF.setUpLeft(MAPAFF.calculerUpLeft(centreAff, largAffC, hautAffC));
+		MAPAFF.setDownRight(MAPAFF.calculerDownRight(centreAff, largAffC, hautAffC));
 		// Calcul de l'origine
-		int largMAC = mapAff.getLargeur(),							// largMAC = largAffC => pas toujours !
-			hautMAC = mapAff.getHauteur(),							// Idem
+		int largMAC = MAPAFF.getLargeur(),							// largMAC = largAffC => pas toujours !
+			hautMAC = MAPAFF.getHauteur(),							// Idem
 			xC = centreAff.getX(),									// C = Centre de la carte (= zone) affichée
 			yC = centreAff.getY();
 		// Calcul des coordonnées de l'origine de la carte
@@ -346,8 +426,8 @@ public class Carte implements IConfig , Serializable {
 	public void faireAgirHeros(Point p) {
 		Element cible;
 		if (selection instanceof Heros && !((Soldat)selection).getAJoue()) {
-			Position posCible = p.toPositionAxiale(rayonHex, origine).toPosition().add(mapAff.getUpLeft());
-			if (mapAff.getUpLeft().getY() % 2 != 0 && posCible.getY() % 2 == 0)
+			Position posCible = p.toPositionAxiale(rayonHex, origine).toPosition().add(MAPAFF.getUpLeft());
+			if (MAPAFF.getUpLeft().getY() % 2 != 0 && posCible.getY() % 2 == 0)
 				posCible = posCible.add(new Position(1, 0));
 			cible = getElement(posCible);
 			if (cible instanceof Monstre)
@@ -428,7 +508,7 @@ public class Carte implements IConfig , Serializable {
 	
 	// Méthodes graphiques
 	public void seDessiner(Graphics2D g) {
-		mapAff.seDessiner(g);
+		MAPAFF.seDessiner(g);
 		if (selection != null)
 			if (selection instanceof Heros) ((Soldat)selection).dessinerZoneDeplacement(g);
 		if (chemin != null) chemin.seDessiner(g);
@@ -441,7 +521,7 @@ public class Carte implements IConfig , Serializable {
 	
 	// Dessine la carte reelle sous forme de mini-map
 	public void seDessinerMM(Graphics2D g) {
-		for (Element[] liste : grille)
+		for (Element[] liste : GRILLE)
 			for (Element e : liste)
 				e.seDessinerMM(g);
 		if (selection != null)
@@ -449,8 +529,8 @@ public class Carte implements IConfig , Serializable {
 			selection.seDessinerCadreMM(g, COULEUR_SELECTION);
 		if (curseur != null) curseur.seDessinerCadreMM(g, COULEUR_CURSEUR);
 		// Dessin d'un rectangle représentant la zone affichée
-		Point ul = mapAff.getUpLeft().toPositionAxiale().toPoint(rayonMM, origineMM).substract(new Point(rayonMM, rayonMM)),
-			  dr = mapAff.getDownRight().toPositionAxiale().toPoint(rayonMM, origineMM);
+		Point ul = MAPAFF.getUpLeft().toPositionAxiale().toPoint(rayonMM, origineMM).substract(new Point(rayonMM, rayonMM)),
+			  dr = MAPAFF.getDownRight().toPositionAxiale().toPoint(rayonMM, origineMM);
 		g.setColor(Color.yellow);
 		g.drawRect((int)ul.getX(), (int)ul.getY(), (int)(dr.getX() - ul.getX()), (int)(dr.getY() - ul.getY()));
 	}

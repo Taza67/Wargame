@@ -117,8 +117,8 @@ public class Fenetre extends JFrame implements IConfig {
 		public List<JMenuItem> chercherSauvegardes() {
 			List<JMenuItem> saves = new ArrayList<JMenuItem>();
 			String dir = System.getProperty("user.dir");
-			File folder = new File(dir + "/sauvegardes");
-			
+			File folder = new File(dir + "/sauvegardes/");
+			folder.mkdirs();
 			for (File file : folder.listFiles()) {
 				if (!file.isDirectory()) {
 					saves.add(new JMenuItem(file.getName().substring(0, file.getName().length() - 4)));
