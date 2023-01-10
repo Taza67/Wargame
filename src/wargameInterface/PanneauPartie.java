@@ -29,10 +29,17 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 	protected PanneauGrille grille;
 	protected PanneauTableauBord tableauBord;
 	transient protected Fenetre f;
-	// Textures
+
+	/**
+	 * Textures de la map
+	 */
 	public static TexturePaint[] texturesPaint;
 	
-	// Constructeurs
+	/**
+	 * Constructeur du panneau de la partie
+	 * @param f
+	 * @param carte
+	 */
 	public PanneauPartie(Fenetre f, Carte carte) {
 		super();
 		this.f = f;
@@ -117,13 +124,32 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 		
 	}
 	
-	// Accesseurs
+	/**
+	 * Retourne la grille du jeu
+	 * @return Retourne la grille du jeu
+	 */
 	public PanneauGrille getGrille() { return grille; }
+	
+	/**
+	 * Retourne le panneau du tableau de bord
+	 * @return Retourne le panneau du tableau de bord
+	 */
 	public PanneauTableauBord getTableauBord() { return tableauBord; }
+	
+	/**
+	 * Retourne la fenêtre de jeu
+	 * @return Retourne la fenêtre de jeu
+	 */
 	public Fenetre getF() { return f; }
 
-	// Méthodes d'écoute
+	/**
+	 * Inutilisé
+	 */
 	public void keyTyped(KeyEvent e) { }
+	
+	/**
+	 * Ecouteur d'un bouton du clavier
+	 */
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_UP:
@@ -189,6 +215,9 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 			break;
 		}
 	}
+	/**
+	 * Relachement du bouton
+	 */
 	public void keyReleased(KeyEvent e) {
 	}
 }
