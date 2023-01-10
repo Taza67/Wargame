@@ -9,4 +9,8 @@ public class MethodesAuxiliaires {
 		for (Thread t : threads) ret = ret || t.isAlive();
 		return ret;	
 	}
+	// Renvoie un nombre aléatoire compris entre inf et sup
+	public static int alea(int inf, int sup) {
+		return inf + (int)(Math.random() * ((sup - inf) + 1));
+	}
 }

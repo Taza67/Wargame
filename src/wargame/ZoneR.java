@@ -62,8 +62,8 @@ public class ZoneR implements Serializable {
 		int i = pos.getY(), j = pos.getX(),
 			rayon_x = largeur / 2,
 			rayon_y = hauteur / 2,
-			downRightX = (j + rayon_x) < carte.getLargC() ? j + rayon_x : carte.getLargC() - 1,
-			downRightY = (i + rayon_y) < carte.getHautC() ? i + rayon_y : carte.getHautC() - 1;
+			downRightX = (j + rayon_x) < carte.getLARGC() ? j + rayon_x : carte.getLARGC() - 1,
+			downRightY = (i + rayon_y) < carte.getHAUTC() ? i + rayon_y : carte.getHAUTC() - 1;
 		return new Position(downRightX, downRightY);
 	}
 	// Calcule la largeur
@@ -80,8 +80,8 @@ public class ZoneR implements Serializable {
 	// Méthodes graphiques
 	// Dessine une zone de la carte
 	public void seDessiner(Graphics2D g) {
-		for (int i = upLeft.getY(); i <= Math.min(carte.getHautC() - 1, downRight.getY() + 2); i++)
-			for (int j = upLeft.getX(); j <= Math.min(carte.getLargC() - 1, downRight.getX() + 2); j++)
+		for (int i = upLeft.getY(); i <= Math.min(carte.getHAUTC() - 1, downRight.getY() + 2); i++)
+			for (int j = upLeft.getX(); j <= Math.min(carte.getLARGC() - 1, downRight.getX() + 2); j++)
 				carte.getElement(new Position(j, i)).seDessiner(g);
 	}
 }

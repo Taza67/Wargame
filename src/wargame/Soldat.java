@@ -115,9 +115,9 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		zoneDeplacement = new LinkedList<Element>();
 		List<List<Position>> zoneDeplacementBis = new ArrayList<List<Position>>();
 		//// Couleurs : 0 = BLANC, 1 = NOIR
-		int[][] couleurs = new int[carte.getHautC()][carte.getLargC()];
-		for (int i = 0; i < carte.getHautC(); i++)
-			for (int j = 0; j < carte.getLargC(); j++)
+		int[][] couleurs = new int[carte.getHAUTC()][carte.getLARGC()];
+		for (int i = 0; i < carte.getHAUTC(); i++)
+			for (int j = 0; j < carte.getLARGC(); j++)
 				couleurs[i][j] = 0;
 		// Calcul de la zone de déplacement
 		zoneDeplacementBis.add(new ArrayList<Position>());
@@ -179,8 +179,8 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Attaque le soldat au corps-à-corps
 	public void attaqueSoldatCorps(Soldat adv) {
 		int advPDV = adv.pointsDeVie,
-			ptsAttaque = Carte.alea(3, puissance),
-			advPtsAttaque = Carte.alea(3, adv.puissance);
+			ptsAttaque = MethodesAuxiliaires.alea(3, puissance),
+			advPtsAttaque = MethodesAuxiliaires.alea(3, adv.puissance);
 		advPDV -= ptsAttaque;
 		advPDV = Math.min(advPDV, adv.pointsDeVie);
 		adv.pointsDeVie = advPDV;
@@ -196,12 +196,12 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Attaque le soldat à distance
 	public void attaqueSoldatDistance(Soldat adv) {
 		int advPDV = adv.pointsDeVie;
-		advPDV -= Carte.alea(3, tir);
+		advPDV -= MethodesAuxiliaires.alea(3, tir);
 		advPDV = Math.min(advPDV, adv.pointsDeVie);
 		adv.pointsDeVie = advPDV;
 		if (advPDV <= 0) carte.mort(adv);
 		else
-			pointsDeVie = Math.min(pointsDeVie - Carte.alea(3, adv.tir), pointsDeVie);
+			pointsDeVie = Math.min(pointsDeVie - MethodesAuxiliaires.alea(3, adv.tir), pointsDeVie);
 		if (pointsDeVie <= 0)
 			carte.mort(this);
 	}
@@ -212,7 +212,7 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 	// Retourne un des éléments de la liste donnée aléatoirement
 	public Element aleaElem(List<Element> listeElem) {
 		int t = listeElem.size(),
-			alea = Carte.alea(0, t - 1);
+			alea = MethodesAuxiliaires.alea(0, t - 1);
 		return listeElem.get(alea);
 	}
 	// Applique les points de guérison
