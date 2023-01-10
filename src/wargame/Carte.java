@@ -11,7 +11,6 @@ import wargame.Sol.TypeSol;
 import wargameInterface.Fenetre;
 import wargameInterface.PanneauPartie;
 
-
 /**
  * <b>Carte est la classe principale du programme, elle représente toute la grille de jeu.</b>
  * <p>
@@ -109,19 +108,69 @@ public class Carte implements IConfig , Serializable {
 	 * La position du centre de la zone rectangulaire représentant la carte qui sera affichée, elle peut changer
 	 * @see Carte#deplacer(Position)
 	 */
-	private Position centreAff;										// Centre de la carte affichée
-	// Interactions
+	private Position centreAff;
+	/**
+	 * L'élément sélectionné par l'utilisateur et celui sur lequel est le curseur. Ils peuvent changer
+	 * @see Carte#setCurseur(Element)
+	 * @see Carte#setSelection(Element)
+	 * @see Carte#deplacerCurseur(Point)
+	 * @see Carte#deplacerSelection(Point)
+	 */
 	private Element curseur, selection;
+	/**
+	 * Le chemin entre l'élément du curseur et celui sélectionné, si ce dernier est un héros. Il peut changer
+	 * @see Carte#deplacerCurseur(Point)
+	 * @see Carte#deplacerSelection(Point)
+	 * @see Carte#finirTour(char)
+	 */
 	private CheminDijkstra chemin;
-	private int typeAttaque = CORPS_CORPS;							// Type de l'attaque du soldat (DISTANCE, CORPS_CORPS)
-	// Infos sur la partie
+	/**
+	 * Le type de l'attaque choisie par l'utilisateur (DISTANCE, CORPS_CORPS). Il peut changer
+	 * @see Carte#setTypeAttaque(int)
+	 */
+	private int typeAttaque = CORPS_CORPS;
+	/**
+	 * Les informations sur la partie. Elles peuvent changer
+	 * @see Carte#mort(Soldat)
+	 * @see Carte#finirTour(char)
+	 */
 	private InfoPartie infoPartie;
-	// Liste des entités
+	/**
+	 * Les listes des monstres et héros. Elles peuvent changer
+	 * @see Carte#mort(Soldat)
+	 */
 	List<Element> listeMonstres, listeHeros;
-	// Processus
+	/**
+	 * La liste des processus lancés par l'utilisateur (actions, déplacements, tours de l'ordi). Elle peut changer
+	 * @see Carte#deplacerHeros(Element)
+	 * @see Carte#faireAttaquerHeros(Element)
+	 * @see Carte#finirTour(char)
+	 */
 	transient List<Thread> listeThreads;
 	
-	// Constructeurs
+    /**
+     * Constructeur Carte.
+     * <p>
+     * A la construction, les dimensions en pixels et en cases sont calculées, la partie affichée est construite et la grille de jeu est générée aléatoirement.
+     * Les éléments interactifs sont générés.
+     * </p>
+     * 
+     * @param panPartie
+     * 				Le panneauPartie qui contiendra la carte.
+     * @param largeur
+     *            	La largeur de la grille.
+     * @param hauteur
+     * 			  	La hauteur de la grile.
+     * @param nbHeros
+     * 				Le nombre de héros
+     * @param nbMonstre
+     * 				Le nombre de monstres
+     * @see Carte#panPartie
+     * @see Carte#LARGC
+     * @see Carte#HAUTC
+     * @see Carte#nbHeros
+     * @see Carte#nbMonstres
+     */
 	public Carte(PanneauPartie panPartie, int largeur, int hauteur, int nbHeros, int nbMonstres) {
 		int horiz, vert, horizMM, vertMM;
 		horiz = (int)(Math.sqrt(3.) * rayonHex);
@@ -165,44 +214,168 @@ public class Carte implements IConfig , Serializable {
 		listeThreads = new ArrayList<Thread>();
 	}
 	
-	// Accesseurs
+
+    /**
+     * Retourne le PanneauPartie de la carte.
+     * 
+     * @return PanneauPartie de la carte. 
+     */
 	public PanneauPartie getPanPartie() { return panPartie; }
-	public int getLargC() { return LARGC; }
-	public int getHautC() { return HAUTC; }
+    /**
+     * Retourne la largeur de la carte.
+     * 
+     * @return Largeur de la carte. 
+     */
+	public int getLARGC() { return LARGC; }
+    /**
+     * Retourne la hauteur de la carte.
+     * 
+     * @return Hauteur de la carte. 
+     */
+	public int getHAUTC() { return HAUTC; }
+    /**
+     * Retourne la largeur de la partie affichée de la carte.
+     * 
+     * @return Largeur de la partie affichée de la carte. 
+     */
 	public int getLargAffC() { return largAffC; }
+    /**
+     * Retourne la hauteur de la partie affichée de la carte.
+     * 
+     * @return Hauteur de la partie affichée de la carte. 
+     */
 	public int getHautAffC() { return hautAffC; }
+    /**
+     * Retourne la largeur en pixels de la mini-map.
+     * 
+     * @return Largeur en pixels de la mini-map. 
+     */
 	public int getLargMM() { return largMM; }
+    /**
+     * Retourne la hauteur en pixels de la mini-map.
+     * 
+     * @return Hauteur en pixels de la mini-map. 
+     */
 	public int getHautMM() { return hautMM; }
+    /**
+     * Retourne le rayon d'un hexagone représentant une case de la partie affichée.
+     * 
+     * @return Rayon d'un hexagone représentant une case de la partie affichée.
+     */
 	public int getRayonHex() { return rayonHex; }
+    /**
+     * Retourne le rayon d'un hexagone représentant une case de la mini-map.
+     * 
+     * @return Rayon d'un hexagone représentant une case de la mini-map.
+     */
 	public int getRayonMM() { return rayonMM; }
+    /**
+     * Retourne l'origine de la partie affichée.
+     * 
+     * @return Origine de la partie affichée. 
+     */
 	public Point getOrigine() { return origine; }
+    /**
+     * Retourne l'origine de la mini-map.
+     * 
+     * @return Origine de la mini-map.
+     */
 	public Point getOrigineMM() { return origineMM; }
-	public Element[][] getGrille() { return GRILLE; }
+    /**
+     * Retourne la zone rectangulaire représentant la partie affichée.
+     * 
+     * @return Zone rectangulaire représentant la partie affichée. 
+     */
 	public ZoneR getMapAff() { return MAPAFF; }
+    /**
+     * Retourne le centre de la partie affichée de la carte.
+     * 
+     * @return Centre de la partie affichée de la carte. 
+     */
 	public Position getCentreAff() { return centreAff; }
+    /**
+     * Retourne les informations sur la partie.
+     * 
+     * @return Informations sur la partie. 
+     */
 	public InfoPartie getInfoPartie() { return infoPartie; }
+    /**
+     * Retourne la liste de monstres.
+     * 
+     * @return Liste de monstres. 
+     */
 	public List<Element> getListeMonstres() { return listeMonstres; }
+    /**
+     * Retourne la liste des héros.
+     * 
+     * @return Liste des héros. 
+     */
 	public List<Element> getListeHeros() { return listeHeros; }
+    /**
+     * Retourne l'élément sur lequel est le curseur.
+     * 
+     * @return Elément sur lequel est le curseur. 
+     */
 	public Element getCurseur() { return curseur; }
+    /**
+     * Retourne l'élément sélectionné.
+     * 
+     * @return Elément sélectionné. 
+     */
 	public Element getSelection() { return selection; }
+    /**
+     * Retourne la liste des threads en cours.
+     * 
+     * @return Liste des threads en cours. 
+     */
 	public List<Thread> getListeThreads() { return listeThreads; }
-	//// Pseudo-accesseurs
+    /**
+     * Retourne l'élément dont la position est donnée
+     * 
+     * @param Position de l'élément dans la grille
+     * @return Élément dont la position est donnée. 
+     */
 	public Element getElement(Position pos) {
 		return (pos.estValide(LARGC, HAUTC)) ? GRILLE[pos.getY()][pos.getX()] : null;
 	}
 	
-	// Mutateurs
+	/**
+	 * Modifie l'élément représentant le curseur
+	 * 
+	 * @param curseur
+	 */
 	public void setCurseur(Element curseur) { this.curseur = curseur; }
+	/**
+	 * Modifie l'élement sélectionné
+	 * 
+	 * @param selection
+	 */
 	public void setSelection(Element selection) { this.selection = selection; }
+	/**
+	 * Modifie le type de l'attaque
+	 * 
+	 * @param typeAttaque
+	 */
 	public void setTypeAttaque(int typeAttaque) { this.typeAttaque = typeAttaque; }
+	/**
+	 * Modifie le panneauPartie sur lequel est la carte
+	 * 
+	 * @param panPartie
+	 */
 	public void setPanPartie(PanneauPartie panPartie) { this.panPartie = panPartie; }
-	//// Pseudo-mutateurs
+	/**
+	 * Change l'élément à la position donnée par l'élément donné
+	 * 
+	 * @param pos
+	 * @param elem
+	 */
 	public void setElement(Position pos, Element elem) {
 		if (pos.estValide(LARGC, HAUTC)) GRILLE[pos.getY()][pos.getX()] = elem;
 	}
 	
-	// Méthodes
-	// Recalcules les dimensions de la carte affichées
+	/**
+	 * Recalcules la 
+	 */
 	public void recalculerMapAff() {
 		int horiz, vert;
 		horiz = (int)(Math.sqrt(3.) * rayonHex);

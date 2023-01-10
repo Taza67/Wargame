@@ -21,11 +21,11 @@ import wargameInterface.PanneauPartie;
  * <p>
  * Elle est caractérisée par :
  * <ul>
- * <li>Une carte représentant la carte du jeu.</li>
- * <li>La position de chaque élément dans la grille.</li>
+ * <li>Une carte représentant la carte du jeu. ---> la Carte qui le contient</li>
+ * <li>La position de chaque élément dans la grille. ---> la position de cet élément </li>
  * </ul>
  * </p>
- * @see ZoneR 
+ * @see Carte
  * @see Hexagone
  * @see Position
  * @author AKIL M., BAYAZID H., AMIROUCHE A.
