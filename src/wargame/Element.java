@@ -37,22 +37,60 @@ import wargameInterface.PanneauPartie;
 
 public abstract class Element implements IConfig, Serializable {
 	private static final long serialVersionUID = -2180721218940141556L;
-	// Constantes statiques
-	private static final int POS = 0, TYPE = 1, SOL = 2, PDV = 3, DEP = 4, VISUEL = 5, POW = 6, TIR = 7;
+	
 	/**
 	 * Les indices dans le tableau infos de la methode getStringInfos().
 	 * @see getStringInfos()
 	 */
+	private static final int POS = 0, TYPE = 1, SOL = 2, PDV = 3, DEP = 4, VISUEL = 5, POW = 6, TIR = 7;
 	
-	
-	// Infos
+	/**
+	 * La carte qui contient l'élément.
+	 * @see Carte#setElement(Position, Element)
+	 * @see Carte#calculerHex()
+	 */	
 	protected Carte carte;
+	
+	/**
+	 * La position d'un élément dans la carte.
+	 * @see Carte#deplacer(Position)
+	 * @see Carte#trouvePosVide()
+	 * @see Carte#trouvePosType(int, int, int, int, char)
+	 */
 	protected Position pos;
-	protected Hexagone hex, hexMM;
+	
+	/**
+	 * Hexagone de la map affichée.
+	 * @see Element#creerHexM()
+	 * @see Carte#calculerHex()
+	 */
+	protected Hexagone hex;
+	
+	/**
+	 * Hexagone de la mini-map.
+	 * @see Element#creerHexMM()
+	 */
+	protected Hexagone hexMM;
+	
+	/**
+	 * Visibilité d'un hexagone dans la carte.
+	 * @see Element#seDessinerBis(Hexagone, Graphics2D)
+	 * @see Element#seDessinerCadreBis(Hexagone, Graphics2D, Color)
+	 */
 	protected boolean visible = false;
+	
+	/**
+	 * Type de la texture d'un élément.
+	 * @see Element#seDessinerBis(Hexagone, Graphics2D)
+	 * @see Element#seDessinerCadreBis(Hexagone, Graphics2D, Color)
+	 */
 	protected int numTexture;
 	
-	// Accesseurs
+	 /**
+     * Retourne la position d'un élément.
+     * 
+     * @return position d'un élément. 
+     */
 	public Position getPos() { return pos; }
 	
 	// Mutateurs
