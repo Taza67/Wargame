@@ -90,6 +90,8 @@ public abstract class Element implements IConfig, Serializable {
      * Retourne la position d'un élément.
      * 
      * @return position d'un élément. 
+     * @see Element#creerHexM()
+     * @see Element#creerHexMM()
      */
 	public Position getPos() { return pos; }
 	
@@ -97,6 +99,8 @@ public abstract class Element implements IConfig, Serializable {
 	 * Modifie la position de l'élement.
 	 * 
 	 * @param pos
+	 * @see Obstacle#Obstacle(Carte, wargame.Obstacle.TypeObstacle, Position)
+	 * @see Sol#Sol(Carte, wargame.Sol.TypeSol, Position)
 	 */
 	public void setPos(Position pos) { this.pos = pos; }
 	
@@ -104,6 +108,8 @@ public abstract class Element implements IConfig, Serializable {
 	/**
 	 * Crée les deux hexagones.
 	 * 
+	 * @see Soldat#seDeplace(Position)
+	 * @see Soldat#Soldat(Carte, Position, int, int, int, int, int)
 	 */
 	public void creerHex() {
 		creerHexM();
@@ -210,7 +216,9 @@ public abstract class Element implements IConfig, Serializable {
 	 * Dessine l'élément avec un cadre dans la mini-map
 	 * 
 	 * @param g
+	 * 		paramètre Graphics2D pour dessiner
 	 * @param cadre
+	 * 		couleur du cadre		
 	 */
 	public void seDessinerCadreMM(Graphics2D g, Color cadre) {
 		seDessinerCadreBis(hexMM, g, cadre);

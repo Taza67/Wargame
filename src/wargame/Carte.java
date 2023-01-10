@@ -686,7 +686,7 @@ public class Carte implements IConfig , Serializable {
 			genereZoneType(10, 20, TypeSol.DESERT);
 	}
 	/**
-	 * alcul tous les hexagones des éléments de la carte
+	 * Calcul tous les hexagones des éléments de la carte
 	 * @see Element
 	 * @see Carte#GRILLE
 	 * @see Element#creerHex()
