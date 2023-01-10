@@ -1,5 +1,25 @@
 package wargame;
 
+
+
+
+/**
+ * <b>PositionCubique est une classe intermédiaire dans la gestion des positions entre des positions rectangulaires et des positions hexagonales</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>La carte qui contient cet élément.</li>
+ * <li>La position de cet élément dans la grille.</li>
+ * </ul>
+ * </p>
+ * @see Carte
+ * @see Hexagone
+ * @see Position
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
+
 public class PositionCubique {
 	// Infos
 	private double r, q, s;
