@@ -17,16 +17,79 @@ import javax.swing.SpinnerNumberModel;
 
 import wargame.IConfig;
 
+
+
+
+/**
+ * <b>Classe DialogueNouvellePartie extension de JDialog et implémentation de IConfig</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Un JSpinner nbHeros</li>
+ * <li>Un JSpinner nbMonstres</li>
+ * <li>Un JSpinner Largeur</li>
+ * <li>Un JSpinner Hauteur</li>
+ * <li>Un tableau de String labels</li>
+ * <li>Une larg(int)</li>
+ * <li>Une haut (int)</li>
+ * <li>Une nbH (int)</li>
+ * <li>Une nbM (int)</li>
+ * </ul>
+ * </p>
+ * 
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
 public class DialogueNouvellePartie extends JDialog implements IConfig {
 	private static final long serialVersionUID = 1L;
-	// Infos
-	protected JSpinner nbHeros, nbMonstres, largeur, hauteur;
+	/**
+	 * JSpinner nbHeros
+	 */
+	protected JSpinner nbHeros, 
+	/**
+	 * Jspinner nbMonstres
+	 */
+	nbMonstres,
+	/**
+	 * Jspinner largeur
+	 */
+	largeur,
+	/**
+	 * Jspinner hauteur
+	 */
+	hauteur;
+	
+	/**
+	 * Tableau de labels
+	 */
 	protected String[] labels = {"Nombre d'héros", "Nombre de monstres", "Largeur de la carte", "Hauteur de la carte"};
-	private int larg, haut, nbH, nbM;
+	/**
+	 * largeur (int)
+	 */
+	private int larg, 
+	/**
+	 * hauteur (int)
+	 */
+	haut, 
+	/**
+	 * nbH
+	 */
+	nbH, 
+	/**
+	 * nbM
+	 */
+	nbM;
+	/**
+	 * ret (bool)
+	 */
 	private boolean ret = false;
 	
 	
-	// Constructeurs
+	/**
+	 *  Constructeur
+	 * @param f
+	 */
 	public DialogueNouvellePartie(Fenetre f) {
 		super(f, "Nouvelle Partie", Dialog.ModalityType.APPLICATION_MODAL);
 		int hautS = 20, 
@@ -102,13 +165,31 @@ public class DialogueNouvellePartie extends JDialog implements IConfig {
 		this.setLocationRelativeTo(null); 
 	}
 
-	// Accesseurs
+	/**
+	 *  Accesseur Larg
+	 * @return int
+	 */
 	public int getLarg() { return larg; }
+	/**
+	 * Accesseur Haut
+	 * @return int
+	 */
 	public int getHaut() { return haut; }
+	/**
+	 * Accesseur NbH
+	 * @return int
+	 */
 	public int getNbH() { return nbH; }
+	/**
+	 * Accesseur NbM
+	 * @return int
+	 */
 	public int getNbM() { return nbM; }
 	
-	// Méthodes
+	/**
+	 * rend visible la boite dialogue et retourne true
+	 * @return bool
+	 */
 	public boolean showDialogue() {
 		this.setVisible(true);
 		return ret;
