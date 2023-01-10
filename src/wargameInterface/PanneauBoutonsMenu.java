@@ -16,7 +16,11 @@ public class PanneauBoutonsMenu extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
 	protected JButton newGame, saveGame, loadGame, help, options, quit;
 	
-	// Constructeurs
+	/**
+	 * Constructeur d'un panneau bouton menu
+	 * @param carte
+	 * @param f
+	 */
 	public PanneauBoutonsMenu(Carte carte, Fenetre f) {
 		super();
 		int largB = carte.getLargMM() / 2 - 4,
