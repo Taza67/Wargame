@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import wargame.Obstacle.TypeObstacle;
 import wargame.Sol.TypeSol;
 import wargameInterface.Fenetre;
@@ -130,7 +132,7 @@ public class Carte implements IConfig , Serializable {
 	 * Le type de l'attaque choisie par l'utilisateur (DISTANCE, CORPS_CORPS). Il peut changer
 	 * @see Carte#setTypeAttaque(int)
 	 */
-	private int typeAttaque = CORPS_CORPS;
+	protected int typeAttaque = CORPS_CORPS;
 	/**
 	 * Les informations sur la partie. Elles peuvent changer
 	 * @see Carte#mort(Soldat)
@@ -550,6 +552,21 @@ public class Carte implements IConfig , Serializable {
 			infoPartie.setNbMonstres(--nbMonstres);
 		}
 		victime = null;
+		
+		if (listeHeros.size() == 0) {
+			if (JOptionPane.showConfirmDialog(null, "Vous avez perdu ! Voulez-vous refaire une partie ?", "Défaite", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+				panPartie.getF().nouvellePartie();
+			} else {
+				panPartie.getF().quitter();
+			}
+		} else if (listeMonstres.size() == 0) {
+			if (JOptionPane.showConfirmDialog(null, "Vous avez gagné ! Voulez-vous refaire une partie ?", "Victoire", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+				panPartie.getF().nouvellePartie();
+			} else {
+				panPartie.getF().quitter();
+			}
+		}
+		
 		panPartie.repaint();
 	}
 	/**

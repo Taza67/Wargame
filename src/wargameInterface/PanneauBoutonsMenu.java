@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import wargame.Carte;
@@ -70,7 +71,9 @@ public class PanneauBoutonsMenu extends JPanel implements IConfig {
 		});
 		quit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				f.quitter();
+				if (JOptionPane.showConfirmDialog(null, "Êtes-vous sûr de quitter", "Quitter", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+					f.quitter();
+				}
 			}
 		});
 	}

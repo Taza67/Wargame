@@ -19,11 +19,12 @@ public class PanneauInfoPartie extends JPanel implements IConfig {
 		super();
 		this.infoPartie = carte.getInfoPartie();
 		this.setBackground(COULEUR_VIDE);
-		this.setPreferredSize(new Dimension(Carte.largeurMap, 110));
+		this.setPreferredSize(new Dimension(Carte.largeurMap, 140));
 	}
 	
 	// Méthodes graphiques
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		infoPartie.seDessiner(g);
 	}
 }

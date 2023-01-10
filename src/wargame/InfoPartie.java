@@ -1,6 +1,7 @@
 package wargame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.io.Serializable;
@@ -30,6 +31,7 @@ public class InfoPartie implements IConfig, Serializable {
 	private int nbTours;
 	private char joueur;
 	private int nbHeros, nbMonstres;
+	private Carte carte;
 	
 	/**
 	 * Constructeur InfoPartie qui initialise les caractéristiques de la classe.
@@ -42,6 +44,7 @@ public class InfoPartie implements IConfig, Serializable {
 		this.joueur = GENTILS;
 		this.nbHeros = nbHeros;
 		this.nbMonstres = nbMonstres;
+		this.carte = carte;
 	}
 
 	/**
@@ -97,14 +100,16 @@ public class InfoPartie implements IConfig, Serializable {
 		String nbToursS = "Nombre de tours : " + nbTours,
 			   joueurS = "Joueur : " + ((joueur == GENTILS) ? "vous" : "adversaire"),
 			   nbHerosS = "Nombre de héros : " + nbHeros,
-			   nbMonstresS = "Nombre de Monstres : " + nbMonstres;
-	    
+			   nbMonstresS = "Nombre de Monstres : " + nbMonstres,
+			   typeAttaqueS = "Type de l'attaque : " + ((carte.typeAttaque == CORPS_CORPS) ? "attaque frontale" : "attaque à distance");
+		g.setFont(new Font("Courier", Font.BOLD, 13));
 	    FontMetrics metrics = g.getFontMetrics(g.getFont());
 		g.setColor(Color.white);
 		g.drawString(nbToursS, 10, 10 * 2);
 		g.drawString(joueurS, 10, 10 * 3 + metrics.getHeight() * 1);
 		g.drawString(nbHerosS, 10, 10 * 4 + metrics.getHeight() * 2);
 		g.drawString(nbMonstresS, 10, 10 * 5 + metrics.getHeight() * 3);
+		g.drawString(typeAttaqueS, 10, 10 * 6 + metrics.getHeight() * 4);
 	}
 	
 }
