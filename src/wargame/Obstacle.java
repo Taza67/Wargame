@@ -1,21 +1,48 @@
 package wargame;
 
+
+
+/**
+ * <b>Obstacle est la classe qui gère les obstacles type montagne, foret ou eau Extension de Element</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Une enumération de types d'obstacles</li>
+ * <li>Un numéro de texture</li>
+ * </ul>
+ * </p>
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
 public class Obstacle extends Element implements IConfig {
 	private static final long serialVersionUID = 459512988497610851L;
-	// Type
+	/**
+	 * Enumeration de types d'obstacles
+	 *
+	 */
 	public enum TypeObstacle {
-		// Liste
 		ROCHER(TEX_ROCHER), FORET(TEX_FORET), EAU(TEX_EAU);
 		
-		// Infos
+		/**
+		 * Numero de texture
+		 */
 		private final int NUM_TEXTURE;
 		
-		// Constructeurs
+		/**
+		 * Constructeur TypeObstacle 
+		 * @param numTexture
+		 */
 		private TypeObstacle(int numTexture) { NUM_TEXTURE = numTexture; }
 		
-		// Accesseur
+		/**
+		 * Accesseur du numéro de texture
+		 * @return int
+		 */
 		public int getNUM_TEXTURE() { return NUM_TEXTURE; }
-		// Pseudo-accesseurs
+		/**
+		 * Pseudo-accesseur 
+		 * @return retourne un type d'obstacle aléatoire
+		 */
 		public static TypeObstacle getObstacleAlea() { 
 			return values() [(int) (Math.random() * values().length)];
 		}
@@ -24,7 +51,12 @@ public class Obstacle extends Element implements IConfig {
 	// Infos
 	private final TypeObstacle TYPE;
 	
-	// Constructeurs
+	/**
+	 * Constructeur d'obstacle
+	 * @param carte
+	 * @param type
+	 * @param pos
+	 */
 	public Obstacle(Carte carte, TypeObstacle type, Position pos) {
 		this.carte = carte; 
 		TYPE = type; 
@@ -33,10 +65,17 @@ public class Obstacle extends Element implements IConfig {
 		numTexture = type.getNUM_TEXTURE();
 	}
 	
-	// Accesseurs
+	/**
+	 * Accesseur du Type d'un obstacle
+	 * @return TypeObstacle
+	 */
 	public TypeObstacle getTYPE() { return TYPE; }
-	// Pseudo-accesseur
-	// Renvoie le type sous forme de chaine de caractères
+	
+	
+	/**
+	 * Retourne le type d'un obstacle sous forme de chaine de caractère
+	 * @return String
+	 */
 	public String getStringType() {
 		return ("" + TYPE).toLowerCase();
 	}
