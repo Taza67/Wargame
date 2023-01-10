@@ -118,8 +118,7 @@ public class Fenetre extends JFrame implements IConfig {
 		// Renvoie une liste de boutons liés aux sauvegardes
 		public List<JMenuItem> chercherSauvegardes() {
 			List<JMenuItem> saves = new ArrayList<JMenuItem>();
-			String dir = System.getProperty("user.dir");
-			File folder = new File(dir + "/sauvegardes/");
+			File folder = new File("./sauvegardes/");
 			folder.mkdirs();
 			for (File file : folder.listFiles()) {
 				if (!file.isDirectory()) {
@@ -190,7 +189,7 @@ public class Fenetre extends JFrame implements IConfig {
 			DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 			nom = myDateObj.format(myFormatObj);
 		}
-		nomFichier = System.getProperty("user.dir") + "/sauvegardes/" + nom + ".ser";
+		nomFichier = "./sauvegardes/" + nom + ".ser";
 		try {
 			fichier = new FileOutputStream(nomFichier);
 			output = new ObjectOutputStream(fichier);
@@ -210,7 +209,7 @@ public class Fenetre extends JFrame implements IConfig {
 		ObjectInputStream lecture = null;
 		Carte carte = null;
 		PanneauPartie p = null;
-		nom = System.getProperty("user.dir") + "/sauvegardes/" + nom + ".ser";
+		nom = "./sauvegardes/" + nom + ".ser";
 		try {
 			fichier = new FileInputStream(nom);
 			lecture = new ObjectInputStream(fichier);

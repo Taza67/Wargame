@@ -28,7 +28,7 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 	protected Carte carte;
 	protected PanneauGrille grille;
 	protected PanneauTableauBord tableauBord;
-	protected Fenetre f;
+	transient protected Fenetre f;
 	// Textures
 	public static TexturePaint[] texturesPaint;
 	
