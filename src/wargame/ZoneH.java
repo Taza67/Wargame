@@ -6,15 +6,49 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
+/**
+ * <b>Classe ZoneH implémente Serializable</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Une carte</li>
+ * <li>Un centre sous forme de positionAxiale</li>
+ * <li>Un rayon(int)</li>
+ * <li>Une Zone sous la forme d'une liste d'éléments</li>
+ * </ul>
+ * </p>
+ * 
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
 public class ZoneH implements Serializable {
 	private static final long serialVersionUID = 4780267211740884717L;
-	// Infos
+	/**
+	 * Carte
+	 */
 	private Carte carte;
+	/**
+	 * Centre (PositionAxiale)
+	 */
 	private PositionAxiale centre;
+	/**
+	 * rayon (int)
+	 */
 	private int rayon;
+	/**
+	 * zone( List<Element>)
+	 */
 	List<Element> zone;
 	
-	// Constructeurs
+	/**
+	 *  Constructeur
+	 * @param centre
+	 * @param rayon
+	 * @param carte
+	 */
 	public ZoneH(PositionAxiale centre, int rayon, Carte carte) {
 		this.carte = carte;
 		this.centre = centre;
@@ -23,18 +57,44 @@ public class ZoneH implements Serializable {
 		calculerZone();
 	}
 	
-	// Accesseurs
+	/**
+	 * Accesseur du centre
+	 * @return centre (PositionAxiale)
+	 */
 	public PositionAxiale getCentre() { return centre; }
+	/**
+	 * Accesseur du rayon
+	 * @return rayon (int)
+	 */
 	public int getRayon() { return rayon; }
+	/**
+	 * Accesseur de la zone
+	 * @return zone (List<Element>)
+	 */
 	public List<Element> getZone() { return zone; }
 	
-	// Mutateurs
+	/**
+	 * Mutateur du centre
+	 * @param centre
+	 */
 	public void setCentre(PositionAxiale centre) { this.centre = centre; }
+	
+	/**
+	 * Mutateur du rayon
+	 * @param rayon
+	 */
 	public void setRayon(int rayon) { this.rayon = rayon; }
+	
+	/**
+	 * Mutatateur de la zone
+	 * @param zone
+	 */
 	public void setZone(List<Element> zone) { this.zone = zone; }
 	
-	// Méthodes
-	// Calcule la zone
+	
+	/**
+	 *  Calcule la zone
+	 */
 	public void calculerZone() {
 		for (int q = -rayon; q <= rayon; q++) {
 			int borneInf = (-rayon > -q - rayon) ? -rayon : -q - rayon,
@@ -46,23 +106,34 @@ public class ZoneH implements Serializable {
 			}
 		}
 	}
-	// Mets à jour la zone
+	/**
+	 *  Mets à jour la zone
+	 */
 	public void maj() {
 		zone = new ArrayList<Element>();
 		calculerZone();
 	}
-	// Vérifie si l'élément donné est dans la zone ou pas
+	/**
+	 *  Vérifie si l'élément donné est dans la zone ou pas
+	 * @param elem
+	 * @return bool
+	 */
 	public boolean contient(Element elem) {
 		return zone.contains(elem);
 	}
-	// Rend la zone visible sur la carte
+	/**
+	 * Rend la zone visible sur la carte
+	 */
 	public void rendreVisible() {
 		for (Element e : zone)
 			if (e != null) e.visible = true;
 	}
 	
-	// Méthodes graphiques
-	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
+
+	/**
+	 *  Dessine un cadre autour des éléments pour montrer la zone de déplacement du soldat
+	 * @param g
+	 */
 	public void seDessiner(Graphics2D g) {
 		for (Element e : zone)
 			if (e instanceof Monstre)
