@@ -54,12 +54,49 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 				puissance,
 				tir,
 				guerison;
+	/**
+	 * Type de sol
+	 */
 	private Sol sol;
+	
+	/**
+	 * Zone visuelle
+	 */
 	private ZoneH zoneVisuelle;
+	
+	/**
+	 * Zone visuelle du soldat
+	 */
 	private List<Element> zoneDeplacement;
+	
+	/**
+	 * Identifie si le soldat a joué
+	 */
 	private boolean aJoue = false;
 	
 	// Constructeurs
+	  /**
+     * Constructeur Soldat.
+     * <p>
+     * A la construction, les données concernant le soldat sont affectés au soldat, les effets de sol sont appliquées.
+     * La zone visuelle et la zone de déplacement du soldat sont calculées
+     * </p>
+     * 
+     * @param carte
+     * 				La carte du soldat.
+     * @param pos
+     *            	La position du soldat.
+     * @param pts
+     * 			  	Les points de vie du soldat.
+     * @param porteeVisuelle
+     * 				La portée visuelle du soldat
+     * @param porteeDeplacement
+     * 				La portée de déplacement du soldat
+     *  @param puissance
+     * 				La puissance du soldat
+     *  @param tir
+     * 				Le tir du soldat
+     */
 	public Soldat(Carte carte, Position pos, int pts, int porteeVisuelle, int porteeDeplacement, int puissance, int tir) {
 		this.carte = carte;
 		this.setPos(pos);
@@ -80,54 +117,216 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		this.creerHex();
 	}
 
-	// Accesseurs
+	  /**
+     * Retourne les points de vie max du soldat.
+     * 
+     * @return les points de vie maximum du soldat
+     */
 	public int getPOINTS_DE_VIE_MAX() { return POINTS_DE_VIE_MAX; }
+	
+	/**
+     * Retourne la portée visuelle de base du soldat.
+     * 
+     * @return la portée visuelle de base du soldat.
+     */
 	public int getPORTEE_VISUELLE_BASE() { return PORTEE_VISUELLE_BASE; }
+	
+	/**
+     * Retourne la puissance de base du soldat.
+     * 
+     * @return Retourne la puissance de base du soldat.
+     */
 	public int getPUISSANCE_BASE() { return PUISSANCE_BASE; }
+	
+	/**
+     * Retourne le puissance de tir du soldat.
+     * 
+     * @return Retourne le puissance de tir du soldat.
+     */
 	public int getTIR_BASE() { return TIR_BASE; }
+	
+	
+	/**
+     * Retourne les points de vie que le soldat peut guérir.
+     * 
+     * @return Retourne les points de vie que le soldat peut guérir.
+     */
 	public int getGUERISON_BASE() { return GUERISON_BASE;}
+	
+	/**
+     * Retourne le deplacement maximum du soldat.
+     * 
+     * @return Retourne le deplacement maximum du soldat
+     */
 	public int getPORTEE_DEPLACEMENT_MAX() { return PORTEE_DEPLACEMENT_MAX; }
+	
+	/**
+     * Retourne les points de vie du soldat
+     * 
+     * @return Retourne les points de vie du soldat
+     */
 	public int getPointsDeVie() { return pointsDeVie; }
+	
+	
+	/**
+     * Retourne la portee visuelle du soldat
+     * 
+     * @return Retourne la portee visuelle du soldat
+     */
 	public int getPorteeVisuelle() { return porteeVisuelle; }
+	
+	/**
+     * Retourne la portee de deplacement d'un soldat
+     * 
+     * @return Retourne la portee de deplacement d'un soldat
+     */
 	public int getPorteeDeplacement() { return porteeDeplacement; }
+	
+	/**
+     * Retourne la puissance d'un soldat
+     * 
+     * @return Retourne la puissance d'un soldat
+     */
 	public int getPuissance() { return puissance; }
+	
+	/**
+     * Retourne le tir d'un soldat.
+     * 
+     * @return Retourne le tir d'un soldat.
+     */
 	public int getTir() { return tir; }
+	
+	/**
+     * Retourne les points de vie que le soldat peut guérir.
+     * 
+     * @return Retourne les points de vie que le soldat peut guérir.
+     */
 	public int getGuerison() { return guerison; }
+	
+	/**
+     * Retourne le sol.
+     * 
+     * @return Retourne le sol.
+     */
 	public Sol getSol() { return sol; }
+	
+	/**
+     * Retourne la zone visuelle.
+     * 
+     * @return Retourne la zone visuelle.
+     */
 	public ZoneH getZoneVisuelle() { return zoneVisuelle; }
+	
+	/**
+     * Retourne la zone de deplacement.
+     * 
+     * @return Retourne la zone de deplacement.
+     */
 	public List<Element> getZoneDeplacement() { return zoneDeplacement; }
+	
+	/**
+     * Retourne si le soldat a joué.
+     * 
+     * @return Retourne si le soldat a joué.
+     */
 	public boolean getAJoue() { return aJoue; }
-	// Pseudo-accesseurs
-	// Retourne les points de vie du soldat sous forme de chaine de caractères
+	
+	/**
+     * Retourne les points de vie du soldat sous forme de chaine de caractères
+     * 
+     * @return Retourne les points de vie du soldat sous forme de chaine de caractères
+     */
 	public String getStringPdv() { return pointsDeVie + " / " + POINTS_DE_VIE_MAX; }
-	// Retourne la portee de déplacement du soldat sous forme de chaine de caractères
+	
+	
+	/**
+	 * Retourne la portee de déplacement du soldat sous forme de chaine de caractères
+	 * 
+	 * @return Retourne la portee de déplacement du soldat sous forme de chaine de caractères
+	 */
 	public String getStringDep() { return porteeDeplacement + " / " + PORTEE_DEPLACEMENT_MAX; }
-	// Retourne la portee visuelle du soldat sous forme de chaine de caractères
+	
+	
+	/**
+	 * Retourne la portee visuelle du soldat sous forme de chaine de caractères
+	 * @return Retourne la portee visuelle du soldat sous forme de chaine de caractères
+	 */
 	public String getStringVisuel() { return porteeVisuelle + " / " + PORTEE_VISUELLE_BASE; }
-	// Retourne la puissance du soldat sous forme de chaine de caractères
+	
+	
+	/**
+	 * Retourne la puissance du soldat sous forme de chaine de caractères
+	 * @return Retourne la puissance du soldat sous forme de chaine de caractères
+	 */
 	public String getStringPow() { return puissance + " / " + PUISSANCE_BASE; }
-	// Retourne la puissance de tir du soldat sous forme de chaine de caractères
+	
+	
+	/**
+	 * Retourne la puissance de tir du soldat sous forme de chaine de caractères
+	 * @return Retourne la puissance de tir du soldat sous forme de chaine de caractères
+	 */
 	public String getStringTir() { return tir + " / " + TIR_BASE; }
 	
-	// Mutateurs
+	/**
+	 * Modifie les points de vie du soldat
+	 * @param pointsDeVie
+	 */
 	public void setPointsDeVie(int pointsDeVie) { this.pointsDeVie = pointsDeVie; }
+	
+	/**
+	 * modifie la portee visuelle d'un soldat
+	 * @param porteeVisuelle
+	 */
 	public void setPorteeVisuelle(int porteeVisuelle) { this.porteeVisuelle = porteeVisuelle; }
+	
+	/**
+	 * modifie la portee de deplacement d'un soldat
+	 * @param porteeDeplacement
+	 */
 	public void setPorteeDeplacement(int porteeDeplacement) { this.porteeDeplacement = porteeDeplacement; }
+	
+	/**
+	 * modifie la puissance d'un soldat
+	 * @param puissance
+	 */
 	public void setPuissance(int puissance) { this.puissance = puissance; }
+	
+	/**
+	 * modifie la puissance de tir d'un soldat
+	 * @param tir
+	 */
 	public void setTir(int tir) { this.tir = tir; }
+	
+	/**
+	 * modifie les points de vie de guerison possible 
+	 * @param guerison
+	 */
 	public void setGuerison(int guerison) { this.guerison = guerison; }
+	
+	/**
+	 * modifie le tour du soldat
+	 * @param aJoue
+	 */
 	public void setAJoue(boolean aJoue) { this.aJoue = aJoue; }
 	
-	// Méthodes
-	// Met à jour la zone visuelle du soldat
+	/**
+	 * Met à jour la zone visuelle du soldat 
+	 */
 	public void majZoneVisuelle() {
 		calculerZoneVisuelle();
 	}
-	// Met à jour la zone de déplacement du soldat
+	
+	
+	/**
+	 * Met à jour la zone de déplacement du soldat
+	 */
 	public void majZoneDeplacement() {
 		calculerZoneDeplacement();
 	}
-	// Calcule la zone visuelle du soldat
+	
+	/**
+	 * Calcule la zone visuelle du soldat
+	 */
 	public void calculerZoneVisuelle() {
 		zoneVisuelle = new ZoneH(getPos().toPositionAxiale(), porteeVisuelle, carte);
 		List<Element> realZoneV = new ArrayList<Element>();
@@ -145,7 +344,10 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		}
 		zoneVisuelle.setZone(realZoneV);
 	}
-	// Calcule la zone de déplacement du soldat
+	
+	/**
+	 * Calcule la zone de déplacement du soldat
+	 */
 	public void calculerZoneDeplacement() {
 		zoneDeplacement = new LinkedList<Element>();
 		List<List<Position>> zoneDeplacementBis = new ArrayList<List<Position>>();
@@ -180,7 +382,13 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 				zoneDeplacement.add(carte.getElement(pos));
 			
 	}
-	// Déplace le soldat à la position pos
+	
+	
+	/**
+	 * Déplace le soldat à la position pos
+	 * @param cible
+	 * @return si le déplacement est possible ou non.
+	 */
 	public boolean seDeplace(Position cible) {
 		boolean possible = true;
 		// Vérifications
@@ -211,7 +419,12 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		}
 		return possible;
 	}
-	// Attaque le soldat au corps-à-corps
+	
+	
+	/**
+	 * Attaque le soldat au corps-à-corps
+	 * @param adv
+	 */
 	public void attaqueSoldatCorps(Soldat adv) {
 		int advPDV = adv.pointsDeVie,
 			ptsAttaque = MethodesAuxiliaires.alea(3, puissance),
@@ -228,7 +441,12 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		if (pointsDeVie <= 0)
 			carte.mort(this);
 	}
-	// Attaque le soldat à distance
+	
+	
+	/**
+	 * Attaque le soldat à distance
+	 * @param adv
+	 */
 	public void attaqueSoldatDistance(Soldat adv) {
 		int advPDV = adv.pointsDeVie;
 		advPDV -= MethodesAuxiliaires.alea(3, tir);
@@ -240,31 +458,60 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 		if (pointsDeVie <= 0)
 			carte.mort(this);
 	}
-	// Vérifie si une attaque à distance est possible
+	
+	
+	/**
+	 * Vérifie si une attaque à distance est possible
+	 * @param adv
+	 * @return si l'attaque à distance est possible ou non
+	 */
 	public boolean verifieAttaqueDistance(Soldat adv) {
 		return zoneVisuelle.contient(adv);
 	}
-	// Retourne un des éléments de la liste donnée aléatoirement
+	
+	
+	/**
+	 * Retourne un des éléments de la liste donnée aléatoirement
+	 * @param listeElem
+	 * @return Un élément aléatoirement de la liste des éléments listeElem
+	 */
 	public Element aleaElem(List<Element> listeElem) {
 		int t = listeElem.size(),
 			alea = MethodesAuxiliaires.alea(0, t - 1);
 		return listeElem.get(alea);
 	}
-	// Applique les points de guérison
+	
+	
+	/**
+	 * Applique les points de guérison
+	 */
 	public void guerir() {
 		pointsDeVie = Math.min(POINTS_DE_VIE_MAX, pointsDeVie + guerison);
 	}
-	// Vérifie si la zone de déplacement contient un élément cible
+	
+	
+	/**
+	 * Vérifie si la zone de déplacement contient un élément cible
+	 * @param e
+	 * @return si l'élément en paramètre est dans la zone de déplacement
+	 */
 	public boolean zoneDeplacementContient(Element e) {
 		return zoneDeplacement.indexOf(e) != -1;
 	}
-	// Vérifie si le soldat est mourrant ou pas
+	
+	/**
+	 * Vérifie si le soldat est mourrant ou pas
+	 * @return si le soldat est mort.
+	 */
 	public boolean estMourrant() {
 		return pointsDeVie < POINTS_DE_VIE_MAX / 5;
 	}
 	
-	// Méthodes graphiques
-	// Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
+	
+	/**
+	 * Dessine un cadre autoure des éléments pour montrer la zone de déplacement du soldat
+	 * @param g
+	 */
 	public void dessinerZoneDeplacement(Graphics2D g) {
 		if (!aJoue) {
 			for (Element e : zoneDeplacement)
@@ -276,7 +523,9 @@ public abstract class Soldat extends Element implements IConfig, ISoldat {
 				}
 		}
 	}
-	// Dessine le soldat
+	/**
+	 * Dessine le soldat
+	 */
 	public void seDessiner(Graphics2D g) {
 		if (aJoue && visible)										// Si le soldat a déjà joué
 			super.seDessinerCadre(g, Color.black);
