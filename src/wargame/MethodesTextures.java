@@ -10,8 +10,20 @@ import java.awt.image.BufferedImage;
 
 import wargameInterface.PanneauPartie;
 
+
+
+
+
+/**<b>Classe répertoriant les méthodes propres aux textures</b>
+*/
+
 public class MethodesTextures implements IConfig {
-	// Renvoie des textures d'images bufferisées
+	/**
+	 * Renvoie les textures d'image bufferisées 
+	 * @param bufferedImages
+	 * @param rayon
+	 * @return TexturePaint[]
+	 */
 	public static TexturePaint[] getTexturesPaint(BufferedImage[] bufferedImages, int rayon) {
 		int horiz, vert;
 		horiz = (int)(Math.sqrt(3.) * rayon);
@@ -22,7 +34,12 @@ public class MethodesTextures implements IConfig {
 		return texturesPaint;
 	}
 	
-	// Charges les images
+	/**
+	 * Charge les images
+	 * @param sources
+	 * @param c
+	 * @return Image[]
+	 */
 	public static Image[] getImages(String[] sources, Component c) {
 		Image[] images = new Image[sources.length];
 		for (int i = 0; i < sources.length; i++)
@@ -31,7 +48,12 @@ public class MethodesTextures implements IConfig {
 	    return images;
 	}
 	
-	// Renvoie des images bufferisées
+	/**
+	 * Renvoie des images bufferisées
+	 * @param images
+	 * @param c
+	 * @return BufferedImage[]
+	 */
 	public static BufferedImage[] getBufferedImages(Image[] images, Component c) {
 		BufferedImage[] bufferedImages = new BufferedImage[images.length];
 	    for (int i = 0; i < images.length; i++) {
@@ -42,7 +64,12 @@ public class MethodesTextures implements IConfig {
 	    return bufferedImages;
 	}
 
-	// Attend le chargement complet de plusieurs images
+	/**
+	 * Attend le chargement complet de plusieurs images 
+	 * @param images
+	 * @param c
+	 * @return boolean
+	 */
 	public static boolean waitForImages(Image[] images, Component c) {
 		MediaTracker tracker = new MediaTracker(c);
 		for(int i=0; i<images.length; i++)
@@ -52,7 +79,12 @@ public class MethodesTextures implements IConfig {
 		} catch(InterruptedException ie) {}
 		return(!tracker.isErrorAny());
 	}
-	// Charge les textures
+	/**
+	 * Charge les textures
+	 * @param p
+	 * @param rayon
+	 * @return TexturePaint[]
+	 */
 	public static TexturePaint[] chargerTextures(PanneauPartie p, int rayon) {
 		String dir = System.getProperty("user.dir");
 		String[] sources = new String[11];
