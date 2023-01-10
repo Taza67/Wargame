@@ -39,7 +39,7 @@ public class DialogueNouvellePartie extends JDialog implements IConfig {
 		JLabel label = new JLabel(labels[0], JLabel.CENTER);
 		label.setPreferredSize(new Dimension(largL, hautL));
 		this.add(label);
-		SpinnerModel modele = new SpinnerNumberModel(5, 5, 15, 1);
+		SpinnerModel modele = new SpinnerNumberModel(5, 1, 15, 1);
 		nbHeros = new JSpinner(modele);
 		nbHeros.setPreferredSize(new Dimension(largS, hautS));
 		this.add(nbHeros);
@@ -47,7 +47,7 @@ public class DialogueNouvellePartie extends JDialog implements IConfig {
 		label = new JLabel(labels[1], JLabel.CENTER);
 		label.setPreferredSize(new Dimension(largL, hautL));
 		this.add(label);
-		modele = new SpinnerNumberModel(5, 5, 15, 1);
+		modele = new SpinnerNumberModel(5, 1, 15, 1);
 		nbMonstres = new JSpinner(modele);
 		nbMonstres.setPreferredSize(new Dimension(largS, hautS));
 		this.add(nbMonstres);

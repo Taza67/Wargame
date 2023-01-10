@@ -42,11 +42,13 @@ public class PanneauActionsHeros extends JPanel implements IConfig {
 		frontale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CARTE.setTypeAttaque(CORPS_CORPS);
+				carte.getPanPartie().tableauBord.infoPartie.repaint();
 			}
 		});
 		distance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CARTE.setTypeAttaque(DISTANCE);
+				carte.getPanPartie().tableauBord.infoPartie.repaint();
 			}
 		});
 	}

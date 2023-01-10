@@ -26,20 +26,22 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 	// Infos
 	private int zoom = 10;
 	protected Carte carte;
-	protected PanneauJeu jeu;
+	protected PanneauGrille grille;
 	protected PanneauTableauBord tableauBord;
+	protected Fenetre f;
 	// Textures
 	public static TexturePaint[] texturesPaint;
 	
 	// Constructeurs
 	public PanneauPartie(Fenetre f, Carte carte) {
 		super();
+		this.f = f;
 		if (isFocusable()) setFocusable(true);
 		carte.setPanPartie(this);
 		this.carte = carte;
 		this.tableauBord = new PanneauTableauBord(carte, f);
-		this.jeu = new PanneauJeu(carte);
-		this.add(jeu, BorderLayout.WEST);
+		this.grille = new PanneauGrille(carte);
+		this.add(grille, BorderLayout.WEST);
 		this.add(tableauBord, BorderLayout.EAST);
 		
 		// Textures
@@ -53,36 +55,36 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 		tableauBord.miniMap.addMouseMotionListener(new MouseAdapter() {
 			public void mouseDragged(MouseEvent e) { carte.deplacer(new Point(e.getX(), e.getY())); repaint(); }
 		});
-		jeu.grille.addMouseMotionListener(new MouseAdapter() {
+		grille.addMouseMotionListener(new MouseAdapter() {
 			public void mouseMoved(MouseEvent e) {
 				carte.deplacerCurseur(new Point(e.getX(), e.getY())); 
-				jeu.repaint();
+				grille.repaint();
 				tableauBord.miniMap.repaint();
 			}
 		});
-		jeu.grille.addMouseListener(new MouseAdapter() {
+		grille.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (carte.getInfoPartie().getJoueur() == GENTILS) {
 					if (SwingUtilities.isLeftMouseButton(e)) {
 						carte.deplacerSelection(new Point(e.getX(), e.getY()));
-						jeu.repaint();
+						grille.repaint();
 						tableauBord.miniMap.repaint();
 						if (carte.getSelection() instanceof Heros) tableauBord.actionsHeros.setVisible(true);
 						else tableauBord.actionsHeros.setVisible(false);
 					} else if (SwingUtilities.isRightMouseButton(e)) {
 						carte.faireAgirHeros(new Point(e.getX(), e.getY()));
-						jeu.repaint();
+						grille.repaint();
 						tableauBord.miniMap.repaint();
 					}
 				}
 			}
 		});
-		jeu.grille.addMouseWheelListener(new MouseAdapter() {
+		grille.addMouseWheelListener(new MouseAdapter() {
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				zoom = (e.getWheelRotation() < 0) ? Math.min(18, zoom + 1) : Math.max(6, zoom - 1); 
 				tableauBord.boutonsMiniMap.slider.setValue(zoom);
 				carte.zoomer(zoom);
-				jeu.repaint();
+				grille.repaint();
 				tableauBord.miniMap.repaint();
 			}
 		});
@@ -93,9 +95,17 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 			public void actionPerformed(ActionEvent e) {
 				carte.zoomer(10);
 				tableauBord.boutonsMiniMap.slider.setValue(10);
-				jeu.repaint();
+				grille.repaint();
 				tableauBord.miniMap.repaint();
 			};
+		});
+		tableauBord.boutonsTour.nextHeros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				carte.setSelection(carte.trouveHeros());
+				tableauBord.actionsHeros.setVisible(true);
+				grille.repaint();
+				tableauBord.miniMap.repaint();
+			}
 		});
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
@@ -108,8 +118,9 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 	}
 	
 	// Accesseurs
-	public PanneauJeu getJeu() { return jeu; }
+	public PanneauGrille getGrille() { return grille; }
 	public PanneauTableauBord getTableauBord() { return tableauBord; }
+	public Fenetre getF() { return f; }
 
 	// Méthodes d'écoute
 	public void keyTyped(KeyEvent e) { }
@@ -143,6 +154,7 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 			break;
 		case KeyEvent.VK_H:
 			carte.setSelection(carte.trouveHeros());
+			this.tableauBord.actionsHeros.setVisible(true);
 			repaint();
 			break;
 		case KeyEvent.VK_ADD:
@@ -150,7 +162,7 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 			zoom = Math.min(18, zoom + 1); 
 			tableauBord.boutonsMiniMap.slider.setValue(zoom);
 			carte.zoomer(zoom);
-			jeu.repaint();
+			grille.repaint();
 			tableauBord.miniMap.repaint();
 			break;
 		case KeyEvent.VK_SUBTRACT:
@@ -158,7 +170,7 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 			zoom = Math.max(6, zoom - 1); 
 			tableauBord.boutonsMiniMap.slider.setValue(zoom);
 			carte.zoomer(zoom);
-			jeu.repaint();
+			grille.repaint();
 			tableauBord.miniMap.repaint();
 			break;
 		case KeyEvent.VK_ENTER:
@@ -172,6 +184,7 @@ public class PanneauPartie extends JPanel implements IConfig, KeyListener {
 			break;
 		case KeyEvent.VK_ESCAPE:
 			carte.setSelection(null);
+			this.tableauBord.actionsHeros.setVisible(false);
 			repaint();
 			break;
 		}

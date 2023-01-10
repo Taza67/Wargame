@@ -12,6 +12,7 @@ package wargame;
  */
 
 public class Monstre extends Soldat {
+
 	private static final long serialVersionUID = -4592881709041950606L;
 	/**
 	 * Type du Monstre
@@ -42,4 +43,9 @@ public class Monstre extends Soldat {
 	public String getStringType() {
 		return ("" + TYPE).toLowerCase();
 	}
+
+   
+   
+ 
 }
+

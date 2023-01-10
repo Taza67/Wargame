@@ -81,7 +81,9 @@ public class Fenetre extends JFrame implements IConfig {
 			});
 			quitter.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					f.quitter();
+					if (JOptionPane.showConfirmDialog(null, "Êtes-vous sûr de quitter", "Quitter", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+						f.quitter();
+					}
 				}
 			});
 			pleinEcran.addActionListener(new ActionListener() {
