@@ -39,6 +39,11 @@ public abstract class Element implements IConfig, Serializable {
 	private static final long serialVersionUID = -2180721218940141556L;
 	// Constantes statiques
 	private static final int POS = 0, TYPE = 1, SOL = 2, PDV = 3, DEP = 4, VISUEL = 5, POW = 6, TIR = 7;
+	/**
+	 * Les indices dans le tableau infos de la methode getStringInfos().
+	 * @see getStringInfos()
+	 */
+	
 	
 	// Infos
 	protected Carte carte;
