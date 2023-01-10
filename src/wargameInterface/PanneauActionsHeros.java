@@ -18,6 +18,10 @@ public class PanneauActionsHeros extends JPanel implements IConfig {
 	protected JButton distance;
 	public final Carte CARTE;
 
+	/**
+	 * Constructeur du Panneau qui gère l'action des héros
+	 * @param carte
+	 */
 	public PanneauActionsHeros(Carte carte) {
 		super();
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
