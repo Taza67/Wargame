@@ -147,6 +147,13 @@ public class CheminDijkstra implements IConfig, Serializable {
 	
 	/**
 	 * Mets à jour les distances dans le tableau d
+	 * 
+	 * @param s1
+	 * 		Premier sommet
+	 * 
+	 *  @param s2
+	 * 		deuxième sommet
+	 
 	 */
 	public void maj_distances(int s1, int s2) {
 		if (d[s2] > d[s1] + poids[s1][s2]) {
@@ -157,6 +164,9 @@ public class CheminDijkstra implements IConfig, Serializable {
 	
 	/**
 	 * Trouve le chemint le plus court à partir de l'élément de départ
+	 * 
+	 * @param depart
+	 * 		élément de départ
 	 * 
 	 * @see CheminDijkstra#CheminDijkstra(Element, Element, List)
 	 */
@@ -174,6 +184,11 @@ public class CheminDijkstra implements IConfig, Serializable {
 	
 	/**
 	 * Trouve le chemin le plus court entre l'élément de départ et l'arrivée
+	 * 
+	 * @param depart
+	 * 		Element de départ
+	 * @param arrivee
+	 * 		Element d'arrivée
 	 * 
 	 */
 	public void plusCourtChemin(Element depart, Element arrivee) {
