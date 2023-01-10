@@ -5,15 +5,75 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import wargameInterface.Fenetre;
+import wargameInterface.PanneauPartie;
+
+/**
+ * <b>CheminDjikstra permet de trouver le chemin le plus court d'un soldat.</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Une liste de sommets représentés par des éléments.</li>
+ * <li>Une liste de sommets contenant le chemins le plus court.</li>
+ * <li>Un tableau contenant le poids de chaque sommet.</li>
+ * </ul>
+ * </p>
+ * @see AttaqueSoldatCorps
+ * @see Carte
+ * @see TourOrdi
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
+
+
 public class CheminDijkstra implements IConfig, Serializable {
 	private static final long serialVersionUID = -1614658200180524351L;
-	// Infos
+	/**
+	 * Liste des sommets. Cette liste peut changer.
+	 * @see CheminDijkstra#CheminDijkstra(Element, Element, List)
+	 */
 	List<Element> sommets;
+	
+	/**
+	 * Tableaux contenant la distance de chaque sommet (d) et le predecesseur (pred).
+	 * @see CheminDijkstra#CheminDijkstra(Element, Element, List)
+	 */
 	int[] d, pred;
+	
+	/**
+	 * Tableau contenant le poid de chaque sommet.
+	 * @see CheminDijkstra#CheminDijkstra(Element, Element, List)
+	 */
 	int[][] poids;
+	
+	/**
+	 * Liste de sommets contenant le chemin le plus court.
+	 * @see CheminDijkstra#CheminDijkstra(Element, Element, List)
+	 * @see CheminDijkstra#inverserChemin()
+	 */
 	List<Element> chemin;
 	
-	// Constructeurs
+	
+
+	/**
+	 * Constructeur CheminDijkstra
+	 * <p>
+	 * A la construction, initialisqtoin des tableaux puis construction du chemin le plus court.
+	 * </p>
+	 * 
+	 * @param depart
+	 * 				Element de départ.
+	 * @param arrivee
+	 *            	Element d'arrivée.
+	 * @param sommets
+	 * 				Liste des sommets.
+	 * @see Carte#panPartie
+	 * @see Carte#LARGC
+	 * @see Carte#HAUTC
+	 * @see Carte#nbHeros
+	 * @see Carte#nbMonstres
+	 */
 	public CheminDijkstra(Element depart, Element arrivee, List<Element> sommets) {
 		this.sommets = sommets;
 		this.d = new int[sommets.size()];

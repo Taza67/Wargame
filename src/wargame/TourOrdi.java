@@ -9,8 +9,31 @@ public class TourOrdi extends APatient implements IConfig {
 	Carte carte;
 	List<Element> listeMonstres, listeHeros, listeCiblesAttaquees;
 	List<Thread> processus;
+
 	
-	// Constructeurs
+	/**
+	 * Constructeur TourOrdi.
+	 * <p>
+	 * A la construction, les dimensions en pixels et en cases sont calculées, la partie affichée est construite et la grille de jeu est générée aléatoirement.
+	 * Les éléments interactifs sont générés.
+	 * </p>
+	 * 
+	 * @param panPartie
+	 * 				Le panneauPartie qui contiendra la carte.
+	 * @param largeur
+	 *            	La largeur de la grille.
+	 * @param hauteur
+	 * 			  	La hauteur de la grile.
+	 * @param nbHeros
+	 * 				Le nombre de héros
+	 * @param nbMonstre
+	 * 				Le nombre de monstres
+	 * @see Carte#panPartie
+	 * @see Carte#LARGC
+	 * @see Carte#HAUTC
+	 * @see Carte#nbHeros
+	 * @see Carte#nbMonstres
+	 */
 	public TourOrdi(Carte carte, List<Thread> lastProcessus) {
 		super();
 		this.processusAttendre = lastProcessus;
