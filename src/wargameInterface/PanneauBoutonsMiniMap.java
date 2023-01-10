@@ -1,6 +1,8 @@
 package wargameInterface;
 
 import java.awt.Dimension;
+
+
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -9,13 +11,43 @@ import javax.swing.JSlider;
 import wargame.Carte;
 import wargame.IConfig;
 
+
+
+
+/**
+ * <b>Classe PanneauBoutonMiniMap extension de JPanel et implémentation de IConfig</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>Un JButton reinit</li>
+ * <li>Un JSlider slider</li>
+ * <li>Une carte CARTE</li>
+ * </ul>
+ * </p>
+ * 
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
 public class PanneauBoutonsMiniMap extends JPanel implements IConfig {
 	private static final long serialVersionUID = 1L;
-	// Infos
+	/**
+	 * JButton reinit
+	 */
 	protected JButton reinit;
+	/**
+	 * JSlider slider
+	 */
 	protected JSlider slider;
+	/**
+	 * Carte CARTE
+	 */
 	public final Carte CARTE;
 
+	/**
+	 * Constructeur du PanneauBoutonMiniMap
+	 * @param carte
+	 */
 	public PanneauBoutonsMiniMap(Carte carte) {
 		super();
 		
