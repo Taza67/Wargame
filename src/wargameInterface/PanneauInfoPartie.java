@@ -14,7 +14,10 @@ public class PanneauInfoPartie extends JPanel implements IConfig {
 	// Infos
 	private final InfoPartie infoPartie;
 	
-	// Constructeurs
+	/**
+	 * Créer un panneau pour les informations de la partie
+	 * @param carte
+	 */
 	public PanneauInfoPartie(Carte carte) {
 		super();
 		this.infoPartie = carte.getInfoPartie();
@@ -22,7 +25,10 @@ public class PanneauInfoPartie extends JPanel implements IConfig {
 		this.setPreferredSize(new Dimension(Carte.largeurMap, 140));
 	}
 	
-	// Méthodes graphiques
+	/**
+	 * Methode paintcomponent responsable du dessin graphique
+	 * Graphics g
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		infoPartie.seDessiner(g);
