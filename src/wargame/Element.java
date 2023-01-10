@@ -21,8 +21,8 @@ import wargameInterface.PanneauPartie;
  * <p>
  * Elle est caractérisée par :
  * <ul>
- * <li>Une carte représentant la carte du jeu. ---> la Carte qui le contient</li>
- * <li>La position de chaque élément dans la grille. ---> la position de cet élément </li>
+ * <li>La carte qui contient cet élément.</li>
+ * <li>La position de cet élément dans la grille.</li>
  * </ul>
  * </p>
  * @see Carte
@@ -37,29 +37,83 @@ import wargameInterface.PanneauPartie;
 
 public abstract class Element implements IConfig, Serializable {
 	private static final long serialVersionUID = -2180721218940141556L;
-	// Constantes statiques
+	
+	/**
+	 * Les indices dans le tableau infos de la methode getStringInfos().
+	 * @see getStringInfos()
+	 */
 	private static final int POS = 0, TYPE = 1, SOL = 2, PDV = 3, DEP = 4, VISUEL = 5, POW = 6, TIR = 7;
 	
-	// Infos
+	/**
+	 * La carte qui contient l'élément.
+	 * @see Carte#setElement(Position, Element)
+	 * @see Carte#calculerHex()
+	 */	
 	protected Carte carte;
+	
+	/**
+	 * La position d'un élément dans la carte.
+	 * @see Carte#deplacer(Position)
+	 * @see Carte#trouvePosVide()
+	 * @see Carte#trouvePosType(int, int, int, int, char)
+	 */
 	protected Position pos;
-	protected Hexagone hex, hexMM;
+	
+	/**
+	 * Hexagone de la map affichée.
+	 * @see Element#creerHexM()
+	 * @see Carte#calculerHex()
+	 */
+	protected Hexagone hex;
+	
+	/**
+	 * Hexagone de la mini-map.
+	 * @see Element#creerHexMM()
+	 */
+	protected Hexagone hexMM;
+	
+	/**
+	 * Visibilité d'un hexagone dans la carte.
+	 * @see Element#seDessinerBis(Hexagone, Graphics2D)
+	 * @see Element#seDessinerCadreBis(Hexagone, Graphics2D, Color)
+	 */
 	protected boolean visible = false;
+	
+	/**
+	 * Type de la texture d'un élément.
+	 * @see Element#seDessinerBis(Hexagone, Graphics2D)
+	 * @see Element#seDessinerCadreBis(Hexagone, Graphics2D, Color)
+	 */
 	protected int numTexture;
 	
-	// Accesseurs
+	 /**
+     * Retourne la position d'un élément.
+     * 
+     * @return position d'un élément. 
+     */
 	public Position getPos() { return pos; }
 	
-	// Mutateurs
+	/**
+	 * Modifie la position de l'élement.
+	 * 
+	 * @param pos
+	 */
 	public void setPos(Position pos) { this.pos = pos; }
 	
-	// Méthodes
-	// Crée les deux hexagones
+	
+	/**
+	 * Crée les deux hexagones.
+	 * 
+	 */
 	public void creerHex() {
 		creerHexM();
 		creerHexMM();
 	}
-	// Crée l'hexagone de la map affichée
+	
+	/**
+	 * Crée l'hexagone de la map affichée.
+	 * 
+	 */
 	public void creerHexM() {
 		int rayon;
 		Point centre;
@@ -69,6 +123,7 @@ public abstract class Element implements IConfig, Serializable {
 			centre = centre.substract(new Point(Math.sqrt(3) * rayon, 0));
 		hex = new Hexagone(centre, rayon);
 	}
+	
 	// Renvoie les infos
 	public String toString() {
 		return getPos().toString();
