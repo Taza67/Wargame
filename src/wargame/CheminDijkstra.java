@@ -84,13 +84,32 @@ public class CheminDijkstra implements IConfig, Serializable {
 		plusCourtChemin(depart, arrivee);
 		inverserChemin();
 	}
-	
-	// Accesseurs
+
+	 /**
+     * Retourne le chemin le plus court.
+     * 
+     * @return Le chemin le plus court. 
+     * 
+     * @see CheminDijkstra#chemin
+     */
 	public List<Element> getChemin() {
 		return chemin;
 	}
 	
-	// Méthodes
+	
+	/**
+	 * Initialise les tableaux d, pred, poids et le chemin
+	 * @param depart
+	 * 			Elément de départ
+	 * @param sommets
+	 * 			Liste des sommets
+	 * @return liste du chemin 
+	 * 
+	 * @see CheminDijkstra#d
+	 * @see CheminDijkstra#poids
+	 * @see CheminDijkstra#pred
+	 * @see CheminDijkstra#sommets
+	 */
 	private void initialise(Element depart, List<Element> sommets) {
 		// d
 		for (int i = 0; i < d.length; i++) d[i] = 100000;
@@ -106,6 +125,14 @@ public class CheminDijkstra implements IConfig, Serializable {
 		// chemin
 		this.chemin = new ArrayList<Element>();
 	}
+	
+	/**
+	 * Trouve le sommet de distance minimum
+	 * @param q
+	 * 			Liste des éléments
+	 * 
+	 * @return sommet de distance minimum
+	 */
 	private int trouveMin(List<Element> q) {
 		int min = 100000,
 			sommet = -1;
@@ -117,12 +144,22 @@ public class CheminDijkstra implements IConfig, Serializable {
 		}
 		return sommet;
 	}
+	
+	/**
+	 * Mets à jour les distances dans le tableau d
+	 */
 	public void maj_distances(int s1, int s2) {
 		if (d[s2] > d[s1] + poids[s1][s2]) {
 			d[s2] = d[s1] + poids[s1][s2];
 			pred[s2] = s1;
 		}
 	}
+	
+	/**
+	 * Trouve le chemint le plus court à partir de l'élément de départ
+	 * 
+	 * @see CheminDijkstra#CheminDijkstra(Element, Element, List)
+	 */
 	public void dijkstra(Element depart) {
 		List<Element> q = new ArrayList<Element>();
 		for (Element e : sommets) q.add(e);
@@ -134,6 +171,11 @@ public class CheminDijkstra implements IConfig, Serializable {
 					maj_distances(s1, j);
 		}
 	}
+	
+	/**
+	 * Trouve le chemin le plus court entre l'élément de départ et l'arrivée
+	 * 
+	 */
 	public void plusCourtChemin(Element depart, Element arrivee) {
 		int s = sommets.indexOf(arrivee),
 			deb = sommets.indexOf(depart);
@@ -142,6 +184,12 @@ public class CheminDijkstra implements IConfig, Serializable {
 			s = pred[s];
 		}
 	}
+	
+	/**
+	 * Inverse le chemin pour avoir le chemin le plus court dans chemin
+	 *  
+	 * @see CheminDijkstra#chemin
+	 */
 	public void inverserChemin() {
 		List<Element> chemInv = new ArrayList<Element>();
 		for (int i = chemin.size() - 1; i >= 0; i--)
@@ -149,7 +197,12 @@ public class CheminDijkstra implements IConfig, Serializable {
 		chemin = chemInv;
 	}
 	
-	// Méthodes grahiques
+	/**
+	 * Dessine le chemin le plus court 
+	 * 
+	 * @param g
+	 * 		Graphics2D
+	 */
 	public void seDessiner(Graphics2D g) {
 		for (Element e : chemin)
 			if (e != null) e.seDessinerCadre(g, COULEUR_CHEMIN);
