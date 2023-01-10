@@ -3,14 +3,74 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import wargameInterface.Fenetre;
+
+
+
+/**
+ * <b>AttaqueSoldatCorps est responsable des attaques de corps.</b>
+ * <p>
+ * Elle est caractérisée par :
+ * <ul>
+ * <li>La carte qui contient le soldat.</li>
+ * <li>Le soldat attaquant.</li>
+ * <li>Le soldat attaqué.</li>
+ * <li>La liste des chemins du soldat.</li>
+ * </ul>
+ * </p>
+ * @see Carte
+ * @see Soldat
+ * @author AKIL M., BAYAZID H., AMIROUCHE A.
+ *
+ */
+
+
 public class AttaqueSoldatCorps extends APatient implements IConfig {
-	// Infos
+	
+	/**
+	 * La carte du soldat.
+	 * @see Element#carte
+	 */
 	Carte carte;
+	
+	/**
+	 * Le soldat attaquant.
+	 * @see Soldat#attaqueSoldatCorps(Soldat)
+	 */
 	Soldat soldat;
+	
+	/**
+	 * Le soldat attaqué.
+	 * @see Soldat#attaqueSoldatCorps(Soldat)
+	 */
 	Soldat cible;
+	
+	/**
+	 * Liste des chemins du soldat attaquant.
+	 * @see Carte#mort(Soldat)
+	 */
 	List<Element> chemin;
 	
-	// Constructeurs
+	
+	 /**
+     * Constructeur AttaqueSoldatCorps.
+     * <p>
+     * A la construction, les chemins sont construits et ajoutés à la liste des chemins.
+     * Les éléments interactifs sont générés.
+     * </p>
+     * 
+     * @param carte
+     * 				Le la carte qui contient le soldat.
+     * @param soldat
+     *            	Le soldat attaquant.
+     * @param cible
+     * 			  	Le soldat ciblé.
+     * @param processusAttendre
+     * 				Liste des processus
+     * 				
+     * @see Carte#faireAttaquerHeros(Element)
+     * @see TourOrdi#reflechirStrategie(Soldat)
+     */
 	public AttaqueSoldatCorps(Carte carte, Soldat soldat, Soldat cible, List<Thread> processusAttendre) {
 		super();
 		this.processusAttendre = processusAttendre;
@@ -21,11 +81,21 @@ public class AttaqueSoldatCorps extends APatient implements IConfig {
 		this.chemin.remove(chemin.size() - 1);
 	}
 	
-	// Méthodes
+	 /**
+     * Fais attaquer le soldat
+     * 
+     * @see AttaqueSoldatCorps#faireAttaquerSoldat()
+     */
 	public void run() {
 		faireAttaquerSoldat();
 	}
-	// Déplace le soldat case par case
+	
+	 /**
+     * Déplace le soldat case par case
+     * 
+     * @see AttaqueSoldatCorps#faireAttaquerSoldat()
+     * @see AttaqueSoldatDistance#AttaqueSoldatDistance(Carte, Soldat, Soldat, List)
+     */
 	public void faireAttaquerSoldat() {
 		DeplacementSoldat ds = new DeplacementSoldat(carte, soldat, chemin, processusAttendre);
 		ds.run();
