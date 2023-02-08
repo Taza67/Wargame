@@ -2,8 +2,6 @@ package wargame;
 
 import java.util.List;
 
-import wargameInterface.Fenetre;
-
 
 /**<b>Apatient est l'interface qui gère les processus .</b>
 * Elle est caractérisée par :

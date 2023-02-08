@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import wargame.Obstacle.TypeObstacle;
-import wargameInterface.Fenetre;
-import wargameInterface.PanneauPartie;
 
 
 

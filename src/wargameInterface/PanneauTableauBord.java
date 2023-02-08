@@ -8,10 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import wargame.Carte;
-import wargame.Element;
 import wargame.IConfig;
-import wargame.InfoPartie;
-import wargame.ZoneR;
 
 
 

@@ -3,9 +3,6 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import wargameInterface.Fenetre;
-import wargameInterface.PanneauPartie;
-
 
 /**
  * <b>AttaqueSoldatDistance est responsable de la gestion des attaques à distance.</b>

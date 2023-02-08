@@ -3,8 +3,6 @@ package wargame;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import wargameInterface.Fenetre;
-
 
 
 /**

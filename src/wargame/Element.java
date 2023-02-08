@@ -9,7 +9,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.io.Serializable;
 
-import wargameInterface.Fenetre;
 import wargameInterface.PanneauPartie;
 
 

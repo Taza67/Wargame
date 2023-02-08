@@ -5,9 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import wargameInterface.Fenetre;
-import wargameInterface.PanneauPartie;
-
 /**
  * <b>CheminDjikstra permet de trouver le chemin le plus court d'un soldat.</b>
  * Elle est caractérisée par :
